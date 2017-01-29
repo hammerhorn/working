@@ -35,9 +35,9 @@ def main():
         SHELL.output(out_str)
 
         if Terminal.platform != 'android':
-            with open('binary.txt', 'w') as fhandler:
+            with open('__data__/binary.txt', 'w') as fhandler:
                 fhandler.write(out_str)
-            SHELL.report_filesave('binary.txt')
+            SHELL.report_filesave('__data__/binary.txt')
 
     else:
         with open(ARGS.d, 'r') as fhandler:
