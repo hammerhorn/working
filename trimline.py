@@ -68,4 +68,4 @@ if __name__ == '__main__':
     - learn argparse syntax better
     - allow multiple files
     + fails to erase old file before writing new one""")
-main()
+    main()
