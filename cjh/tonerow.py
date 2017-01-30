@@ -229,8 +229,8 @@ K: C
 
     def play_midi(self, player='timidity'):
         proc = subprocess.Popen((
-            'abc2midi {0}.abc -Q 140 > /dev/null &&' +
-            ' {1} {0}1.mid > /dev/null&').format(self.basename, player), shell=True)
+            'abc2midi __data__/{0}.abc -Q 140 > /dev/null &&' +
+            ' {1} __data__/{0}1.mid > /dev/null&').format(self.basename, player), shell=True)
         proc.wait()
 
     
@@ -238,11 +238,12 @@ K: C
     def write_abc_file(self):
         """write ABC data to a file"""
         abc_str = self.generate_abc_str()
-        filename = self.generate_basename() + '.abc'
+        filename = '__data__/' + self.generate_basename() + '.abc'
         handler = open(filename, 'w')
         handler.write(abc_str)
         handler.close()
-        Terminal.notify("'{0}.abc' written".format(filename))
+        Terminal.notify("'{}' written".format(filename))
+
         
 #        basename = generate_basename()
 #        write_abc_file(basename)
@@ -279,8 +280,8 @@ K: C
         #filename = filename.split('.')[0]
         basename = self.generate_basename()
         proc = subprocess.Popen((
-            'yaps {0}.abc > /dev/null &&' +
-            ' evince {0}.ps 2> /dev/null&').format(basename), shell=True)
+            'yaps __data__/{0}.abc > /dev/null &&' +
+            ' evince __data__/{0}.ps 2> /dev/null&').format(basename), shell=True)
         proc.wait()
 
     def shift_h(self, cols):
