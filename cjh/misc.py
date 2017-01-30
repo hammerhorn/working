@@ -10,6 +10,7 @@ contains: bye(),
           speak()
 """
 import datetime
+import os
 import subprocess
 import sys
 # import time
@@ -70,7 +71,7 @@ def fahr_to_kelvins(fahr):
 def notebook(remarks):
     if '-C' in sys.argv[1:]:
         Terminal()
-        if Terminal.os_name == 'posix':
+        if Terminal.os_name == 'posix' and 'DISPLAY' in os.environ:
             remarks = remarks.replace('    *', '    •')
             if Terminal.platform == 'Linux':
                 remarks = remarks.replace('    -', '    ☐')

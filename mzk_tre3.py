@@ -4,6 +4,7 @@
 TONEROW EDITOR
 """
 import argparse
+import os
 import sys
 
 from cjh.misc import notebook
@@ -53,8 +54,8 @@ REMARKS = """
     - Save as text
     - Save as audio file
     - Save and open pickle
-    - Hide X features when there is no X
     - Get to work with wx, dialog, zenity, sl4a, html, ....
+    + Hide X features when there is no X
     + zeroth note should be down an octave
     + Fix Tk
 
@@ -149,10 +150,13 @@ def main():
 
 #        elif pressed == menu_obj.index(emphasis('Visualize')) + 1:
         elif pressed == menu_obj.index(vmenu_head) + 1:
-            view_menu = ListPrompt([
+            menu_entries = [
                 '..', 'Tone matrix (text-based)', 'Notenames, frequencies',
-                'ABC notation', 'Pyplot         (X only)',
-                'Staff notation (X only)'])
+                'ABC notation']
+            if 'DISPLAY' in os.environ:
+                menu_entries += [
+                    'Pyplot         (X only)', 'Staff notation (X only)']
+            view_menu = ListPrompt(menu_entries)
 
             if 12 % len(row) != 0:
                 obj_str = MICROTONE_WARNING
@@ -208,9 +212,11 @@ def main():
         elif pressed == menu_obj.index(midi_head) + 1:
 
             #heading = 'PLAY MIDI'
-            play_menu = ListPrompt([
-                '..', 'Play MIDI     (timidity)',
-                'Play MIDI     (audacious, X only)'])
+            menu_entries = ['..', 'Play MIDI     (timidity)']
+            if 'DISPLAY' in os.environ:
+                menu_entries += ['Play MIDI     (audacious, X only)']
+            play_menu = ListPrompt(menu_entries)
+                
             while True:
                 if SHELL.interface == 'term':
                     pressed = TERM.make_page(
