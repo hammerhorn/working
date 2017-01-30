@@ -1,5 +1,5 @@
-# working
-collection of scripts i am working on
+# My 'working' Repository
+A collection of scripts i am working on.
 
 ##Packages
 - cjh
