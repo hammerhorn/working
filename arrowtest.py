@@ -10,6 +10,9 @@ Terminal()
 SHELL = Config().start_user_profile()
 
 def get_arrow_key():
+    """
+    distinguish between arrow keys being pressed
+    """
     pressed = Terminal.get_keypress()
     if pressed == chr(27):
         pressed = Terminal.get_keypress()

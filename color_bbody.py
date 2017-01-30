@@ -126,11 +126,11 @@ def main():
                 if ARGS.T is True:
                     Terminal.output(Terminal.fx('bn', color.write(
                         '#000000', 'hex', bgcolor, 'hex', bgcolor + ' ' * 33,
-                        heading=_heading, truecolor=True, get_str=True)))
+                        truecolor=True, get_str=True)), heading=_heading)
                 else:
                     Terminal.output(Terminal.fx('bn', color.write(
                         '#000000', 'hex', bgcolor, 'hex', bgcolor + ' ' * 33,
-                        heading=_heading, truecolor=False, get_str=True)))
+                        truecolor=False, get_str=True)), heading=_heading)
                 #Terminal.output('')
             except KeyboardInterrupt:
                 Terminal.clear(0)
@@ -152,12 +152,12 @@ def main():
             color_str = "#000000"
             heading = '{:,.5}K'.format(kelvins)
             if ARGS.html is True:
-                HtmlShell(
-                    title, FILENAME, bgcolor, color_str, heading, bgcolor)
-
+                html_sh = HtmlShell(
+                    title, FILENAME, bgcolor, color_str)
+                html_sh.output(heading)
             try:
                 SHELL.main_window.config(bg=bgcolor)
-                PANE.config(bg=bgcolor)
+                pane.config(bg=bgcolor)
             #build this into shell
             except (tk.TclError, ValueError):
                 tkMessageBox.showerror('Color error', 'That color is unknown.')
@@ -165,8 +165,8 @@ def main():
         SHELL.main_window.title('Kelvin -> Hue')
         SHELL.msg.destroy()
 
-        PANE = tk.Frame(SHELL.main_window)
-        ENTRY = tk.Entry(PANE, width=15, font=('sans', 12))
+        pane = tk.Frame(SHELL.main_window)
+        entry = tk.Entry(pane, width=15, font=('sans', 12))
 
 #        def get_color():
 #            kelvins = float(ENTRY.get())
@@ -175,13 +175,13 @@ def main():
 #            red, green, blue = kelvin_to_rgb(kelvins)
 #            return color_dec_to_hex(red, green, blue)
 
-        BUTTON = tk.Button(
-            PANE, text='Color temp. (K)', command=lambda: change_color(
-                float(ENTRY.get())))
+        button = tk.Button(
+            pane, text='Color temp. (K)', command=lambda: change_color(
+                float(entry.get())))
 
-        ENTRY.pack(side=tk.LEFT)
-        BUTTON.pack(side=tk.RIGHT)
-        PANE.pack(fill=tk.X, side=tk.TOP, pady=10, padx=10)
+        entry.pack(side=tk.LEFT)
+        button.pack(side=tk.RIGHT)
+        pane.pack(fill=tk.X, side=tk.TOP, pady=10, padx=10)
 
         TkTemplate.center_window(height_=200, width_=300)
 
