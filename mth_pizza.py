@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding=utf8
 """
-PIZZA PY - 
+PIZZA PY -
 
 Calculate the area and unit price of a circular pizza.
 """
@@ -85,7 +85,7 @@ def set_diameter(abbrev):
     Gets diameter from args or stdin and return as a <cjh.kinematics.Disp>.
     """
     if ARGS is not None and ARGS.diameter is not None:
-        diameter = decimal.Decimal(ARGS.diameter)
+        diameter_dec = decimal.Decimal(ARGS.diameter)
     else:
         if ARGS is not None and ARGS.metric is True:
             prompt = 'centimeters'
@@ -94,12 +94,12 @@ def set_diameter(abbrev):
         #Cli.output('')
         while True:
             try:
-                diameter = decimal.Decimal(SHELL.input('{}? '.format(prompt)))
+                diameter_dec = decimal.Decimal(SHELL.input('{}? '.format(prompt)))
                 break
             except decimal.InvalidOperation:
                 Terminal.clear(1)
-                continue        
-    diameter = Disp(diameter, u=abbrev)
+                continue
+    diameter = Disp(diameter_dec, u=abbrev)
     return diameter
 
 

@@ -43,7 +43,7 @@ class Thing(object):
             return self.label == other
 
     def __ne__(self, other):
-        return not self == other
+        return not self == other  # pylint: disable=C0113
 
     def __default_label(self):
         """
@@ -74,7 +74,7 @@ class Thing(object):
         if ext == 'p':
             handler = open(filename, 'wb')
         else:
-            handler = open(filename, 'w')            
+            handler = open(filename, 'w')
         save_func(handler)
         handler.close()
 

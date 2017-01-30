@@ -9,7 +9,7 @@ Example
     ./tonerow -n 11 | ./draw_row.py -p
 
 'tonerow' generated a sequence of shuffled 0 thru 10, and draw_row.py draws the
-picture. 
+picture.
 """
 import argparse
 

@@ -1,9 +1,16 @@
 #!/usr/bin/env python
+"""output the corresponding ordinal value for the pressed key character"""
 from easycat import write
 from versatiledialogs.terminal import Terminal
 
 Terminal()
-while True:
-    prest = Terminal.get_keypress()
-    write(Terminal.fx('un', str(ord(prest))))
-    write(' ')
+
+def main():
+    """Main function"""
+    while True:
+        prest = Terminal.get_keypress()
+        write(Terminal.fx('un', str(ord(prest))))
+        write(' ')
+
+if __name__ == '__main__':
+    main()

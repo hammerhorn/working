@@ -68,7 +68,7 @@ def main():
     docstring
     """
     SHELL.welcome('EMWaves - demonstration of my EMWave class')
-    hertz = ''
+    hertz = None
 
     if SHELL.interface == 'Tk':
         SHELL.msg.config(

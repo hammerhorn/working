@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 #coding=utf8
+"""
+Collection of input/output functions which are similar to the cat command
+"""
 import os
 import pydoc
-import re
+# import re
 import sys
 
 import colorama
@@ -45,7 +48,7 @@ def cat(**kwargs):
                 if sys.version_info.major == 2:
                     line = raw_input()
                 else:
-                    line = input()
+                    line = input()  # pylint: disable=bad-builtin
                 line = line.rstrip()
                 lines += [line]
                 write(line + '\n')
@@ -114,9 +117,9 @@ def less(*args, **kwargs):
         pydoc.pager(text)
 
 
-def strip_ansi(in_str):
-    ansi_escape = re.compile(r'\x1b[^m]*m')
-    return ansi_escape.sub('', in_str)
+# def strip_ansi(in_str):
+#     ansi_escape = re.compile(r'\x1b[^m]*m')
+#     return ansi_escape.sub('', in_str)
 
 
 def view_source(src=sys.argv[0]):
@@ -125,7 +128,7 @@ def view_source(src=sys.argv[0]):
     """
     write(colored(src, attrs=['underline']))
     write(':\n')
-    write(get_src_str(src) + '\n')                                          
+    write(get_src_str(src) + '\n')
 
 
 def write(text):

@@ -84,7 +84,7 @@ class Herbo(object):
         """
         Takes Scalar mass_g; returns decimal.Decimal or Money dollars
         """
-        if type(mass_g) == float:
+        if isinstance(mass_g, float):
             mass_g = Scalar(mass_g, 'g')
         if DISCOUNT is True:
             d_float = mass_g.mag * decimal.Decimal(8.4507042253521)
@@ -112,10 +112,10 @@ class Herbo(object):
         if SHAKE is True:
             grams *= 2.0
         grams *= 10
-        grams = int(grams.mag)
-        grams = float(grams)
-        grams /= 10.0
-        return Scalar(grams, 'g')
+        grams_int = int(grams.mag)
+        grams_float = float(grams_int)
+        grams_float /= 10.0
+        return Scalar(grams_float, 'g')
 
 
 def process_discounts():

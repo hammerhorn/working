@@ -216,7 +216,7 @@ def main():
                                                             # window styles
                 Terminal.wait('Press a key, ^C to end and see stats')
 
-                if ARGS.keep == False and ARGS.quiet == None:
+                if ARGS.keep is False and ARGS.quiet is None:
                     Terminal.clear(11)
 
         except KeyboardInterrupt:

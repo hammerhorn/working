@@ -27,6 +27,9 @@ def _parse_args():
 
 
 def save_prefs(var1, var2, var3):
+    """
+    write all changes to config.json
+    """
     CONFIG.write_to_config_file(shell=var1, editor=var2, terminal=var3)
     SHELL.report_filesave('versatiledialogs/config.json')
 
@@ -38,28 +41,30 @@ SHELL = TkTemplate()
 CONFIG = Config()
 SHELL.main_window.title("cjh Settings Editor")
 SHELL.center_window(height_=200)
-SHELL.msg.config(width=200, font=('serif',10, 'bold', 'italic'))
+SHELL.msg.config(width=200, font=('serif', 10, 'bold', 'italic'))
 SHELL.msgtxt.set('Customize your settings')
-variable1 = tk.StringVar(SHELL.main_window)
-variable1.set('term')
-w1 = tk.OptionMenu(
-    SHELL.main_window, variable1, "term", "Tk", "dialog", "zenity", "wx")
-w1.pack()
+VARIABLE1 = tk.StringVar(SHELL.main_window)
+VARIABLE1.set('term')
+W1 = tk.OptionMenu(
+    SHELL.main_window, VARIABLE1, "term", "Tk", "dialog", "zenity", "wx")
+W1.pack()
 
-variable2 = tk.StringVar(SHELL.main_window)
-variable2.set("emacs")
-w2 = tk.OptionMenu(
-    SHELL.main_window, variable2, "./tk_text", "gedit", "scite", "emacs", "vim", "nano")
-w2.pack()
+VARIABLE2 = tk.StringVar(SHELL.main_window)
+VARIABLE2.set("emacs")
+W2 = tk.OptionMenu(
+    SHELL.main_window, VARIABLE2, "./tk_text", "gedit", "scite", "emacs", "vim", "nano")
+W2.pack()
 
-variable3 = tk.StringVar(SHELL.main_window)
-variable3.set("terminal")
-w3 = tk.OptionMenu(
-    SHELL.main_window, variable3, "terminator -x", "gnome-terminal -x", "xterm -x")
-w3.pack()
+VARIABLE3 = tk.StringVar(SHELL.main_window)
+VARIABLE3.set("terminal")
+W3 = tk.OptionMenu(
+    SHELL.main_window, VARIABLE3, "terminator -x", "gnome-terminal -x", "xterm -x")
+W3.pack()
 
-button = tk.Button(SHELL.main_window, text="Save preferences", command=lambda: save_prefs(variable1.get(), variable2.get(), variable3.get()))
-button.pack(pady=15)
+BUTTON = tk.Button(
+    SHELL.main_window, text="Save preferences", command=lambda: save_prefs(
+        VARIABLE1.get(), VARIABLE2.get(), VARIABLE3.get()))
+BUTTON.pack(pady=15)
 
 ##########
 #  MAIN  #

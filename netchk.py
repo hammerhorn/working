@@ -61,10 +61,11 @@ def main():
 
                 if return_val == 2:  # I guess 2 means fail?
                     # Alter this to use python regex
-                    return_val = subprocess.check_output(
+
+                    return_val_str = subprocess.check_output(
                         'ifconfig|tail -8|head -1|grep 192|wc -l',
                         shell=True)
-                    return_val = int(return_val)
+                    return_val = int(return_val_str)
                     if return_val == 0:
                         time.sleep(5)
 

@@ -42,6 +42,7 @@ FILENAME = 'versatiledialogs/config.json'
 
 
 def lookup(key):
+    """return the requested value"""
     if key in list(CONFIG.config_dict.keys()):
         return CONFIG.config_dict[key]
     else:
@@ -70,37 +71,27 @@ def main():
     if ARGS.b is not None:
         CONFIG.write_to_config_file(browser=ARGS.b)
 
-#    config_dict = {'shell':shell}
-#    with open(filename, 'w') as outfile: json.dump(
-#        config_dict, outfile, indent=2)
-
     string = ''
 
-    if ARGS.v == 2 and ARGS.s is not None:
-        string += "\n    versatiledialogs mode: '{}'".format(ARGS.s)
-    elif not (ARGS.v or ARGS.e or ARGS.s or ARGS.t or ARGS.l or ARGS.b):
-        string += "\n    versatiledialogs mode: '{}'".format(SHELL)
-
-    if ARGS.v == 2 and ARGS.e is not None:
-        string += "\n      default text editor: '{}'".format(ARGS.e)
-    elif not (ARGS.v or ARGS.e or ARGS.s or ARGS.t or ARGS.l or ARGS.b):
-        string += "\n      default text editor: '{}'".format(EDITOR)
-
-    if ARGS.v == 2 and ARGS.t is not None:
-        string += "\ndefault terminal emulator: '{}'".format(ARGS.t)
-    elif not (ARGS.v or ARGS.e or ARGS.s or ARGS.t or ARGS.l or ARGS.b):
-        string += "\ndefault terminal emulator: '{}'".format(TERMINAL)
-
-    if ARGS.v == 2 and ARGS.l is not None:
-        string += "\n                 language: '{}'".format(ARGS.l)
-    elif not (ARGS.v or ARGS.e or ARGS.s or ARGS.t or ARGS.l or ARGS.b):
-        string += "\n                 language: '{}'".format(LANGUAGE)
+    def generate_msg(what_arg, attr_name):
+        """
+        generate the output to be written to stdout at the appropriate level
+        of verbosity
+        """
+        if ARGS.v == 2 and what_arg is not None:
+            return_str = "\n{:>25s}: '{}'".format(attr_name, what_arg)
+        elif not (ARGS.v or ARGS.e or ARGS.s or ARGS.t or ARGS.l or ARGS.b):
+            return_str = "\n{:>25s}: '{}'".format(attr_name, SHELL)
+        else:
+            return_str = None
+        return return_str
 
 
-    if ARGS.v == 2 and ARGS.b is not None:
-        string += "\n      default web browser: '{}'".format(ARGS.b)
-    elif not (ARGS.v or ARGS.e or ARGS.s or ARGS.t or ARGS.l or ARGS.b):
-        string += "\n      default web browser: '{}'".format(BROWSER)
+    string += generate_msg(ARGS.s, 'versatiledialogs mode')
+    string += generate_msg(ARGS.e, 'default text editor')
+    string += generate_msg(ARGS.t, 'default terminal emulator')
+    string += generate_msg(ARGS.l, 'language')
+    string += generate_msg(ARGS.b, 'default web browser')
 
     if len(string) > 0:
         Terminal.output(string + '\n')
@@ -110,9 +101,11 @@ def main():
         ARGS.v is not None and ARGS.v >= 1):
         Terminal.output('')
         easycat.view_source(FILENAME)
-    if ARGS.v is not None and ARGS.v >= 1 and (
-            ARGS.s or ARGS.e or ARGS.t or ARGS.l or ARGS.b):
+    if ARGS.v > 0 and (set('setlb') & set(ARGS.__dict__.keys())):
+        print
         Terminal.report_filesave(FILENAME)
+        Terminal.clear(2)
+        Terminal.report_filesave(FILENAME, fast=True)
 
 if __name__ == '__main__':
     main()

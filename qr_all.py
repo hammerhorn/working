@@ -4,12 +4,16 @@
 Tries to generate a QR code for each Python file in the directory.
 Many files will be too large.
 """
+# Std Lib
 import glob
 import os
-import qrcode
 import subprocess
 import sys
 
+# Add-ons
+import qrcode
+
+# Local imports
 import easycat
 from versatiledialogs.lists import ItemList
 from versatiledialogs.terminal import Terminal
@@ -47,8 +51,8 @@ def main():
             dir_tkns = py_fname.split('/')
             dirname = ''
             if len(dir_tkns) > 1:
-                   for tkn in dir_tkns[:-1]:
-                       dirname += tkn + '/'
+                for tkn in dir_tkns[:-1]:
+                    dirname += tkn + '/'
             f_handler = open(py_fname)
             txt_str = f_handler.read()
             img = qrcode.make(txt_str)
@@ -57,7 +61,7 @@ def main():
             proc = subprocess.Popen(
                 'optipng {} > /dev/null 2>&1'.format(img_fname), shell=True)
             proc.wait()
-            
+
             VT.report_filesave(img_fname, fast=True)
 
         except qrcode.exceptions.DataOverflowError:
