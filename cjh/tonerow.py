@@ -30,7 +30,7 @@ class Tonerow(Thing):
         if int_list is not None:
             self.seq = int_list
         else:
-            self.seq = list(range(length ))
+            self.seq = list(range(length))
             index = length - 1
             for count in range(length):
                 max_index = index - count
@@ -39,7 +39,7 @@ class Tonerow(Thing):
                     self.seq[random_index], self.seq[max_index]
         self.pseq = PitchSequence(PitchSet(len(self.seq)), [i + 1 for i in self.seq])
         self.basename = self.generate_basename()
-        
+
     def __str__(self):
         return str(self.seq).replace('[', '').replace(']', '').replace(',', '')
 
@@ -55,7 +55,7 @@ class Tonerow(Thing):
         """
         self.draw()
         self.listfreqs()
-        self.write_abc()
+        self.write_abc_file()
         #self.plot()
         #self.play()
 
@@ -68,9 +68,12 @@ class Tonerow(Thing):
 
 
     def plot(self):
+        """
+        plot tonerow contour with matplotlib
+        """
         import matplotlib.pyplot as plt
         Terminal.output('\nClose Pyplot window to continue....')
-        plt.axis([-0.2 ,len(self.seq) - 0.8, -0.2, len(self.seq) - 0.8])
+        plt.axis([-0.2, len(self.seq) - 0.8, -0.2, len(self.seq) - 0.8])
         plt.plot(list(range(len(self.seq))), self.seq, 's--')#, ms=10.0)
         plt.show()
 
@@ -97,7 +100,7 @@ class Tonerow(Thing):
                 if self.seq[index] == maximum - row - 1:
                     if self.sh_obj.interface == 'term':
                         if self.sh_obj.os_name == 'posix':
-                            str_row += colored('   ', attrs=['reverse', 'bold'] )
+                            str_row += colored('   ', attrs=['reverse', 'bold'])
                         else:
                             str_row += colored('   ', 'white', 'on_white')
                     else:
@@ -110,11 +113,12 @@ class Tonerow(Thing):
             return out_str
         else:
             if self.sh_obj.interface == 'dialog':
-                w, h = 46, 24
+                wide, high = 46, 24
             elif self.sh_obj.interface == 'Tk':
-                w, h = 400, 300
-            else: w, h = None, None
-            self.sh_obj.output(out_str, width=w, height=h)
+                wide, high = 400, 300
+            else:
+                wide, high = None, None
+            self.sh_obj.output(out_str, width=wide, height=high)
 
     def reverse(self):
         """
@@ -134,6 +138,9 @@ class Tonerow(Thing):
 
 
     def rotate(self):
+        """
+        rotate
+        """
         backup = tuple(self.seq)
         for outer, _ in enumerate(backup):
             for inner, _ in enumerate(backup):
@@ -218,22 +225,28 @@ K: C
 #        return basename
 
     def generate_basename(self):
+        """
+        Convert sequence to hex and this will be the basename
+        """
         basename = ''
         for i in self.seq:
             #print i
             #Cli.wait(i)
             basename += hex(i)[2:].upper()
         return basename
-        
-    
+
+
 
     def play_midi(self, player='timidity'):
+        """
+        Play midi file with designated player, timidity by default
+        """
         proc = subprocess.Popen((
             'abc2midi __data__/{0}.abc -Q 140 > /dev/null &&' +
             ' {1} __data__/{0}1.mid > /dev/null&').format(self.basename, player), shell=True)
         proc.wait()
 
-    
+
 
     def write_abc_file(self):
         """write ABC data to a file"""
@@ -244,7 +257,7 @@ K: C
         handler.close()
         Terminal.notify("'{}' written".format(filename))
 
-        
+
 #        basename = generate_basename()
 #        write_abc_file(basename)
         #kpress = Cli.get_keypress("write to abc file '{}'?".format(filename
@@ -285,6 +298,9 @@ K: C
         proc.wait()
 
     def shift_h(self, cols):
+        """
+        shift horizontally
+        """
         if cols >= 0:
             for _ in range(cols):
                 self.seq = [self.seq[-1]] + self.seq[:-1]
@@ -293,6 +309,9 @@ K: C
                 self.seq = self.seq[1:] + [self.seq[0]]
 
     def shift_v(self, rows):
+        """
+        shift vertically
+        """
         for index in range(len(self)):
             self.seq[index] = self.seq[index] + rows
             if self.seq[index] >= len(self):
