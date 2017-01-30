@@ -7,6 +7,7 @@ collection of scripts i am working on
 - ttyfun
 - versatiledialogs
 
+##Scripts
 Scripts to test these packages, and also scripts for 12-tone music
 
 ##Future plans
