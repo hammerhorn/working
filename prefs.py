@@ -13,7 +13,8 @@ __license__ = 'GPL'
 
 REMARKS = """
     + include brower
-    - go game client"""
+    - go game client
+    - use dict.get()"""
 
 def _parse_args():
     """
