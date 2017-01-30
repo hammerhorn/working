@@ -135,12 +135,12 @@ class Tonerow(Thing):
 
     def rotate(self):
         backup = tuple(self.seq)
-        for outer in range(1, len(backup) + 1):
-            for inner in range(len(backup)):
+        for outer, _ in enumerate(backup):
+            for inner, _ in enumerate(backup):
                 if backup[inner] == outer:
-                    self.seq[outer - 1] = len(backup) - inner
+                    self.seq[outer] = len(backup) - inner - 1
         self.pseq = PitchSequence(
-            PitchSet(len(self), start_pitch=self.get_lowest_tone()), [i + 1 for i in self.seq])
+            PitchSet(len(self), start_pitch=self.get_lowest_tone()), self.seq)
 
     def transpose(self, interval):
         """
