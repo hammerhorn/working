@@ -20,10 +20,7 @@ def _parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('filename', type=str, help='file to process', nargs="?")
     parser.add_argument('-C', action='store_true')
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else:
-        args = None
+    args = parser.parse_args() if __name__ == '__main__' else None
     return args
 
 
@@ -42,9 +39,10 @@ def main():
     lines_of_text = file_handler.readlines()
     file_handler.seek(0)
     file_handler.truncate()
+
     # Preview and write text back to file and close file
-    Terminal.output(lines_of_text)
-    Terminal.wait()
+    #Terminal.output(lines_of_text)
+    #Terminal.wait()
     string = ''
     preview_string = ''
     for index, _ in enumerate(lines_of_text):
