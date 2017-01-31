@@ -3,7 +3,8 @@ A collection of scripts i am working on.
 
 ##Packages
 - **cjh**
-  - maths
+    - maths
+    - tablegames
 - **colorful**
 - **fiziko**
 - **ttyfun**
