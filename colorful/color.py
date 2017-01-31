@@ -4,7 +4,7 @@ import time
 
 import colortrans
 
-from cjh.fiziko.waves import kelvin_to_rgb
+from fiziko.waves import kelvin_to_rgb
 import easycat
 from versatiledialogs.terminal import Terminal
 
