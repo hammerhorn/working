@@ -117,20 +117,20 @@ class DataSet(object):
         #s = {'EN':'maximum', 'EO':'maksimumo'}
         #out_str += "{:>11} = {:g}\n".format(s[LANG], max(self))
         out_str += '  {} ≤ {{{} {}}} ≤ {}\n'.format(
-            min(self), label_dict[lang], len(self), max(self))
+            min(self), label_dict[lang.upper()], len(self), max(self))
         return out_str
 
     def averages_str(self, lang='EN'):
         out_str = ''
 
         label_dict = {'EN':'mean', 'EO':'meznombro'}
-        out_str += "{:>9} = {:.4g}\n".format(label_dict[lang], self.mean)
+        out_str += "{:>9} = {:.4g}\n".format(label_dict[lang.upper()], self.mean)
 
         label_dict = {'EN':'median', 'EO':'mediano'}
-        out_str += "{:>9} = {:.4g}\n".format(label_dict[lang], self.median)
+        out_str += "{:>9} = {:.4g}\n".format(label_dict[lang.upper()], self.median)
 
         label_dict = {'EN':'mode', 'EO':'   reĝimo'}
-        out_str += "{:>9} = {}\n".format(label_dict[lang], self.mode)
+        out_str += "{:>9} = {}\n".format(label_dict[lang.upper()], self.mode)
         return out_str
 
     @property

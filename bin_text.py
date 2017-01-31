@@ -25,10 +25,8 @@ def _parse_args():
 def main():
     """Encode or decode"""
     if ARGS.d is None:
-        if SHELL.platform != 'android':
-            buf = easycat.cat(return_str=True)
-        else:
-            buf = Terminal.input(hide_form=True)
+        buf = easycat.cat(return_str=True) if SHELL.platform != 'android' else\
+              Terminal.input(hide_form=True)
         out_str = ''
         for char in buf:
             out_str += '{0:b}'.format(ord(char)).zfill(8) + ' '

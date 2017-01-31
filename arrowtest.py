@@ -29,7 +29,7 @@ def get_arrow_key():
                 'D': 'left'
             }
 
-            pressed = Terminal.get_keypress()            
+            pressed = Terminal.get_keypress()
             direction = code_dict.get(pressed, None)
     return direction
 

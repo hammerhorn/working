@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 #coding=utf8
 """
-EMR HZ-TO-COLOR -
+EMR HZ-TO-COLOR
 
 User inputs a frequency (e.g., 5e14 is in the visible light range).
 The program outputs a description of EM radiation at the given frequency.
 
 Current version is based on this:
-<https://academo.org/demos/wavelength-to-colour-relationship/>
+<http://academo.org/demos/wavelength-to-colour-relationship/>
 """
 import argparse
 import sys

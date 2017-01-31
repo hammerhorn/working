@@ -58,13 +58,8 @@ def _parse_args():
     parser.add_argument(
         '-F', action='store_true', help='accept input in Fahr')
     parser.add_argument('-T', action='store_true', help='Truecolor')
-
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else:
-        args = None
+    args = parser.parse_args() if __name__ == '__main__' else None
     return args
-
 
 ARGS = _parse_args()
 if __name__ == '__main__':
@@ -78,7 +73,7 @@ if ARGS is not None and ARGS.shell is not None:
 else:
     SHELL = CONFIG.start_user_profile()
 
-BROWSER = CONFIG.config_dict['browser']
+BROWSER = CONFIG.config_dict.get('browser')
 
 
 def main():

@@ -63,17 +63,8 @@ def _parse_args():
         '-C', action='store_true', help="see developer's comments")
     parser.add_argument("ADDENDS", help="numbers to be summed", nargs="*")
 
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else: args = None
+    args = parser.parse_args() if __name__ == '__main__' else None
     return args
-
-#def _enable_notebook():
-#    """
- #   View developer's comments
- #   """
- #   if ARGS.C is True:
- #       notebook(REMARKS)
 
 def getdata_stdin():
     """
@@ -97,7 +88,6 @@ def reset_frame():
     """
     Terminal.clear()
     Terminal.titlebar()
-    #Terminal.output('')
 
 def main():
     """
@@ -124,34 +114,24 @@ def main():
         out_str1 += Terminal.hrule(string=True) + '\n'
         if ARGS.w is True and SHELL.interface == 'term':
             reset_frame()
-             #Cli.print_header()
         Terminal.output(out_str1)
         Terminal.wait()
-#
+
 
     out_str2 = '\n{}'.format(stats.range_str(LANG))
     out_str2 += '\n{}'.format(stats.averages_str(LANG))
-        #s_dict = {'EN':'variance', 'EO':'varieco'}
-        #out_str += '\n'#      {} = {:.4}'.format(s_dict[LANG], stats.variance)
     s_dict = {'EN':'std. deviation', 'EO':'norma diferenco'}
-    out_str2 += '\n{} = {}'.format(s_dict[LANG], stats.std_dev)
+    out_str2 += '\n{} = {}'.format(s_dict[LANG.upper()], stats.std_dev)
 
     if SHELL.interface == 'term':
         SHELL.output(out_str2 + '\n')
         if ARGS.w is True:
-#            Cli.output('')
             stats.histogram()
             Terminal.wait()
     else:
-		#"Hang up" on main Tk window when done
-        #if
-        SHELL.message(out_str1 + out_str2, stats.__str__())#:
-
-        #SHELL.main_window.destroy()
+        # "Hang up" on main Tk window when done
+        SHELL.message(out_str1 + out_str2, stats.__str__())
         SHELL.exit()
-        #sys.exit()
-        return
-
 
     Terminal.hrule()
     while True:

@@ -82,9 +82,10 @@ def main():
         if ARGS.v == 2 and what_arg is not None:
             return_str = "\n{:>25s}: '{}'".format(attr_name, what_arg)
         elif not (ARGS.v or ARGS.e or ARGS.s or ARGS.t or ARGS.l or ARGS.b):
+
             return_str = "\n{:>25s}: '{}'".format(attr_name, SHELL)
         else:
-            return_str = None
+            return_str = ''
         return return_str
 
 
