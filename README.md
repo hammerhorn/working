@@ -3,7 +3,9 @@ A collection of scripts i am working on.
 
 ##Packages
 - **cjh**
+  - maths
 - **colorful**
+- **fiziko**
 - **ttyfun**
 - **versatiledialogs**
 
