@@ -6,9 +6,8 @@ Contains the Angle class.
 import decimal
 import math
 
-from cjh.fiziko.scalars import Scalar  # , Unit
 from cjh.letterator import Letter
-
+from fiziko.scalars import Scalar  # , Unit
 from versatiledialogs.terminal import Terminal
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'

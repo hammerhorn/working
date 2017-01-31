@@ -11,9 +11,9 @@ import sys
 import time
 
 #from cjh.angles import Angle
-from cjh.fiziko.kinematics import Disp, Velocity
-from cjh.fiziko.scalars import Scalar, Unit
-from cjh.fiziko.waves import SoundWave
+from fiziko.kinematics import Disp, Velocity
+from fiziko.scalars import Scalar, Unit
+from fiziko.waves import SoundWave
 
 from things import Thing
 

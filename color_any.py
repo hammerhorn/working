@@ -4,10 +4,10 @@
 Define a color by ANSI code, RGB hex code, Kelvins (, wavelength, or frequency).
 """
 import argparse
+import sys
 
 from cjh.misc import notebook
-from colorful.color import Color
-
+from colorful.color import Color, cycle_thru_ansiboxes
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 
@@ -42,6 +42,18 @@ def _parse_args():
 #  INITIALIZE DIALOGS  #
 ########################
 notebook('    - by freq and wavelength')
+
+if len(sys.argv[1:]) == 0:
+    Terminal.hide_cursor()
+    try:
+        Terminal.output('')
+        cycle_thru_ansiboxes()
+    finally:
+        Terminal.output('')        
+        Terminal.unhide_cursor()
+        Terminal.start_app()
+        sys.exit()
+
 ARGS = _parse_args()
 CONFIG = Config()
 if ARGS is not None and ARGS.shell is not None:
@@ -57,13 +69,15 @@ def main():
     """
     Main function
     """
+    #if not {'value', 'type'} & set(ARGS.__dict__.keys()):
+    #    cycle_thru_ansiboxes()
+    #    return
+
     if len(ARGS.value) == 1:
         ARGS.value = '0' + ARGS.value
     new_color = Color(ARGS.value, ARGS.type)
     SHELL.output(new_color)
-
     Terminal.output('Truecolor is {}.\n'.format(ARGS.t))
-
     new_color.draw_box(tc_on=ARGS.t)
     Terminal.output('\n')
 

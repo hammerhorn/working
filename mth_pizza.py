@@ -8,12 +8,11 @@ Calculate the area and unit price of a circular pizza.
 import argparse
 import decimal
 
-from cjh.fiziko.kinematics import Disp
-from cjh.fiziko.scalars import Unit
 from cjh.maths.geometry import Circle
 from cjh.misc import notebook
 from cjh.money import Money
-
+from fiziko.kinematics import Disp
+from fiziko.scalars import Unit
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 

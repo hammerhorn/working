@@ -11,12 +11,10 @@ import decimal
 import sys
 import time
 
-from cjh.fiziko.scalars import Scalar
 from cjh.misc import catch_help_flag, notebook
 from cjh.money import Money
-
+from fiziko.scalars import Scalar
 from ttyfun.unix import Figlet
-
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 

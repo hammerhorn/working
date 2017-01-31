@@ -16,7 +16,8 @@ try:
     elif sys.version_info.major == 3:
         import tkinter as tk
 except ImportError:
-    sys.exit('Tk could not be loaded.  Ending program.')
+    print('Warning: Tk could not be loaded.')
+    pass
 
 from cjh.misc    import notebook
 from cjh.statset import DataSet
@@ -64,7 +65,7 @@ def roll_and_output():
         SHELL.msg.config(font=('mono', 10, 'bold'))
     DIE.roll()
     if ARGS.quiet is not None and ARGS.quiet > 2:
-        sys.exit(0)
+        sys.exit(0)  # so quiet it's silent
     elif ARGS.quiet == 2:
         SHELL.output(DIE.value)
     elif ARGS.quiet == 1:

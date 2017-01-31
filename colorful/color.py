@@ -25,7 +25,7 @@ from versatiledialogs.terminal import Terminal
 #         Terminal.output('')
 
 
-def cycle_thru_ansiboxes(start, end, delta_t=0.25, tc=False):
+def cycle_thru_ansiboxes(start=0, end=255, delta_t=0.25, tc=False):
     try:
         for i in range(start, end + 1):
             Color(i, 'ansi').draw_box(tc_on=tc, label_type='ansi')

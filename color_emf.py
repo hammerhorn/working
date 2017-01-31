@@ -19,8 +19,8 @@ except ImportError:
 
 from colorful.color import color_dec_to_hex, nm_to_rgb, write
 from cjh import misc
-from cjh.fiziko.scalars import Unit
-from cjh.fiziko.waves import EMWave
+from fiziko.scalars import Unit
+from fiziko.waves import EMWave
 
 from versatiledialogs.config import Config
 

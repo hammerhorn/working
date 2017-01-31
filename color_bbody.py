@@ -26,7 +26,7 @@ except ImportError:
 from colorful import color
 from colorful.color       import color_dec_to_hex
 from cjh.misc        import fahr_to_kelvins, notebook
-from cjh.fiziko.waves       import kelvin_to_rgb
+from fiziko.waves       import kelvin_to_rgb
 
 from versatiledialogs.config      import Config
 from versatiledialogs.html_sh     import HtmlShell
