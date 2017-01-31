@@ -32,7 +32,7 @@ def main():
     VT.output(
         '\nChecking for Internet @ {}....(^C will terminate)'.format(
             current_time()))
-    VT.hrule(string=True)
+    VT.hrule()
 
     try:
         while True:
@@ -61,7 +61,6 @@ def main():
 
                 if return_val == 2:  # I guess 2 means fail?
                     # Alter this to use python regex
-
                     return_val_str = subprocess.check_output(
                         'ifconfig|tail -8|head -1|grep 192|wc -l',
                         shell=True)
