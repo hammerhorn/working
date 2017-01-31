@@ -63,9 +63,9 @@ if SHELL.interface == 'Tk':
         bg='#fff', width=200)
     SHELL.main_window.config(bg='dark green')
     SHELL.center_window(width_=300, height_=125)
-    if LANG == "EO":
+    if LANG.upper() == "EO":
         SHELL.main_window.title('horloĝo')
-    elif LANG == "EN":
+    elif LANG.upper() == "EN":
         SHELL.main_window.title('clock')
 
 
@@ -79,7 +79,7 @@ def main_loop_bash(month):
         while True:
             _today = datetime.datetime.today()
             now = _today.strftime('%l:%M %P')
-            if LANG == 'EO':
+            if LANG.upper() == 'EO':
                 now = now[:-1] + 'tm'
 
             try:
@@ -89,9 +89,9 @@ def main_loop_bash(month):
                     "unix shell not available or 'toilet' not available")
 
             string += '\n'
-            if LANG == 'EN':
+            if LANG.upper() == 'EN':
                 string += "{}'s for Stevie!!!\n\n".format(month.capitalize())
-            elif LANG == 'EO':
+            elif LANG.upper() == 'EO':
                 string += '{} estas por Stevie!!!\n\n'.format(
                     month.capitalize())
 
@@ -122,9 +122,9 @@ def main_loop_tk(day, month):
     """
     Check the time, refresh the clock.
     """
-    if LANG == 'EO':
+    if LANG.upper() == 'EO':
         msgtext = "{} estas por Stevie!!!"
-    elif LANG == 'EN':
+    elif LANG.upper() == 'EN':
         msgtext = "{}'s for Stevie!!!"
     else:
         msgtext = ''
@@ -141,7 +141,7 @@ def main_loop_tk(day, month):
         """update the time and the background color."""
         today = datetime.datetime.today()
         now = today.strftime('%l:%M:%S %P')
-        if LANG == 'EO':
+        if LANG.upper() == 'EO':
             now = now[:-1] + 'tm'
         SHELL.msgtxt.set(now)
 
@@ -180,7 +180,7 @@ def get_date_and_month():
     """
     _today = datetime.datetime.today()
     en_month = _today.strftime('%B')
-    if LANG == 'EO':
+    if LANG.upper() == 'EO':
         mnth = MONTH_DICT[en_month]
     else:
         mnth = en_month
