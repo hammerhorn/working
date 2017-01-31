@@ -13,25 +13,25 @@ from versatiledialogs.terminal import Terminal
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
-class Chess(object):
-    """
+"""
     converts strings of Forsythe-Edwards board notation and draws the board
     position
-    """
-    def __init__(self, fen_str='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'):
-        self.fen_list = fen_str.split('/')
-
-    def __str__(self):
-        out_str = '\n'
-        for rank in self.fen_list:
-            for char in rank:
-                if char.isdigit():
-                    out_str += '. ' * int(char)
-                elif char.isalpha():
-                    out_str += char + ' '
-            out_str += '\n' #newline at end of each rank
-        out_str += '\n' # end with a newline
-        return out_str
+"""
+def rank_list(fen_str='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'):
+    fen_list = fen_str.split('/')
+    return fen_list
+    
+def draw(fen_list):
+    out_str = '\n'
+    for rank in fen_list:
+        for char in rank:
+            if char.isdigit():
+                out_str += '. ' * int(char)
+            elif char.isalpha():
+                out_str += char + ' '
+        out_str += '\n' #newline at end of each rank
+    out_str += '\n' # end with a newline
+    return out_str
 
 
 REMARKS = """
@@ -47,15 +47,13 @@ if SHELL.platform != 'android':
 def main():
     """ Main function """
     # Use class Section from cjh.doc_format
-    if len(sys.argv[1:]) == 0:
-        board_position = Chess()
-    else:
-        board_position = Chess(sys.argv[1])
-    SHELL.output(board_position, height=200)
+    board_position = rank_list() if len(sys.argv[1:]) == 0 else set_board(
+        sys.argv[1])
+    SHELL.output(draw(board_position), height=200)
 
     while True:
-        board_position = Chess(SHELL.input())
-        SHELL.output(board_position, height=200)
+        board_position = rank_list(SHELL.input())
+        SHELL.output(draw(board_position), height=200)
 
 
 if __name__ == '__main__':
