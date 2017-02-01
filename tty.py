@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-"""A test of the Cli.tty method.  Writes text to the screen one char at a time,
+"""A test of the Terminal.tty method.  Writes text to the screen one char at a time,
 like a teletype."""
 
 
 import datetime
-# import sys
 import textwrap
 
 from cjh.text_fill import TextGen
