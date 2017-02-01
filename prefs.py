@@ -11,12 +11,12 @@ Config Attributes:
       editor - default text editor, e.g., emacs, vi, gedit, ...
     language - 'EN' and 'EO' will be supported
      browser - default web browser
-                                                                                                                                                                                                                                                                              
-Examples:                                                                                                                                                                                                                                                                     
+
+Examples:
     ./prefs.py         (Lists all keys and their values)
     ./prefs.py -s term (Sets the default shell to 'term')
     ./prefs.py -l en   (Sets the default language to English)
-    ./prefs.py -b \?   (Echos back the selected web browser)
+    ./prefs.py -b \\?   (Echos back the selected web browser)
 """
 import argparse
 import copy
@@ -26,7 +26,7 @@ import time
 import easycat
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
-from cjh.misc import catch_help_flag
+#from cjh.misc import catch_help_flag
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
@@ -36,23 +36,29 @@ REMARKS = """
     - go game client
     - use dict.get()"""
 
-#if {'-h', '--help'} & set(sys.argv[1:]):
-#    catch_help_flag(__doc__)
 
 def _parse_args():
     """
     Parse command-line arguments
     """
-    parser = argparse.ArgumentParser(
-        description='Edit or view settings for versatiledialogs package.  ' +
-            "Writes to 'config.json'.")
-    parser.add_argument('--shell', '-s', type=str, help='set shell')
-    parser.add_argument('--editor', '-e', type=str, help='set editor')
-    parser.add_argument('--terminal', '-t', type=str, help='set terminal')
-    parser.add_argument('--language', '-l', type=str, help='set language')
-    parser.add_argument('--browser', '-b', type=str, help='set browser')
-    parser.add_argument('-v', action='count')
-    args = parser.parse_args()
+    helpflag = True if {'-h', '--help'} & set(sys.argv[1:]) else False
+    if helpflag is True:
+        Terminal.output('')
+
+    try:
+        parser = argparse.ArgumentParser(
+            description="Edit or view settings for 'versatiledialogs' package." +
+            "  Writes to 'config.json'.  Type 'pydoc prefs' for more.")
+        parser.add_argument('--shell', '-s', type=str, help='set shell')
+        parser.add_argument('--editor', '-e', type=str, help='set editor')
+        parser.add_argument('--terminal', '-t', type=str, help='set terminal')
+        parser.add_argument('--language', '-l', type=str, help='set language')
+        parser.add_argument('--browser', '-b', type=str, help='set browser')
+        parser.add_argument('-v', action='count')
+        args = parser.parse_args()
+    finally:
+        if helpflag:
+            Terminal.output('')
     return args
 
 ARGS = _parse_args() if __name__ == '__main__' else None
@@ -64,11 +70,14 @@ def lookup(key):
     """return the requested value"""
     return CONFIG.config_dict.get(key, None)
 
-def edit_config_file():                     
-    for key_name in KEYNAME_LIST:           
+def edit_config_file():
+    """
+    Write the changes to the actual file 'config.json'.
+    """
+    for key_name in KEYNAME_LIST:
         if ARGS.__dict__[key_name] is not None and\
            ARGS.shell not in ['?', lookup(key_name)]:  # redundent, but safer
-            CONFIG.config_dict[key_name] = ARGS.__dict__[key_name]            
+            CONFIG.config_dict[key_name] = ARGS.__dict__[key_name]
     CONFIG.write_to_config_file(**CONFIG.config_dict)
 
 
@@ -77,7 +86,6 @@ def main():
     Writes requested modifications to the 'config.json' file, and sends
     some kind of feedback to stdout.
     """
-
     string = ''
 
     def generate_msg(key_name, key_label):
@@ -102,17 +110,17 @@ def main():
         supported_modes = [
             'dialog',
             'html',
+            'SL4A',
             'term',
             'Tk',
             'wx',
             'zenity'
         ]
-                
-        # This bit is a little hacky
+
         if args_dict['shell'] not in (supported_modes + ['?', None]):
             args_dict['shell'] = CONFIG.config_dict['shell']
             Terminal.output('\nsupported modes: ' + str(supported_modes)[1:-1] + '\n')
-                
+
         nochangeneeded = noeditcommand
         for key in args_dict.keys():
             if lookup(key) == args_dict[key]:
@@ -120,7 +128,6 @@ def main():
 
     if nochangeneeded is False:
         edit_config_file()
-
 
     keylabel_list = [
         'mode',
@@ -135,7 +142,7 @@ def main():
            nocommand is True or args_dict[key_name] == '?':
             string += generate_msg(key_name, key_label)
 
-            
+
     if len(string) > 0:
         Terminal.output(string + '\n')
 
@@ -143,12 +150,13 @@ def main():
         Terminal.output('')
         easycat.view_source(FILENAME)
 
-    delta_t = 0.3
     if verbose > 0 and nochangeneeded is False:
         Terminal.output('')
         report_str = Terminal.report_filesave(FILENAME, get_str=True)
 
         def print_and_wait():
+            """Print a message, and then wait"""
+            delta_t = 0.3
             Terminal.output(report_str)
             time.sleep(delta_t)
 
