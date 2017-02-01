@@ -49,7 +49,7 @@ if len(sys.argv[1:]) == 0:
         Terminal.output('')
         cycle_thru_ansiboxes(delta_t=0.1)
     finally:
-        Terminal.output('')        
+        Terminal.output('')
         Terminal.unhide_cursor()
         Terminal.start_app()
         sys.exit()
@@ -78,7 +78,7 @@ def main():
     new_color = Color(ARGS.value, ARGS.type)
     SHELL.output(new_color)
     Terminal.output('Truecolor is {}.\n'.format(ARGS.t))
-    new_color.draw_box(tc_on=ARGS.t)
+    new_color.draw_box(tc_on=ARGS.t, label_type=ARGS.type)
     Terminal.output('\n')
 
 if __name__ == '__main__':
