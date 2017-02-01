@@ -3,8 +3,6 @@
 """
 Provides a convenient interface for launching or editing scripts in pkg cjh.
 """
-__author__ = 'Chris Horn <hammerhorn@gmail.com>'
-
 import argparse
 import os
 import subprocess
@@ -24,8 +22,11 @@ from versatiledialogs.config import Config
 from versatiledialogs.lists import PlainList
 from versatiledialogs.terminal import Terminal
 
+__author__ = 'Chris Horn <hammerhorn@gmail.com>'
+
 REMARKS = """
     fix errors
+    - does not work with zenity
     """
 
 def _parse_args():
@@ -131,7 +132,8 @@ def setup_tk_window():
                            command=lambda: run_script(choose_file(SCRIPT_LIST),
                                                       select_shell(SHELL_LIST)))
     run_button.pack(side=tk.LEFT)
-    edit_button = tk.Button(buttonbar, text='Edit',
+    edit_button = tk.Button(
+        buttonbar, text='Edit',
         command=lambda: open_in_editor(choose_file(SCRIPT_LIST)))
     edit_button.pack(side=tk.LEFT)
     buttonbar.pack(side=tk.TOP)
@@ -180,7 +182,7 @@ else:
     SHELL = CONFIG.start_user_profile()
 
 notebook(REMARKS)
-    
+
 SCRIPT_LIST = [
     s for s in os.listdir(os.getcwd())
     if (s.endswith('py') and not (s.startswith('.') or s.startswith('_')))
@@ -202,8 +204,8 @@ def main():
     """Launch an interface, i.e., main loop."""
     if SHELL.interface in ['term', 'dialog', 'zenity']:
         while True:
-            f = lambda: SHELL.list_menu(MENU_OPTS)
-            action = Terminal.make_page(func=f)
+            menu_func = lambda: SHELL.list_menu(MENU_OPTS)
+            action = Terminal.make_page(func=menu_func)
             if action == 1:
                 scriptname = choose_file(SCRIPT_LIST)
                 MENU_OPTS.items[0] = scriptname

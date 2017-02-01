@@ -2,7 +2,7 @@
 """
 Reads from and write to the config file, 'config.json'.
 """
-import argparse, copy, sys
+import argparse, copy, sys, time
 
 import easycat
 from versatiledialogs.config import Config
@@ -70,13 +70,19 @@ def main():
         args_dict = copy.deepcopy(ARGS.__dict__)
         verbose = 0 if args_dict['v'] is None else args_dict['v']
         del args_dict['v']
-        noeditcommand = True if args_dict.values() == [None, None, None, None, None] else False
 
+        nocommand = True if args_dict.values() == [None, None, None, None, None] else False
+        noeditcommand = True
+        for value in args_dict.values():
+            if value is not None and value != '?':
+                noeditcommand = False                
+        
         nochangeneeded = noeditcommand
         for key in args_dict.keys():
             if lookup(key) == args_dict[key]:
                 nochangeneeded = True  # needs more efficiency
-        
+                
+                #        print nochangeneeded
     if nochangeneeded is False:
         edit_config_file()
 
@@ -84,7 +90,7 @@ def main():
     keylabel_list = ['versatiledialogs mode', 'default text editor', 'default terminal emulator', 'language', 'default web browser']
         
     for key_name, key_label in zip(keyname_list, keylabel_list): 
-        if (verbose > 0 and args_dict[key_name] is not None) or noeditcommand is True or args_dict[key_name] == '?':
+        if (verbose > 0 and args_dict[key_name] is not None) or nocommand is True or args_dict[key_name] == '?':
             string += generate_msg(key_name, key_label)
 
     if len(string) > 0:
@@ -95,7 +101,8 @@ def main():
         easycat.view_source(FILENAME)
     if verbose > 0 and nochangeneeded is False:
         Terminal.output('')
-        Terminal.report_filesave(FILENAME)
+        Terminal.report_filesave(FILENAME, fast=True)
+        time.sleep(0.5)
         Terminal.clear(2)
         Terminal.report_filesave(FILENAME, fast=True)
 
