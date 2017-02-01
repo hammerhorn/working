@@ -145,7 +145,7 @@ def choose_file(script_list_):
         val = menu1.curselection()
         scriptname_ = script_list_[val[0]]
 
-    elif SHELL.interface == 'term':
+    elif SHELL.interface in ['dialog', 'term']:
         listobj = PlainList(script_list_)
         script_menu = lambda: SHELL.list_menu(listobj)
         number = Terminal.make_page(func=script_menu)
@@ -157,7 +157,7 @@ def select_shell(shell_list_):
     """
     Select shell to use.
     """
-    if SHELL.interface == 'term':
+    if SHELL.interface in ['dialog', 'term']:
         listobj = PlainList(shell_list_)
         shell_menu = lambda: SHELL.list_menu(listobj)
         number = Terminal.make_page(func=shell_menu)
