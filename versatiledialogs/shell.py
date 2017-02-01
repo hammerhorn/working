@@ -226,7 +226,7 @@ class Shellib(object):
         return pickle.load(a_file)
 
     @classmethod
-    def report_filesave(cls, filename, fast=False):
+    def report_filesave(cls, filename, fast=False, get_str=False):
         """
         Prints a brief message about size and modification date on a
         specified file.
@@ -239,7 +239,9 @@ class Shellib(object):
             filesize_str = '{} bytes'.format(int_bytes) 
         message = "'{}': {}, {}".format(
             filename, filesize_str, time.ctime(stats.st_ctime))
-        if cls.interface == 'SL4A' or fast is True:
+        if get_str is True:
+            return message
+        elif cls.interface == 'SL4A' or fast is True:
             cls.notify(message)
         else:
             cls.message(message)

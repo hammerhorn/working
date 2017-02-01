@@ -40,6 +40,8 @@ class Config(object):
         else:
             self.basedir = 'versatiledialogs'
         self.sh_class = Terminal()
+
+
         try:
             self.read_config_file()
         except IOError:

@@ -17,13 +17,13 @@ configuration.
     terminal - name of terminal emulator, e.g., 'terminator -x '
       editor - default text editor, e.g., emacs, vi, gedit, ...
     language - 'EN' and 'EO' will be supported
-     browser - default web browser                                          
+     browser - default web browser
 
 
-Examples: 
+Examples:
 
 ./prefs.py -s term (Sets the default shell to 'term')
-./prefs.py -l en (Sets the default language to English))
+./prefs.py -l en (Sets the default language to English)
 """
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
