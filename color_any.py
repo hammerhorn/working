@@ -47,7 +47,7 @@ if len(sys.argv[1:]) == 0:
     Terminal.hide_cursor()
     try:
         Terminal.output('')
-        cycle_thru_ansiboxes()
+        cycle_thru_ansiboxes(delta_t=0.1)
     finally:
         Terminal.output('')        
         Terminal.unhide_cursor()
