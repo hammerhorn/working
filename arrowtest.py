@@ -32,7 +32,7 @@ def get_arrow_key():
             pressed = Terminal.get_keypress()
             direction = code_dict.get(pressed, None)
     return direction
-
+           
 
 def main():
     """

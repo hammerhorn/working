@@ -2,12 +2,6 @@
 """
 Read from command line args or stdin, converting to Morse code.
 """
-
-REMARKS = """
-    - figure out multitasking
-    - add Tk
-    + build it into the letter object"""
-
 import sys
 import time
 
@@ -16,9 +10,18 @@ from cjh.letter import Letter
 import easycat
 from versatiledialogs.terminal import Terminal
 
+
+REMARKS = """
+    - figure out multitasking
+    - add Tk
+    + build it into the letter object"""
+
 Terminal()
 
 def play_and_print(char):
+    """
+    write dots and dashes while also playing audible Morse code sounds
+    """
     try:
         letter = Letter(char)
         easycat.write(letter.morse + ' ')
