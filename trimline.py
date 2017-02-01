@@ -47,14 +47,14 @@ def main():
     preview_string = ''
     for index, _ in enumerate(lines_of_text):
         string += lines_of_text[index].rstrip() + '\n'
-        preview_string = string.strip() + Terminal.fx('b', 'EOL')
-    pydoc.pipepager(preview_string, cmd='less -R')
+        # preview_string = string.strip() + Terminal.fx('b', 'EOL')
+    # pydoc.pipepager(preview_string, cmd='less -R')
     try:
-        char = Terminal.get_keypress('Write to file?')
-        assert char == 'y'
+        # char = Terminal.get_keypress('Write to file?')
+        # assert char == 'y'
         file_handler.write(string)
-    except AssertionError:
-        Terminal.output('File not saved.  Good bye.')
+    #except AssertionError:
+    #    Terminal.output('File not saved.  Good bye.')
     finally:
         file_handler.close()
 
