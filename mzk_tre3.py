@@ -23,28 +23,20 @@ def _parse_args():
         '-C', action='store_true', help="see developer's comments")
     parser.add_argument(
         '-n', '--length', help="notes/scale, row, etc....", nargs='?')
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else: args = None
+    args = parser.parse_args() if __name__ == '__main__' else None
     return args
 
 
-def build_main_menu():
+def find_tonecount():
     """
-    Populate and return the main menu as a ListPrompt object
+    return default value of 12, unless specified in command-line args
     """
-    menu_list = [
-        'Play',
-        'Transform',
-        'Visualize',
-        'Play as MIDI',
-        'Shuffle',
-        'Quit (Ctrl-C)']
-    for index in range(1, 4):
-        menu_list[index] = SHELL.emphasis(menu_list[index])
-    menu = ListPrompt(menu_list)
-    menu_obj = menu
-    return menu_obj
+    try:
+        if ARGS is not None and ARGS.length is not None:
+            return int(ARGS.length)
+        else: return 12
+    except ValueError:
+        return 12
 
 
 REMARKS = """
@@ -74,18 +66,6 @@ if __name__ == '__main__':
 
     notebook(REMARKS)
 
-def find_tonecount():
-    """
-    return default value of 12, unless specified in command-line args
-    """
-    try:
-        if ARGS is not None and ARGS.length is not None:
-            return int(ARGS.length)
-        else: return 12
-    except ValueError:
-        return 12
-
-
 TONE_COUNT = find_tonecount()
 HEADER = 'TONE ROW EDITOR'
 MICROTONE_WARNING = """
@@ -100,6 +80,25 @@ MICROTONE_WARNING = """
  
  
 """ + '\n' * (TONE_COUNT - 5)
+
+
+def build_main_menu():
+    """
+    Populate and return the main menu as a ListPrompt object
+    """
+    menu_list = [
+        'Play',
+        'Transform',
+        'Visualize',
+        'Play as MIDI',
+        'Shuffle',
+        'Quit (Ctrl-C)']
+    for index in range(1, 4):
+        menu_list[index] = SHELL.emphasis(menu_list[index])
+    menu = ListPrompt(menu_list)
+    menu_obj = menu
+    return menu_obj
+
 
 def main():
     """
