@@ -4,7 +4,6 @@
 Removes trailing whitespace.
 """
 import argparse
-import pydoc
 import sys
 import traceback
 
@@ -24,6 +23,10 @@ def _parse_args():
     return args
 
 
+Terminal()
+ARGS = _parse_args()
+
+
 def main():
     """
     Reads in a specified file, removes trailing whitespace, and re-saves.
@@ -41,25 +44,14 @@ def main():
     file_handler.truncate()
 
     # Preview and write text back to file and close file
-    #Terminal.output(lines_of_text)
-    #Terminal.wait()
     string = ''
-    preview_string = ''
     for index, _ in enumerate(lines_of_text):
         string += lines_of_text[index].rstrip() + '\n'
-        # preview_string = string.strip() + Terminal.fx('b', 'EOL')
-    # pydoc.pipepager(preview_string, cmd='less -R')
     try:
-        # char = Terminal.get_keypress('Write to file?')
-        # assert char == 'y'
         file_handler.write(string)
-    #except AssertionError:
-    #    Terminal.output('File not saved.  Good bye.')
     finally:
         file_handler.close()
 
-Terminal()
-ARGS = _parse_args()
 
 if __name__ == '__main__':
     notebook("""    - add text-wrapping
