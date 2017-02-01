@@ -16,7 +16,7 @@ Examples:
     ./prefs.py         (Lists all keys and their values)
     ./prefs.py -s term (Sets the default shell to 'term')
     ./prefs.py -l en   (Sets the default language to English)
-    ./prefs.py -b \\?   (Echos back the selected web browser)
+    ./prefs.py -b \\?   (Echos back the name of the default web browser)
 """
 import argparse
 import copy
@@ -26,40 +26,45 @@ import time
 import easycat
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
-#from cjh.misc import catch_help_flag
+from cjh.misc import notebook  # catch_help_flag
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
 REMARKS = """
-    + include brower
     - go game client
-    - use dict.get()"""
+    + include brower
+    + use dict.get()"""
 
 
 def _parse_args():
     """
     Parse command-line arguments
     """
+    notebook(REMARKS)
+#    if '-C' in sys.argv[1:]:
+#        del sys.argv[sys.argv.index('-C')]
+
     helpflag = True if {'-h', '--help'} & set(sys.argv[1:]) else False
     if helpflag is True:
         Terminal.output('')
-
     try:
         parser = argparse.ArgumentParser(
             description="Edit or view settings for 'versatiledialogs' package." +
-            "  Writes to 'config.json'.  Type 'pydoc prefs' for more.")
+            "  Writes to 'config.json'.  Type 'pydoc prefs' for more info.")
         parser.add_argument('--shell', '-s', type=str, help='set shell')
         parser.add_argument('--editor', '-e', type=str, help='set editor')
         parser.add_argument('--terminal', '-t', type=str, help='set terminal')
         parser.add_argument('--language', '-l', type=str, help='set language')
         parser.add_argument('--browser', '-b', type=str, help='set browser')
-        parser.add_argument('-v', action='count')
+        parser.add_argument(
+            '-v', action='count', help="verbose; the more v's, the more vebose")
         args = parser.parse_args()
     finally:
         if helpflag:
             Terminal.output('')
     return args
+
 
 ARGS = _parse_args() if __name__ == '__main__' else None
 CONFIG = Config()
@@ -146,23 +151,15 @@ def main():
     if len(string) > 0:
         Terminal.output(string + '\n')
 
-    if verbose >= 3 or (noeditcommand is True and verbose >= 1):
+    if verbose >= 2 or (noeditcommand is True and verbose >= 1):
         Terminal.output('')
         easycat.view_source(FILENAME)
 
     if verbose > 0 and nochangeneeded is False:
         Terminal.output('')
-        report_str = Terminal.report_filesave(FILENAME, get_str=True)
-
-        def print_and_wait():
-            """Print a message, and then wait"""
-            delta_t = 0.3
-            Terminal.output(report_str)
-            time.sleep(delta_t)
-
-        print_and_wait()
-        Terminal.clear(2)
-        print_and_wait()
+        Terminal.clear(1)
+        Terminal.report_filesave(FILENAME, fast=True)
+        Terminal.output('')
 
 if __name__ == '__main__':
     main()
