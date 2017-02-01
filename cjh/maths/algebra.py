@@ -9,10 +9,8 @@ import sys
 import traceback
 
 from cjh.letterator import Letter
-from cjh.fiziko.scalars import Minusable
-
+from fiziko.scalars import Minusable
 from things import Thing
-
 from versatiledialogs.lists import PlainList
 from versatiledialogs.terminal import Terminal
 

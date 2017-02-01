@@ -20,12 +20,12 @@ except ImportError:
 
 from termcolor import colored
 
-import easycat
-from cjh.fiziko.kinematics import Disp
-from cjh.fiziko.scalars import Scalar, Unit
 from cjh.letterator import Letter
 from cjh.maths.algebra import Polynom
 from cjh.maths.angles import Angle
+import easycat
+from fiziko.kinematics import Disp
+from fiziko.scalars import Scalar, Unit
 from things import Thing
 from versatiledialogs.lists import Enumeration, ItemList, PlainList
 from versatiledialogs.terminal import Terminal
