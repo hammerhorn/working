@@ -45,7 +45,7 @@ def draw(fen_list):
 def main():
     """ Main function """
     # Use class Section from cjh.doc_format
-    board_position = rank_list() if len(sys.argv[1:]) == 0 else set_board(
+    board_position = rank_list() if len(sys.argv[1:]) == 0 else rank_list(
         sys.argv[1])
     SHELL.output(draw(board_position), height=200)
 
