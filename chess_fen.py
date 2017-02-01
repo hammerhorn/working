@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 Convert chessboard position in Forsythe-Edwards notation to an ASCII diagram and
-print to standard output.
+print board position to standard output.
 """
 import sys
 
@@ -13,10 +13,18 @@ from versatiledialogs.terminal import Terminal
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
-"""
-    converts strings of Forsythe-Edwards board notation and draws the board
-    position
-"""
+
+REMARKS = """
+    - try to get OO version up and running"""
+
+notebook(REMARKS)
+Terminal()
+SHELL = Config().start_user_profile()
+if SHELL.platform != 'android':
+    catch_help_flag('\nusage: {} [FEN_NOTATION_STR]\n'.format(
+        sys.argv[0].replace('./', '')) + __doc__, SHELL)
+
+
 def rank_list(fen_str='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'):
     fen_list = fen_str.split('/')
     return fen_list
@@ -33,16 +41,6 @@ def draw(fen_list):
     out_str += '\n' # end with a newline
     return out_str
 
-
-REMARKS = """
-    - try to get OO version up and running"""
-
-notebook(REMARKS)
-Terminal()
-SHELL = Config().start_user_profile()
-if SHELL.platform != 'android':
-    catch_help_flag('\nusage: {} [FEN_NOTATION_STR]\n'.format(
-        sys.argv[0].replace('./', '')) + __doc__, SHELL)
 
 def main():
     """ Main function """
