@@ -218,16 +218,17 @@ def main():
     """
     Main function
     """
-    menu_obj = build_main_menu()
-    main_func = lambda: SHELL.list_menu(menu_obj)
-
+    # Data
     row = Tonerow(length=TONE_COUNT, sh_obj=SHELL)
     obj_str = row.draw(get_str=True)
-
+    menu_obj = build_main_menu()
+    main_func = lambda: SHELL.list_menu(menu_obj)
     trans_head = menu_obj.items[1]
     vmenu_head = menu_obj.items[2]
     midi_head = menu_obj.items[3]
 
+
+    # Main Menu
     while True:
         if SHELL.interface == 'term':
             pressed = TERM.make_page(HEADER, obj_str, main_func)
@@ -257,3 +258,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    SHELL.start_app()
