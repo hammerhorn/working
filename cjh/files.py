@@ -6,7 +6,7 @@ DOCSTRING
 import glob
 import os
 
-from versatiledialogs import terminal, ListPrompt
+from versatiledialogs.terminal import Terminal, ListPrompt
 import easycat
 #from cjh.cli import Cli, ListPrompt
 #from cjh.lists import ItemList
@@ -20,7 +20,7 @@ class Fileman(object):
     """
 
     def __init__(self):
-        terminal.Terminal()
+        Terminal()
 
     @classmethod
     def pwd(cls, getstr=False):
@@ -31,45 +31,55 @@ class Fileman(object):
         if getstr:
             return string
         else:
-            terminal.Terminal.output(string)
+            Terminal.output(string)
 
     @classmethod
-    def mc(cls):
-        list_prompt = ListPrompt(['..'] + cls.ls(opts=['B'], get_list=True))
-        if len(list_prompt) > terminal.Terminal.height():
+    def commander(cls):
+        """
+        inspired by midnight commander
+        """
+        list_prompt = ListPrompt(['..'] + cls.list_files(opts=['B'], get_list=True))
+        if len(list_prompt) > Terminal.height():
             easycat.less(str(list_prompt))
-        response = terminal.Terminal.make_page(
+        response = Terminal.make_page(
             header=cls.pwd(getstr=True),
             func=list_prompt.input)
         if response == 1:
             os.chdir(list_prompt[response - 1])
-            cls.mc()
+            cls.commander()
         elif list_prompt[response - 1].endswith('/'):
             os.chdir(list_prompt[response - 1][:-1])
-            cls.mc()
+            cls.commander()
         else: return list_prompt[response - 1]
 
     @staticmethod
-    def ls(*args, **kwargs):
+    def list_files(*args, **kwargs):
         """
         Emulate 'ls' command
         """
+        file_list = []
+
+        # if no args, add all files in dir to list
         if len(args) == 0:
             cwd = os.getcwd()
             file_list = os.listdir(cwd)
+
+        # else, add the requested files
         else:
-            file_list = []
             for arg in args:
                 file_list += glob.glob(arg)
 
+        # if opts='B', filter out emacs backup files
         if 'opts' in kwargs and 'B' in kwargs['opts']:
             file_list = [
                 file_ for file_ in file_list if not file_.endswith('~')
             ]
 
+        # sort
         file_list.sort(key=str.lower)
-        dir_list = []
 
+        # opts='F' ->  'directory/', 'executable*'
+        dir_list = []
         if 'opts' in kwargs and 'F' in kwargs['opts']:
             for index, file_ in enumerate(file_list):
                 if os.path.isdir(file_):
@@ -80,11 +90,18 @@ class Fileman(object):
 
         if 'get_list' not in kwargs or kwargs['get_list'] is not True:
             string = ''
-            for dir_ in dir_list:
-                string += (dir_ + '\n')
-            for file_ in file_list:
-                string += (file_ + '\n')
-            if len(dir_list) + len(file_list) + 1 > terminal.Terminal.height():
+
+            def create_list(items):
+                """turn a Python list into a str with an item on each line"""
+                list_str = ''
+                for item in items:
+                    list_str += (item + '\n')
+                return list_str
+
+            string += create_list(dir_list)
+            string += create_list(file_list)
+
+            if len(dir_list) + len(file_list) + 1 > Terminal.height():
                 easycat.less(string)
             else:
                 easycat.write(string.strip())
