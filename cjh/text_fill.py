@@ -6,6 +6,8 @@ Set some maximum lengths and zero out sentence_count
 """
 from random import randint
 
+from ranges import gen_range
+
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
@@ -21,7 +23,7 @@ class TextGen(object):
         Words will be between 1 and WORD_MAXLENGTH letters long.
         """
         word = ''
-        for _ in range(randint(1, cls.WORD_MAXLENGTH)):
+        for _ in gen_range(randint(1, cls.WORD_MAXLENGTH)):
             word += chr(randint(97, 122))
         return word
 
@@ -31,7 +33,7 @@ class TextGen(object):
         Sentences will have exactly SENTENCE_LENGTH words.
         """
         sentence = cls.word().capitalize()
-        for _ in range(1, cls.SENTENCE_LENGTH):
+        for _ in gen_range(1, cls.SENTENCE_LENGTH):
             sentence += ' ' + cls.word()
         sentence += '.'
         return sentence

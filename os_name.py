@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Displays sytem info.  Works with bash or Tk.
 """

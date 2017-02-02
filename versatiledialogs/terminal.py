@@ -22,6 +22,7 @@ from colorama import Fore, Back, Style
 # Local modules
 import easycat
 from colorful.ansi import Ansi
+from ranges import gen_range
 from versatiledialogs.lists import Enumeration, PlainList
 from versatiledialogs.shell import Shellib
 
@@ -116,7 +117,7 @@ class Terminal(Shellib):
         # if arg > 0, erase that many lines back (.i.e., up)
         elif args[0] > 0:
             easycat.write('\r\033[K')
-            for _ in xrange(args[0]):
+            for _ in gen_range(args[0]):
                 cls.cursor_v(1)
                 easycat.write('\r\033[K')
 
@@ -419,9 +420,10 @@ class Terminal(Shellib):
         in the current directory
         """
         if cls.platform != 'android':
-            file_name = sys.argv[0].split('/')[-1].split('.')[0] + '.tmp'
-            fhandler = open(file_name, 'w')
-            fhandler.close()
+            super(Terminal, cls).start_app()
+            #file_name = sys.argv[0].split('/')[-1].split('.')[0] + '.tmp'
+            #fhandler = open(file_name, 'w')
+            #fhandler.close()
 
     @classmethod
     def text_splash(cls, text, duration=2.0, flashes=1, v_center=True):
@@ -456,7 +458,7 @@ class Terminal(Shellib):
        # message_on()
         cls.hide_cursor()
         try:
-            for _ in xrange(int(flashes)):
+            for _ in gen_range(int(flashes)):
                 message_on()
                 message_off()
         finally:

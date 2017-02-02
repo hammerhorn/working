@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Accepts a valid color name (e.g., 'red') or hex string (e.g., '#FF0000'),
 and the window becomes that color.

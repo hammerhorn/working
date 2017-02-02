@@ -102,6 +102,7 @@ class HtmlShell(Shellib):
 #      <input type="submit" value="Submit">
 #    </form>
 #
+
 #<!--    <p>Note that the form itself is not visible.</p>
 #
 #    <p>Also note that the default width of a text input field is 20 characters.

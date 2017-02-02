@@ -5,6 +5,7 @@ docSTRING
 """
 import textwrap
 
+from ranges import gen_range
 from things import Thing
 from versatiledialogs.terminal import Terminal
 
@@ -43,13 +44,13 @@ class Paragraph(Thing):
             pstr += '¶'
         else: pstr += ' '
         pstr += ' ' * (self.lmargin - 1) + lines2[0] + '\n'
-        for index in range(1, len(lines2)):
+        for index in gen_range(1, len(lines2)):
             pstr += ' ' * self.lmargin + lines2[index] + '\n'
         return pstr
 
     def __mul__(self, multi):
         plist = []
-        for _ in range(multi):
+        for _ in gen_range(multi):
             plist.append(self)
         return Section(p_list=plist)
 
@@ -110,7 +111,7 @@ class Paragraph(Thing):
         buf = self.buffer
         lines = []
         line_cnt = len(buf) / self.width + 1
-        for _ in range(line_cnt):
+        for _ in gen_range(line_cnt):
             if len(buf) >= self.width:
                 lines.append(buf[0:self.width - 1])
                 buf = buf[self.width - 1:]

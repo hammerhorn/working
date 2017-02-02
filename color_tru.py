@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #coding=utf8
 """
 Comparison of Truecolor terminal color and Colortrans conversion script
@@ -10,6 +10,7 @@ import time
 
 from colorful import color
 import easycat
+from ranges import gen_range
 from versatiledialogs.terminal import Terminal
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
@@ -63,44 +64,44 @@ def main():
     Terminal.cursor_v(4)
     try:
         #Fade from black to red
-        for val in xrange(256):
+        for val in gen_range(256):
             side_by_side(val, 0, 0)
         Terminal.wait()
         Terminal.hide_cursor()
 
-        for _ in xrange(50):
+        for _ in gen_range(50):
             #Fade from red to yellow
-            for val in xrange(256):
+            for val in gen_range(256):
                 side_by_side(255, val, 0)
             Terminal.wait()
             Terminal.hide_cursor()
 
             #Fade from yellow to green
-            for val in xrange(256):
+            for val in gen_range(256):
                 side_by_side(255 - val, 255, 0)
             Terminal.wait()
             Terminal.hide_cursor()
 
             #Fade from green to cyan
-            for val in xrange(256):
+            for val in gen_range(256):
                 side_by_side(0, 255, val)
             Terminal.wait()
             Terminal.hide_cursor()
 
             #Fade from cyan to blue
-            for val in xrange(256):
+            for val in gen_range(256):
                 side_by_side(0, 255 - val, 255)
             Terminal.wait()
             Terminal.hide_cursor()
 
             #Fade from blue to magenta
-            for val in xrange(256):
+            for val in gen_range(256):
                 side_by_side(val, 0, 255)
             Terminal.wait()
             Terminal.hide_cursor()
 
             #Fade from magenta to red
-            for val in xrange(256):
+            for val in gen_range(256):
                 side_by_side(255, 0, 255 - val)
             Terminal.wait()
             Terminal.hide_cursor()

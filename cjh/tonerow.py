@@ -5,19 +5,16 @@ Contains Tonerow class.
 
 Ought to be merged with <cjh.music> module
 """
-#import itertools
-#import os
 import random
-# import string
 import subprocess
 
 from termcolor import colored
 
-#from cjh import cli
-from versatiledialogs.terminal import Terminal
 from cjh.music import Pitch, PitchSequence, PitchSet
-from things import Thing
 from ranges import gen_range, lst_range
+from things import Thing
+from versatiledialogs.terminal import Terminal
+
 class Tonerow(Thing):
     """
     A shuffled, equal-tempered sequence in which each tone is used exactly once;

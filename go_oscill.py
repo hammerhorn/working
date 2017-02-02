@@ -11,7 +11,7 @@ import time
 
 from cjh.misc import notebook
 from cjh.tablegames.igo import Goban
-
+from ranges import gen_range
 from versatiledialogs.terminal import Terminal
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
@@ -72,7 +72,7 @@ def main():
     current_frame_no = 0
 #    count = 0
     while True:
-        for i in xrange(
+        for i in gen_range(
                 -(goban.max_domain),
                 goban.max_domain + 1,
                 int(round(D_INTERVAL))
@@ -90,7 +90,7 @@ def main():
 
             #count += 1
 
-        for i in xrange(
+        for i in gen_range(
                 -(goban.max_domain - 1),
                 (goban.max_domain),
                 int(round(D_INTERVAL))

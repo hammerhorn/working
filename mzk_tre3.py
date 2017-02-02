@@ -9,7 +9,7 @@ import sys
 
 from cjh.misc import notebook
 from cjh.tonerow import Tonerow
-
+from ranges import gen_range
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal, ListPrompt
 
@@ -93,7 +93,7 @@ def build_main_menu():
         'Play as MIDI',
         'Shuffle',
         'Quit (Ctrl-C)']
-    for index in xrange(1, 4):
+    for index in gen_range(1, 4):
         menu_list[index] = SHELL.emphasis(menu_list[index])
     menu = ListPrompt(menu_list)
     menu_obj = menu

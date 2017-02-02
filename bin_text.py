@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Converts text from stdin into 1's and 0's and writes them to a file.
 With -d followed by the filename, the message is decoded and written to stdout.

@@ -261,9 +261,9 @@ class Shellib(object):
 
     @classmethod    
     def start_app(cls):
-        filename = sys.argv[0].split('/')[-1].split('.')[0]+ '.tmp'        
-        #try:
-        _file = open('__data__/' + filename, 'w')
-        _file.close()
-        #except:
-        #    cls.output('unable to write to file system')            
+        filename = sys.argv[0].split('/')[-1].split('.')[0]+ '.tmp'
+        try:
+            with open('__data__/' + filename, 'w') as _file:
+                pass
+        except:
+            cls.output('unable to write to file system')            

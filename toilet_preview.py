@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """
 Allow the user to preview the available fonts for toilet (or figlet).
+
+Python 2 only for now.
 """
 import argparse
 import atexit
@@ -86,22 +88,22 @@ def main():
     art = ''
     Terminal.hide_cursor()
     while True:
-        try:
+#        try:
             if SHELL.interface in ['dialog'] and not _first_pass:
                 Terminal.wait()
             else:
                 _first_pass = False
 
             selection = Terminal.make_page(
-                obj='\n' + art, func=lambda: SHELL.list_menu(LIST_OBJ))
+                obj='\n'+art, func=lambda: SHELL.list_menu(LIST_OBJ))
             if selection == -1:
                 break
             figlet_font = FONT_OPTIONS[selection - 1]
             fig_writer = Figlet(figlet_font, 'gay')
             art = fig_writer.output(PHRASE, get_str=True)
 
-        except (AttributeError, KeyboardInterrupt, TypeError):
-            sys.exit('\nBye.')
+#        except (AttributeError, KeyboardInterrupt, TypeError):
+#            sys.exit('\nBye.')
 
 if __name__ == '__main__':
     main()

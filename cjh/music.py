@@ -10,15 +10,14 @@ import subprocess
 import sys
 import time
 
-#from cjh.angles import Angle
 from fiziko.kinematics import Disp, Velocity
 from fiziko.scalars import Scalar, Unit
 from fiziko.waves import SoundWave
-
+from ranges import gen_range, lst_range
 from things import Thing
-
 from versatiledialogs.lists import ItemList
 from versatiledialogs.terminal import Terminal
+
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
@@ -416,7 +415,7 @@ class PitchSet(Thing):
         super(PitchSet, self).__init__()
         self.label = 'PitchSet #{}'.format(PitchSet.count)
         if pattern == None:
-            pattern = list(range(1, int(et+1)))
+            pattern = lst_range(1, int(et+1))
         #else:
         #    pattern =
         #    pattern = [ int(i) for i in pattern ]
@@ -425,7 +424,7 @@ class PitchSet(Thing):
             self.pitches = [start_pitch]
             del pattern[pattern.index(1)]
         else: self.pitches = []
-        for x in range(int(et) - 1):
+        for x in gen_range(int(et) - 1):
             if x + 2 in pattern:
                 f = float(start_pitch.freq.mag) * 2 ** ((x + 1) / float(et))
                 next_pitch = Pitch(freq=f)
@@ -450,7 +449,7 @@ class PitchSet(Thing):
         Note(self.pitches[0], .05).play()
         time.sleep(.03)
 #        for x in range(int(((20 + len(self.pitches)) / len(self.pitches) - 1)):
-        for x in range(int((20 + len(self.pitches)) / len(self.pitches))):
+        for x in gen_range(int((20 + len(self.pitches)) / len(self.pitches))):
             for pitch in self.pitches[1:]:
                 Note(pitch, .05).play(voice)
                 time.sleep(.03)

@@ -8,6 +8,8 @@ adapted from:
 <http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/>
     and
 <http://www.zombieprototypes.com/?p=210>
+
+python 2 only because it uses web.py
 """
 import argparse
 import os

@@ -14,6 +14,7 @@ except ImportError:
     NUMPY_AVAILABLE = False
 
 import easycat
+from ranges import gen_range
 from versatiledialogs.terminal import Terminal
 
 __author__ = 'Chris Horn'
@@ -190,7 +191,7 @@ class DataSet(object):
 
     def histogram(self):
         easycat.write('\n%3s:' % self.items[0])
-        for i in range(len(self)):
+        for i in gen_range(len(self)):
             easycat.write('[*]')
             try:
                 if self[i] != self[i + 1]:

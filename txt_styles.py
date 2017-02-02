@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #coding=utf8
 """
 Text Styles - If multiple colors arguments are given, the first one listed will

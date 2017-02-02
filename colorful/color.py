@@ -6,6 +6,7 @@ import colortrans
 
 from fiziko.waves import kelvin_to_rgb
 import easycat
+from ranges import gen_range
 from versatiledialogs.terminal import Terminal
 
 
@@ -198,7 +199,7 @@ class Color(object):
         write(15, 'ansi', 0, 'ansi', ('{:>' + str(spacing[0]) + '}').format(caption), truecolor=tc_on)
         write(self.hexstring, 'hex', self.hexstring, 'hex', ' ' * spacing[1], truecolor=tc_on)
         Terminal.output('')
-        for _ in xrange(9):
+        for _ in gen_range(9):
             easycat.write('  ')
             write(self.hexstring, 'hex', self.hexstring, 'hex', ' ' * 20, truecolor=tc_on)
             Terminal.output('')

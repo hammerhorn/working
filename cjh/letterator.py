@@ -7,6 +7,8 @@ in the same manner for capital letters.
 __author__ = 'Chris Horn'
 __license__ = 'GPL'
 
+from ranges import gen_range
+
 class Letter(object):
     """
     * Convert to closure or lambda of some kind? These two generators have a
@@ -20,7 +22,7 @@ class Letter(object):
         """Generates sequences of capital letters."""
         start_ord = ord(start_letter)
         if start_ord >= 65 and start_ord < 91:
-            letters = iter(range(start_ord, 91))
+            letters = iter(gen_range(start_ord, 91))
             while True:
                 try:
                     output = chr(next(letters))

@@ -21,7 +21,7 @@ except ImportError:
 from cjh.misc    import notebook
 from cjh.statset import DataSet
 from cjh.tablegames.die     import Die
-
+from ranges import gen_range
 from versatiledialogs.config   import Config
 from versatiledialogs.terminal import Terminal
 
@@ -72,8 +72,8 @@ def roll_and_output():
     elif SHELL.interface == 'Tk':
         _TOGGLE = not _TOGGLE  # make this into a generator
         if _TOGGLE is True:
-            SHELL.msg.config(fg='#FF00FF')#, bg='black')
-        else: SHELL.msg.config(fg='chartreuse')#, bg='black')
+            SHELL.msg.config(fg='#FF00FF')  # , bg='black')
+        else: SHELL.msg.config(fg='chartreuse')  # , bg='black')
 
         #if _toggle is True:
         #    SHELL.msg.config(fg='white', bg='black')
@@ -102,10 +102,8 @@ else:
     ARGS = None
 
 CONFIG = Config()
-if ARGS is not None and ARGS.shell is True:
-    SHELL = CONFIG.launch_selected_shell(ARGS.shell)
-else:
-    SHELL = CONFIG.start_user_profile()
+SHELL = CONFIG.launch_selected_shell(ARGS.shell) if ARGS is not None and\
+        ARGS.shell is True else CONFIG.start_user_profile()
 SHELL_NAME = SHELL.interface
 LANG = CONFIG.get_lang_key()
 
@@ -203,7 +201,7 @@ def main():
 
     if SHELL_NAME != 'Tk':
         try:
-            for _ in xrange(100):
+            for _ in gen_range(100):
                 if SHELL_NAME in ['term', 'dialog', 'zenity']:
                     if ARGS is not None and ARGS.anim:
                         DIE.animate() # make this return a value
@@ -215,10 +213,7 @@ def main():
                                                             # for dialog &
                                                             # window styles
 
-                #if SHELL.interface == 'term':
                 Terminal.wait('Press a key, ^C to end and see stats')
-                #elif SHELL.interface == 'zenity':
-                #    SHELL.wait('')
                 if ARGS.keep is False and ARGS.quiet is None:
                     Terminal.clear(11)
 

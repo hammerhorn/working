@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """A test of the Terminal.tty method.  Writes text to the screen one char at a time,
 like a teletype."""
 
