@@ -68,7 +68,6 @@ def main():
         Terminal.wait()
         Terminal.hide_cursor()
 
-
         for _ in range(50):
             #Fade from red to yellow
             for val in range(256):
