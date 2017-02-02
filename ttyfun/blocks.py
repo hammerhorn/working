@@ -56,7 +56,7 @@ def ellipses(msg):
     iters = 3
     try:
         Terminal.hide_cursor()
-        for _ in range(iters):
+        for _ in xrange(iters):
             time.sleep(delta_t)
             Terminal.cursor_h(-3, ' ')
             Terminal.cursor_h(2, '.')

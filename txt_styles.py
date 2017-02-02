@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 #coding=utf8
 """
-Text Styles
+Text Styles - If multiple colors arguments are given, the first one listed will
+              be used.
 
-colors: grey, red, green, yellow, blue, magenta, cyan, white
-styles: bold, dark, underline, blink, reverse, concealed
+Colors: grey, red, green, yellow, blue, magenta, cyan, white
+Styles: bold, dark, underline, blink, reverse, concealed
 """
 import argparse
 
@@ -46,8 +47,10 @@ def main():
         bgcolor = None
     string = easycat.cat(files=[ARGS.FILENAME], return_str=True)
     color = None
-    for index in range(len(ARGS.ATTRIBUTES)):
-        if ARGS.ATTRIBUTES[index] in [
+
+    styles = []
+    for style in ARGS.ATTRIBUTES:
+        if color is None and style in [
                 'grey',
                 'red',
                 'green',
@@ -56,16 +59,11 @@ def main():
                 'magenta',
                 'cyan',
                 'white']:
-            color = ARGS.ATTRIBUTES[index]
-            del ARGS.ATTRIBUTES[index]
-            break
+            color = style            
+        else:
+            styles += [style]
 
-    if bgcolor is not None:
-        cprint(string, color, bgcolor, attrs=ARGS.ATTRIBUTES)
-    elif color is not None:
-        cprint(string, color, attrs=ARGS.ATTRIBUTES)
-    else:
-        cprint(string, attrs=ARGS.ATTRIBUTES)
+    cprint(string, color, bgcolor, styles)
 
 if __name__ == '__main__':
     main()

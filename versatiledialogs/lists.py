@@ -103,14 +103,14 @@ class ItemList(VerticalList):
     """
     def __init__(self, items, heading=None):
         super(ItemList, self).__init__(items, heading)
+        self.bullet = '•'
 
 
     def __str__(self):
-        bullet = '•'
-        string = ' ' + super(ItemList, self).__str__()#1)
+        string = ' ' + super(ItemList, self).__str__()
         if len(self) > 0:
-            for index in range(len(self)):
-                string += '  {} {}\n'.format(bullet, self[index])
+            for item in self:
+                string += '  {} {}\n'.format(self.bullet, item)
         return string
 
 
@@ -127,6 +127,6 @@ class Enumeration(VerticalList):
         """
         string = super(Enumeration, self).__str__()
         if len(self) > 0:
-            for num in range(len(self)):
-                string += '{:>2}. {}\n'.format((num + 1), self[num])
+            for num, val in enumerate(self):
+                string += '{:>2}. {}\n'.format((num + 1), val)
         return string

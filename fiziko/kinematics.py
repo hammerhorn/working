@@ -196,7 +196,7 @@ class Velocity(Vector):
 
     def __mul__(self, other):
         total = Velocity()
-        for _ in range(other):
+        for _ in xrange(other):
             total += self
         return total
 

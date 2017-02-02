@@ -45,8 +45,8 @@ def main():
 
     # Preview and write text back to file and close file
     string = ''
-    for index, _ in enumerate(lines_of_text):
-        string += lines_of_text[index].rstrip() + '\n'
+    for line in lines_of_text:
+        string += line.rstrip() + '\n'        
     try:
         file_handler.write(string)
     finally:

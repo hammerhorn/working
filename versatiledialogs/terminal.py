@@ -116,7 +116,7 @@ class Terminal(Shellib):
         # if arg > 0, erase that many lines back (.i.e., up)
         elif args[0] > 0:
             easycat.write('\r\033[K')
-            for _ in range(args[0]):
+            for _ in xrange(args[0]):
                 cls.cursor_v(1)
                 easycat.write('\r\033[K')
 
@@ -456,7 +456,7 @@ class Terminal(Shellib):
        # message_on()
         cls.hide_cursor()
         try:
-            for _ in range(int(flashes)):
+            for _ in xrange(int(flashes)):
                 message_on()
                 message_off()
         finally:

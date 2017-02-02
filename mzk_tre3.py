@@ -93,7 +93,7 @@ def build_main_menu():
         'Play as MIDI',
         'Shuffle',
         'Quit (Ctrl-C)']
-    for index in range(1, 4):
+    for index in xrange(1, 4):
         menu_list[index] = SHELL.emphasis(menu_list[index])
     menu = ListPrompt(menu_list)
     menu_obj = menu

@@ -27,7 +27,7 @@ from versatiledialogs.terminal import Terminal
 
 def cycle_thru_ansiboxes(start=0, end=255, delta_t=0.25, tc=False):
     try:
-        for i in range(start, end + 1):
+        for i in xrange(start, end + 1):
             Color(i, 'ansi').draw_box(tc_on=tc, label_type='ansi')
             time.sleep(delta_t)
             if i != end:
@@ -198,7 +198,7 @@ class Color(object):
         write(15, 'ansi', 0, 'ansi', ('{:>' + str(spacing[0]) + '}').format(caption), truecolor=tc_on)
         write(self.hexstring, 'hex', self.hexstring, 'hex', ' ' * spacing[1], truecolor=tc_on)
         Terminal.output('')
-        for _ in range(9):
+        for _ in xrange(9):
             easycat.write('  ')
             write(self.hexstring, 'hex', self.hexstring, 'hex', ' ' * 20, truecolor=tc_on)
             Terminal.output('')

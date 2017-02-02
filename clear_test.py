@@ -10,15 +10,15 @@ from versatiledialogs.terminal import Terminal
 DELTA_T = 0.25
 
 Terminal()
-for line in range(Terminal.height()):
+for _ in xrange(Terminal.height()):
     Terminal.output('*' * Terminal.width())
 
-for n in range(7):
+for n in xrange(7):
     Terminal.clear(n)
     easycat.write('%d lines cleared\r' % n)
     time.sleep(DELTA_T)
 
-for n in range(7):
+for n in xrange(7):
     Terminal.clear(-n)
     easycat.write('%d lines cleared\r' % -n)
     time.sleep(DELTA_T)

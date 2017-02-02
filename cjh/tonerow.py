@@ -17,27 +17,36 @@ from termcolor import colored
 from versatiledialogs.terminal import Terminal
 from cjh.music import Pitch, PitchSequence, PitchSet
 from things import Thing
-
+from ranges import gen_range, lst_range
 class Tonerow(Thing):
     """
     A shuffled, equal-tempered sequence in which each tone is used exactly once;
     It really ought to inherit from pitchsequence, but fuck it
     """
     def __init__(self, length=12, int_list=None, sh_obj=Terminal()):
+        #self.gen_range = range(length) if Terminal.py_version == 3 else xrange(length)
+        #self.lst_range = list(range(length)) if Terminal.py_version == 3 else range(length)        
         super(Tonerow, self).__init__()
         # sh_obj should belong to Thing
         self.sh_obj = sh_obj
         if int_list is not None:
             self.seq = int_list
         else:
-            self.seq = list(range(length))
+            Terminal()
+
+            # Time some of these constructions
+            self.seq = lst_range(length)  # list(range(length)) if Terminal.py_version == 3 else\
+                       #range(length)
+
             index = length - 1
-            for count in range(length):
+            #itrbl = range(length) if Terminal.py_version == 3 else xrange(length)
+            for count in gen_range(length):  # itrbl:
                 max_index = index - count
                 random_index = random.randint(0, max_index)
                 self.seq[max_index], self.seq[random_index] =\
                     self.seq[random_index], self.seq[max_index]
-        self.pseq = PitchSequence(PitchSet(len(self.seq)), [i + 1 for i in self.seq])
+
+        self.pseq = PitchSequence(PitchSet(len(self)), [i + 1 for i in self.seq])
         self.basename = self.generate_basename()
 
     def __str__(self):
@@ -73,9 +82,9 @@ class Tonerow(Thing):
         """
         import matplotlib.pyplot as plt
         Terminal.output('\nClose Pyplot window to continue....')
-        plt.axis([-0.2, len(self.seq) - 0.8, -0.2, len(self.seq) - 0.8])
-        plt.plot(list(range(len(self.seq))), self.seq, 's--')#, ms=10.0)
-        plt.show()
+        plt.axis([-0.2, len(self) - 0.8, -0.2, len(self) - 0.8])
+        plt.plot(lst_range(len(self)), self.seq, 's--')  # , ms=10.0)
+        plt.show()  # list/range -- edit this
 
     def draw(self, get_str=False):#, shell_name='bash'):
         """
@@ -94,9 +103,10 @@ class Tonerow(Thing):
 
         out_str += '\n'
 
-        for row in range(maximum):
+        #gen_rng = range(maximum) if Terminal.py_version == 3 else xrange(maximum)
+        for row in gen_range(maximum):
             str_row = ' {:>2} '.format(maximum - row - 1)
-            for index in range(maximum):
+            for index in gen_range(maximum):
                 if self.seq[index] == maximum - row - 1:
                     if self.sh_obj.interface == 'term':
                         if self.sh_obj.os_name == 'posix':
@@ -302,17 +312,17 @@ K: C
         shift horizontally
         """
         if cols >= 0:
-            for _ in range(cols):
+            for _ in gen_range(cols):
                 self.seq = [self.seq[-1]] + self.seq[:-1]
         else:
-            for _ in range(abs(cols)):
+            for _ in gen_range(abs(cols)):
                 self.seq = self.seq[1:] + [self.seq[0]]
 
     def shift_v(self, rows):
         """
         shift vertically
         """
-        for index in range(len(self)):
+        for index in gen_range(len(self)):  # for tone in self:?
             self.seq[index] = self.seq[index] + rows
             if self.seq[index] >= len(self):
                 self.seq[index] -= len(self)

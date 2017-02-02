@@ -72,7 +72,7 @@ def main():
     current_frame_no = 0
 #    count = 0
     while True:
-        for i in range(
+        for i in xrange(
                 -(goban.max_domain),
                 goban.max_domain + 1,
                 int(round(D_INTERVAL))
@@ -90,7 +90,7 @@ def main():
 
             #count += 1
 
-        for i in range(
+        for i in xrange(
                 -(goban.max_domain - 1),
                 (goban.max_domain),
                 int(round(D_INTERVAL))

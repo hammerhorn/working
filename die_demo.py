@@ -203,7 +203,7 @@ def main():
 
     if SHELL_NAME != 'Tk':
         try:
-            for _ in range(100):
+            for _ in xrange(100):
                 if SHELL_NAME in ['term', 'dialog', 'zenity']:
                     if ARGS is not None and ARGS.anim:
                         DIE.animate() # make this return a value
