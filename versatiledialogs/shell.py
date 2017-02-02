@@ -77,7 +77,7 @@ class Shellib(object):
         if cls.platform == 'Windows':  # does this hurt anything if it
                                        # runs in posix?
             filename = filename.split('\\')[1]
-        if filename not in os.listdir(os.getcwd()):
+        if filename not in os.listdir(os.getcwd() + '/__data__/'):
             try:
                 _file = open('__data__/' + filename, 'w')
                 _file.close()

@@ -7,6 +7,7 @@ import os
 import random
 import subprocess
 import sys
+import time
 
 try:
     import androidhelper as android
@@ -51,6 +52,10 @@ class DialogGui(Terminal):
         #        'Starting {} interface.'.format(self.__class__.interface))
 
 
+#    @classmethod
+#    def start_app(cls):
+#        super(DialogGui, cls).start_app()
+        
     ##################
     # SHARED METHODS #
     ##################
@@ -79,26 +84,12 @@ class DialogGui(Terminal):
         Output dialog with mono font.
         """
         # There should really be an operator....
-        try:
-            msg = kwargs['msg']
-        except:
-            pass
-        try:
-            heading = kwargs['heading']
-        except:
-            pass
-        try:
-            width = kwargs['width']
-        except:
-            pass
-        try:
-            height = kwargs['height']
-        except:
-            pass
-        try:
-            file_ = kwargs['file_']
-        except:
-            pass
+        msg = kwargs.get('msg', None)
+        heading = kwargs.get('heading', None)
+        width = kwargs.get('width', None)        
+        height = kwargs.get('height', None)
+        file_ = kwargs.get('file_', None)
+
         if cls.interface == 'dialog':
             cls.output(msg, heading, width, height)
         elif cls.interface == 'SL4A':
@@ -150,7 +141,9 @@ class DialogGui(Terminal):
     def wait(cls, msg='Continue'):
         """Requires that user click 'OK' before going on."""
         if cls.interface in ['dialog']:
-            os.system('dialog --pause "{}" 10 40 3'.format(msg))
+            #os.system('dialog --pause "{}" 10 40 3'.format(msg))
+            #time.sleep(2)
+            super(DialogGui, cls).wait()
         else: cls.message(msg)
 
     @classmethod
@@ -216,8 +209,9 @@ class DialogGui(Terminal):
         elif cls.interface in ['SL4A']:
             return cls.radio_button_dialog(list_obj.label, list_obj.items)
         elif cls.interface in ['zenity']:
-            cmd = 'zenity --list --text="View list:" --column="{0}" --title="{0\
-                }" --height=300 --hide-header'.format(list_obj.label)
+            cmd = 'zenity --list --text="View list:" ' +\
+                  '--column="{0}" --title="{0}" '.format(list_obj.label) +\
+                  '--height=300 --hide-header'.format(list_obj.label)
             for item in list_obj:
                 cmd += ' "{}"'.format(item)
             ans_str = subprocess.check_output("bash -c '{}'".format(

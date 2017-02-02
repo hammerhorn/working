@@ -215,8 +215,11 @@ def main():
                     Terminal.output(str(value_list) + '\n') # write to titlebar
                                                             # for dialog &
                                                             # window styles
-                Terminal.wait('Press a key, ^C to end and see stats')
 
+                #if SHELL.interface == 'term':
+                Terminal.wait('Press a key, ^C to end and see stats')
+                #elif SHELL.interface == 'zenity':
+                #    SHELL.wait('')
                 if ARGS.keep is False and ARGS.quiet is None:
                     Terminal.clear(11)
 

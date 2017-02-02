@@ -37,7 +37,7 @@ def prelims():
     notebook("""    - there should be a cow: object? interface? shell method?
     - maybe a dropdown list would be better?""")
     catch_help_flag(__doc__, SHELL)
-    SHELL.welcome(description=__doc__)
+    Terminal.welcome(description=__doc__)
 
 def define_text():
     """
@@ -52,9 +52,9 @@ def define_text():
         except IndexError:
             SHELL.message('use: cowscript [message]')
             sys.exit()
-    text = text.replace('"', '\"')
-    if text[-1] == '\n':
-        text = text[:-1]
+
+    #if text[-1] == '\n':
+    #    text = text[:-1]
     return text.strip()
 
 
@@ -101,6 +101,7 @@ def main():
         message2 = message1
         message1 = define_text()
         cow = LIST_OBJ[cow_num - 1]
+        message2 = message2.replace('"', r'\"')
         ascii_cow = Cow(cow).output(message2, get_str=True)
         TERMINAL.make_page(
             'UP NEXT: {}'.format(message1),
