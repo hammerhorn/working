@@ -13,7 +13,7 @@ __author__ = 'Chris Horn'
 __license__ = 'GPL'
 
 FILELIST = glob('*/*/*.pyc') + glob('*/*.pyc') + glob('*.pyc') + glob('*/*/*~')\
-           + glob('*~') + glob('*/*~') + glob('*.tmp')
+           + glob('*~') + glob('*/*~') + glob('__data__/*.tmp')
 
 for filename in FILELIST:
     os.remove(filename)

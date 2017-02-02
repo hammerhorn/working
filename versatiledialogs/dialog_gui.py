@@ -257,12 +257,14 @@ class DialogGui(Terminal):
         return selected_items.pop() + 1
 
     @classmethod
-    def notify(cls, msg):
+    def notify(cls, msg, **kwargs):
         """Pops up a breif notification."""
         if cls.interface in ['SL4A']:
             cls.droid.makeToast(msg)
         elif cls.interface in ['zenity']:
             os.system('zenity --notification --text "{}"'.format(msg))
+        elif cls.interface in ['dialog']:
+            cls.message(msg)
 
     @classmethod
     def exit(cls):

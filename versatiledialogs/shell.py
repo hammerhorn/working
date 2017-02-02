@@ -230,7 +230,7 @@ class Shellib(object):
     def report_filesave(cls, filename, fast=False, get_str=False):
         """
         Prints a brief message about size and modification date on a
-        specified file.
+        specified file.  This should be more inheritancey.
         """
         stats = os.stat(filename)
         int_bytes = stats.st_size
@@ -244,12 +244,20 @@ class Shellib(object):
         if get_str is True:
             return colored(message, 'green')
         else:
+            if cls.interface not in ['zenity', 'dialog']:
+                message = colored(cls.notify(message, get_str=True), 'green')
+                cls.output(message)
+            else:
+                cls.notify(message)
         #elif cls.interface == 'SL4A' or fast is True:
-            cls.output(colored(cls.notify(message, get_str=True), 'green'))
-        if cls.interface != 'SL4A' and fast is False:
+        #    cls.output(colored(cls.notify(message, get_str=True), 'green'))
+        
+
+        if cls.interface not in ['SL4A', 'zenity', 'dialog'] and fast is False:
             cls.wait()
         #else:
         #    cls.message(message)
+        
 
     @classmethod    
     def start_app(cls):

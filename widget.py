@@ -90,10 +90,10 @@ def main():
     elif ARGS.list:
         if SHELL.interface == 'term':
             SHELL.clear()
+
+        string = "You chose '{}'."
         if SHELL.interface in ['zenity', 'dialog']:
-            string = "You chose \'{}\'."
-        else:
-            string = "You chose '{}'."
+            string = string.replace("'", "\'")
         list_ = PlainList(ARGS.list.split())
         answer = list_[SHELL.list_menu(list_) - 1]
         SHELL.output(string.format(answer))

@@ -50,8 +50,12 @@ def main():
     SHELL.output(draw(board_position), height=200)
 
     while True:
-        board_position = rank_list(SHELL.input())
+        fen_str = SHELL.input()
+        if len(fen_str) == 0:
+            break
+        board_position = rank_list(fen_str)
         SHELL.output(draw(board_position), height=200)
+
 
 
 if __name__ == '__main__':
