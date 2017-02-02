@@ -12,6 +12,14 @@ REMARKS = '    - Move the function to versatiledialogs.terminal.Terminal'
 Terminal()
 SHELL = Config().start_user_profile()
 
+code_dict = {
+    'A': 'up',
+    'B': 'down',
+    'C': 'right',
+    'D': 'left'
+}
+
+
 def get_arrow_key():
     """
     distinguish between arrow keys being pressed
@@ -21,14 +29,6 @@ def get_arrow_key():
     if pressed == chr(27):
         pressed = Terminal.get_keypress()
         if pressed == '[':
-
-            code_dict = {
-                'A': 'up',
-                'B': 'down',
-                'C': 'right',
-                'D': 'left'
-            }
-
             pressed = Terminal.get_keypress()
             direction = code_dict.get(pressed, None)
     return direction
