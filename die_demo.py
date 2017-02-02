@@ -16,8 +16,7 @@ try:
     elif sys.version_info.major == 3:
         import tkinter as tk
 except ImportError:
-    print('Warning: Tk could not be loaded.')
-    pass
+    print('Warning: Tk could not be loaded.')  # pylint: disable=C0325
 
 from cjh.misc    import notebook
 from cjh.statset import DataSet
@@ -59,8 +58,8 @@ def roll_and_output():
     """
     Roll die and show result
     """
-    global _toggle
-
+    global _TOGGLE
+    
     if SHELL.interface == 'Tk':
         SHELL.msg.config(font=('mono', 10, 'bold'))
     DIE.roll()
@@ -71,8 +70,8 @@ def roll_and_output():
     elif ARGS.quiet == 1:
         SHELL.output(DIE.__str__())
     elif SHELL.interface == 'Tk':
-        _toggle = not _toggle # make this into a generator
-        if _toggle is True:
+        _TOGGLE = not _TOGGLE  # make this into a generator
+        if _TOGGLE is True:
             SHELL.msg.config(fg='#FF00FF')#, bg='black')
         else: SHELL.msg.config(fg='chartreuse')#, bg='black')
 
@@ -152,7 +151,7 @@ if SHELL.interface == 'Tk':
     BUTTON.focus_set()
 
     MAIN_MENU = tk.Menu(SHELL.main_window, tearoff=0)
-    lang_menu = tk.Menu(MAIN_MENU, tearoff=0)
+    LANG_MENU = tk.Menu(MAIN_MENU, tearoff=0)
 
     # english_checked = tk.IntVar()
     # esperanto_checked = tk.IntVar()
@@ -160,13 +159,13 @@ if SHELL.interface == 'Tk':
     #     lang_menu, text='English', variable=english_checked)
     # esperanto = tk.Checkbutton(lang_menu, variable=esperanto_checked)
 
-    lang_menu.add_checkbutton(
+    LANG_MENU.add_checkbutton(
         label='English', command=lambda: change_lang('EN'))
-    lang_menu.add_checkbutton(
+    LANG_MENU.add_checkbutton(
         label='Esperanto', command=lambda: change_lang('EO'))
 
     MAIN_MENU.add_cascade(
-        label={'EN':'Language', 'EO':'Lingvo'}[LANG], menu=lang_menu)
+        label={'EN':'Language', 'EO':'Lingvo'}[LANG], menu=LANG_MENU)
     MAIN_MENU.add_command(
         label={'EN': 'Exit', 'EO': 'Eliri'}[LANG],
         command=SHELL.exit)
@@ -192,7 +191,7 @@ if SHELL_NAME in ['wx', 'Tk']:
 if ARGS is not None and ARGS.sides is not None and ARGS.sides > 0:
     DIE = Die(ARGS.sides)
 else: DIE = Die()
-_toggle = False
+_TOGGLE = False
 
 def main():
     """
