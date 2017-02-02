@@ -366,13 +366,17 @@ class Terminal(Shellib):
         cls.wait()
 
     @classmethod
-    def notify(cls, msg):  # , *args, **kwargs):
+    def notify(cls, msg, get_str=False):  # , *args, **kwargs):
         """
         Prints message like this:
 
         [+]"some message"
         """
-        cls.output(' [+] *** {} ***'.format(msg))
+        message = ' [+] *** {} ***'.format(msg)
+        if get_str is True:
+            return message
+        else:
+            cls.output(message)
 
     @staticmethod
     def output(msg, heading=None, **kwargs):  # add width and height

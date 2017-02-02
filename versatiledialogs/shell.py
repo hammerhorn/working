@@ -12,6 +12,7 @@ import platform
 import sys
 import time
 
+from termcolor import colored
 try:
     import tkFileDialog
 except ImportError:
@@ -78,7 +79,7 @@ class Shellib(object):
             filename = filename.split('\\')[1]
         if filename not in os.listdir(os.getcwd()):
             try:
-                _file = open(filename, 'w')
+                _file = open('__data__/' + filename, 'w')
                 _file.close()
             except IOError:
                 cls.output('unable to write to file system')
@@ -239,18 +240,22 @@ class Shellib(object):
             filesize_str = '{} bytes'.format(int_bytes) 
         message = "'{}': {}, {}".format(
             filename, filesize_str, time.ctime(stats.st_ctime))
+
         if get_str is True:
-            return message
-        elif cls.interface == 'SL4A' or fast is True:
-            cls.notify(message)
+            return colored(message, 'green')
         else:
-            cls.message(message)
+        #elif cls.interface == 'SL4A' or fast is True:
+            cls.output(colored(cls.notify(message, get_str=True), 'green'))
+        if cls.interface != 'SL4A' and fast is False:
+            cls.wait()
+        #else:
+        #    cls.message(message)
 
     @classmethod    
     def start_app(cls):
         filename = sys.argv[0].split('/')[-1].split('.')[0]+ '.tmp'        
         #try:
-        _file = open(filename, 'w')
+        _file = open('__data__/' + filename, 'w')
         _file.close()
         #except:
         #    cls.output('unable to write to file system')            
