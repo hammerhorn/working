@@ -62,18 +62,18 @@ def alert():
 
     if ARGS is not None and ARGS.quiet == False:
         try:
-            proc2 = subprocess.Popen(
+            proc1 = subprocess.Popen(
                 'play -n synth .5 sin 1000 vol 0.05 > /dev/null 2>&1',
                 shell=True)
-            proc2.wait()
+            proc1.wait()
         #if system call fails???
         except (OSError, subprocess.CalledProcessError):
             Terminal.fx('up', 'Problem in sox:')
             print(traceback.format_exc()) #pylint: disable=C0325
         try:
-            proc1 = subprocess.Popen(
+            proc2 = subprocess.Popen(
                 'espeak -v en-us "Your coffee is ready"', shell=True)
-            proc1.wait()
+            proc2.wait()
         #if system call fails???
         except (OSError, subprocess.CalledProcessError):
             Terminal.fx('up', 'Problem in espeak:')
