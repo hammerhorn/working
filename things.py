@@ -1,5 +1,3 @@
-
-#!usr/bin/env python
 #coding=utf8
 """
 Base class for most classes

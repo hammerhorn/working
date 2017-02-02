@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #coding=utf-8
 """
 Removes trailing whitespace.
@@ -46,7 +46,7 @@ def main():
     # Preview and write text back to file and close file
     string = ''
     for line in lines_of_text:
-        string += line.rstrip() + '\n'        
+        string += line.rstrip() + '\n'
     try:
         file_handler.write(string)
     finally:

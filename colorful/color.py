@@ -28,7 +28,7 @@ from versatiledialogs.terminal import Terminal
 
 def cycle_thru_ansiboxes(start=0, end=255, delta_t=0.25, tc=False):
     try:
-        for i in xrange(start, end + 1):
+        for i in gen_range(start, end + 1):
             Color(i, 'ansi').draw_box(tc_on=tc, label_type='ansi')
             time.sleep(delta_t)
             if i != end:

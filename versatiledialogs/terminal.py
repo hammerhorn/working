@@ -508,7 +508,7 @@ class Terminal(Shellib):
 
             for char in msg:
                 easycat.write(char)
-                time.sleep(.02)
+                time.sleep(.019)
         finally:
             cls.output('')
             cls.unhide_cursor()

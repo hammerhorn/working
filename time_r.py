@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #coding=utf8
 """
 Takes an argument in the form of ss or mm:ss, uses mmss.py to convert
