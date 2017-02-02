@@ -12,7 +12,7 @@ REMARKS = '    - Move the function to versatiledialogs.terminal.Terminal'
 Terminal()
 SHELL = Config().start_user_profile()
 
-code_dict = {
+CODE_DICT = {
     'A': 'up',
     'B': 'down',
     'C': 'right',
@@ -30,9 +30,9 @@ def get_arrow_key():
         pressed = Terminal.get_keypress()
         if pressed == '[':
             pressed = Terminal.get_keypress()
-            direction = code_dict.get(pressed, None)
+            direction = CODE_DICT.get(pressed, None)
     return direction
-           
+
 
 def main():
     """
