@@ -108,7 +108,7 @@ def main():
 
         Terminal.output('')
     except KeyboardInterrupt:
-        Terminal.output('')
+        Terminal.clear(0)
 
 if __name__ == '__main__':
     main()
