@@ -12,7 +12,8 @@ import os
 __author__ = 'Chris Horn'
 __license__ = 'GPL'
 
-FILELIST = glob('*/*.pyc') + glob('*.pyc') + glob('*~') + glob('*.tmp')
+FILELIST = glob('*/*/*.pyc') + glob('*/*.pyc') + glob('*.pyc') + glob('*/*/*~')\
+           + glob('*~') + glob('*/*~') + glob('*.tmp')
 
 for filename in FILELIST:
     os.remove(filename)
