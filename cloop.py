@@ -33,10 +33,7 @@ def _parse_args():
         '--f90', action='store_true', help='set language to Fortran 90')
     parser.add_argument(
         '-C', action='store_true', help="view developer's comments")
-    if __name__ == '__main__':
-        return parser.parse_args()
-    else:
-        return  None
+    return parser.parse_args() if __name__ == '__main__' else None
 
 
 ###############

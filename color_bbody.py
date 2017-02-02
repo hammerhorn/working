@@ -23,10 +23,10 @@ except ImportError:
     except ImportError:
         sys.exit('Tk could not be loaded.  Ending program.')
 
-from colorful import color
-from colorful.color       import color_dec_to_hex
-from cjh.misc        import fahr_to_kelvins, notebook
-from fiziko.waves       import kelvin_to_rgb
+from colorful       import color
+from colorful.color import color_dec_to_hex
+from cjh.misc       import fahr_to_kelvins, notebook
+from fiziko.waves   import kelvin_to_rgb
 
 from versatiledialogs.config      import Config
 from versatiledialogs.html_sh     import HtmlShell

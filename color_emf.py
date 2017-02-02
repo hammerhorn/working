@@ -46,22 +46,16 @@ def _parse_args():
         '-s', '--shell', type=str, help='bash, dialog, sh, Tk, wx, zenity')
     parser.add_argument(
         '-C', action='store_true', help="view developer's comments")
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else:
-        args = None
+    args = parser.parse_args() if __name__ == '__main__' else None
     return args
 
 ARGS = _parse_args()
 CONFIG = Config()
-if ARGS is not None and ARGS.shell is not None:
-    SHELL = CONFIG.launch_selected_shell(ARGS.shell)
-else:
-    SHELL = CONFIG.start_user_profile()
+SHELL = CONFIG.laungh_selected_shell(ARGS.shell) if ARGS is not None and\
+        ARGS.shell is not None else CONFIG.start_user_profile()
 
 if ARGS is not None and ARGS.C:
     misc.notebook(REMARKS)
-
 
 def main():
     """
