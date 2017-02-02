@@ -5,7 +5,6 @@ Collection of input/output functions which are similar to the cat command
 """
 import os
 import pydoc
-# import re
 import sys
 
 import colorama
@@ -100,26 +99,21 @@ def less(*args, **kwargs):
          1) a str arg or
          2) file_=FILENAME
     """
-    if 'file_' in list(kwargs.keys()):
-        filename = kwargs['file_']
+    filename = kwargs.get('file_', None)
+    if filename is not None:
         with open(filename, 'r') as file_handler:
-            text = file_handler.read()
-            file_handler.close()
+            text = file_handler.read()            
     elif len(args) > 0:
         text = ''
         for arg in args:
             text += (' ' + str(arg))
-        text = text.lstrip()
+        # text = text.lstrip('\n')
+
     if os.path.exists('/usr/bin/less'):
         pydoc.pipepager(text, cmd='less -R')
     else:
         # works for text, but not for colors
         pydoc.pager(text)
-
-
-# def strip_ansi(in_str):
-#     ansi_escape = re.compile(r'\x1b[^m]*m')
-#     return ansi_escape.sub('', in_str)
 
 
 def view_source(src=sys.argv[0]):

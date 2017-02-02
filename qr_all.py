@@ -70,8 +70,7 @@ def main():
 
     Terminal.wait()
     Terminal.clear()
-    Terminal.output(ItemList(glob.glob('__data__/qr/{}*.png'.format(dirname))))
-    Terminal.wait()
+    easycat.less(' ' + ItemList(sorted(glob.glob('__data__/qr/{}*.png'.format(dirname)))).__str__().lstrip())
 
 if __name__ == '__main__':
     main()
