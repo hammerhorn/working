@@ -282,7 +282,7 @@ class Graph(Thing):
     """
     def __init__(self, size=19, skinfile='graph.json',
                  sh_obj=Terminal(), adjust_ssize=0):
-        basedir = 'skins'
+        basedir = '__data__/skins'
         self.sh_obj = sh_obj
         if self.sh_obj.platform == 'android':
             basedir =\

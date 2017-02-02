@@ -12,7 +12,9 @@ __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
 class Paragraph(Thing):
-
+    """
+    A paragraph of text
+    """
     ## CLASS VARIABLES ##
     invisibles = False
     no_indent = False
@@ -20,10 +22,10 @@ class Paragraph(Thing):
 
     ## METHODS ##
     def __init__(
-        self,
-        text_str,
-        width=int(round(Terminal.width() * .9)),
-        no_indent=False):
+            self,
+            text_str,
+            width=int(round(Terminal.width() * .9)),
+            no_indent=False):
         self.__class__.no_indent = no_indent
         super(Paragraph, self).__init__()
         self.width = width
@@ -58,9 +60,9 @@ class Paragraph(Thing):
         buf = ''
         for line in self.naive_wrap:
             buf += line
-        ls = buf.split('.')
-        ls = [sentence.lstrip('_ ') + '.' for sentence in ls]
-        return ls[index]
+        sentences = buf.split('.')
+        sentences = [sentence.lstrip('_ ') + '.' for sentence in sentences]
+        return sentences[index]
 
     def __len__(self):
         ''' number of sentences '''
@@ -75,9 +77,11 @@ class Paragraph(Thing):
         return len(tmp)
 
     def set_lmargin(self, fill=4):
+        """set left margin"""
         self.lmargin = fill
 
     def cat(self, para2):
+        """concatenate paragraphs?"""
         tmp_str1 = ""
         tmp_str2 = ""
         noindent = True
@@ -93,11 +97,16 @@ class Paragraph(Thing):
             tmp_str1.rstrip() + "  " + tmp_str2, no_indent=noindent)
 
     @property
-    def wc(self):
+    def wordcount(self):
+        """number of words"""
         return len(self.buffer.split())
 
     @property
     def naive_wrap(self):
+        """
+        Wrap text w/o regard to word boundaries.
+        Returns a list of lines.
+        """
         buf = self.buffer
         lines = []
         line_cnt = len(buf) / self.width + 1
@@ -113,8 +122,12 @@ class Paragraph(Thing):
 
     @property
     def word_wrap(self):
+        """
+        use textwrap module to wrap text
+        Returns a list of lines.
+        """
         buf = self.buffer
-        if self.__class__.no_indent == True:
+        if self.__class__.no_indent is True:
             i = ''
         else: i = ' ' * 5
         lines = textwrap.fill(\
@@ -122,11 +135,14 @@ class Paragraph(Thing):
         return lines
 
 class Section(Thing):
-    def __init__(self, hstr='', p_list=[]):
+    """
+    section of an article or chapter
+    """
+    def __init__(self, hstr='', p_list=None):
         super(Section, self).__init__()
-        if len(hstr) == 0:
-            self.heading = "{}.".format(self.__class__.count)
-        else: self.heading = hstr
+        if p_list is None:
+            p_list = []
+        self.heading = "{}.".format(self.__class__.count) if len(hstr) else hstr
         self.pgraph_list = p_list
 
     def __getitem__(self, index):
