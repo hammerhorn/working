@@ -8,9 +8,10 @@ from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 
 REMARKS = '    - Move the function to versatiledialogs.terminal.Terminal'
+notebook(REMARKS)
 
-Terminal()
 SHELL = Config().start_user_profile()
+catch_help_flag(__doc__)
 
 CODE_DICT = {
     'A': 'up',
@@ -49,8 +50,7 @@ def main():
     except KeyboardInterrupt:
         pass
 
+Terminal()
 if __name__ == '__main__':
-    catch_help_flag(__doc__)
-    notebook(REMARKS)
     main()
     SHELL.start_app()

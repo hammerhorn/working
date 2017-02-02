@@ -16,10 +16,7 @@ def _parse_args():
     """./bin_text.py -d filename"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-d', type=str, help='name of file to be decoded')
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else:
-        args = None
+    args = parser.parse_args() if __name__ == '__main__' else None
     return args
 
 def main():
