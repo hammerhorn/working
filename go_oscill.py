@@ -20,7 +20,8 @@ __license__ = 'GPL'
 REMARKS = """
     - animate1() or something could be a method of cjh.geometry.Graph
     - Also, the ability to 'trace' the oscillation (like a seismograph) would be
-      quite nice."""
+      quite nice.
+    - Redo so only the parts that are changing have to be redrawn"""
 
 def _parse_args():
     """
@@ -35,32 +36,17 @@ def _parse_args():
     parser.add_argument('-z', '--size', type=int, help='board size, default 19')
     parser.add_argument(
         '-C', action='store_true', help="see developer's comments")
-
-
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else:
-        args = None
-    return args
+    return parser.parse_args() if __name__ == '__main__' else None
 
 # Set all Parameters
 ARGS = _parse_args()
 notebook(REMARKS)
 
-if ARGS is not None and ARGS.deltat is not None:
-    T_INTERVAL = ARGS.deltat
-else:
-    T_INTERVAL = 0.1
 
-if ARGS is not None and ARGS.deltad is not None:
-    D_INTERVAL = ARGS.deltad
-else:
-    D_INTERVAL = 2
-
-if ARGS is not None and ARGS.size is not None:
-    SIZE_ = ARGS.size
-else:
-    SIZE_ = 19
+if ARGS is not None:
+    T_INTERVAL = 0.1 if ARGS.deltat is None else ARGS.deltat    
+    D_INTERVAL = 2 if ARGS.deltad is None else ARGS.deltad
+    SIZE_ = 19 if ARGS.size is None else ARGS.size
 
 
 def main():

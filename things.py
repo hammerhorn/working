@@ -16,7 +16,6 @@ class Thing(object):
     provides str 'label' and class int 'count'
     Contains methods for saving as txt or pickle.
     """
-
     count = 0
 
     def __init__(self):
@@ -24,8 +23,7 @@ class Thing(object):
         increments instance counter "count" and sets a default label.
         """
         self.__class__.count += 1
-        self.label = self.__default_label()
-
+        self.label = self.__default_label
 
     def __repr__(self):
         """
@@ -43,6 +41,7 @@ class Thing(object):
     def __ne__(self, other):
         return not self == other  # pylint: disable=C0113
 
+    @property
     def __default_label(self):
         """
         Generates a generic label
@@ -60,34 +59,27 @@ class Thing(object):
         dir_name = os.getcwd()
         if dir_name != '/':
             dir_name += '/'
-#        # See if exists
-#        #if sh_class is not None and\
-#        #    sh_class.interface in ['sh', 'bash', 'dialog', 'zenity']:
-#
-#            # Confirm filename
-#            #try:
-#            #    filename = sh_class.save_prompt(filename, dir_name)
-#            #except KeyboardInterrupt:
-#            #    return
-        if ext == 'p':
-            handler = open(filename, 'wb')
-        else:
-            handler = open(filename, 'w')
-        save_func(handler)
-        handler.close()
 
+         # See if exists
+         #if sh_class is not None and\
+         #    sh_class.interface in ['sh', 'bash', 'dialog', 'zenity']:
+ 
+             # Confirm filename
+             #try:
+             #    filename = sh_class.save_prompt(filename, dir_name)
+             #except KeyboardInterrupt:
+             #    return
 
-    def write_txt(self, basename, ext='txt'):  # , sh_class=None):
+        mode = 'wb' if ext == 'p' else 'w'
+        with open(filename, mode) as handler:
+            save_func(handler)        
+
+    def write_txt(self, basename, ext='txt'):
         """
         Cast object as str and write to a txt file.
         """
-        #if sys.version_info.major == 3:
-        #    self._save(\
-        #        basename, ext, lambda f: f.write(bytes(str(self) + '\n',\
-        #        'UTF-8')))#, sh_class)
-        #elif sys.version_info.major == 2:
-        self._save(\
-            basename, ext, lambda f: f.write(str(self) + '\n'))
+        text = self.__str__() + '\n'
+        self._save(basename, ext, lambda f: f.write(text))
 
     def save_p_file(self, basename):
         """

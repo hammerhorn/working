@@ -3,6 +3,8 @@ import time
 from versatiledialogs.terminal import Terminal
 import easycat
 
+from ranges import gen_range
+
 def box(msg, symbol='*', position=None, width=None):
     """
     Print a one-line string surrounded by a border; 'symbol' keyword
@@ -56,7 +58,7 @@ def ellipses(msg):
     iters = 3
     try:
         Terminal.hide_cursor()
-        for _ in xrange(iters):
+        for _ in gen_range(iters):
             time.sleep(delta_t)
             Terminal.cursor_h(-3, ' ')
             Terminal.cursor_h(2, '.')

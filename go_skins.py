@@ -24,7 +24,7 @@ REMARKS = """
 notebook(REMARKS)
 CONFIG = Config()
 SHELL = CONFIG.start_user_profile()
-SKIN_LIST = [sk for sk in os.listdir('skins') if sk.endswith('json')]
+SKIN_LIST = [sk for sk in os.listdir('__data__/skins') if sk.endswith('json')]
 SKIN_LIST.sort(key=str.lower)
 LIST_OBJ = PlainList(SKIN_LIST)
 
@@ -39,9 +39,9 @@ def main():
         skinfile = LIST_OBJ[choice - 1]
         try:
             if SHELL.py_version == 2:
-                goban.skin_dict = json.load(open('skins/' + skinfile, 'rb'))
+                goban.skin_dict = json.load(open('__data__/skins/' + skinfile, 'rb'))
             elif SHELL.py_version == 3:
-                file_ptr = open('skins/{}'.format(skinfile), 'rb')
+                file_ptr = open('__data__skins/{}'.format(skinfile), 'rb')
                 text_buffer = file_ptr.read().decode('utf-8')
                 goban.skin_dict = json.loads(text_buffer)
         except IOError:

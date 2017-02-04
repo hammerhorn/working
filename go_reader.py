@@ -7,7 +7,8 @@ use: ./go_reader.py [ SGF_FILE ]
 """
 import argparse
 
-from cjh.tablegames.igo import GameRecord, Goban
+from cjh.tablegames.game_record import GameRecord
+from cjh.tablegames.igo import Goban
 import easycat
 from versatiledialogs.lists import Enumeration
 from versatiledialogs.terminal import Terminal

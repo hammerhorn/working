@@ -106,7 +106,7 @@ def main():
         verbose = 0 if args_dict['v'] is None else args_dict['v']
         del args_dict['v']
 
-        nocommand = True if args_dict.values() == [None, None, None, None, None] else False
+        nocommand = True if list(args_dict.values()) == [None, None, None, None, None] else False
         noeditcommand = True
         for value in args_dict.values():
             if value is not None and value != '?':
