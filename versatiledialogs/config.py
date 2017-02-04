@@ -9,20 +9,14 @@ import sys
 import time
 import traceback
 
-#from cjh import terminal
+from ttyfun import blocks
+from versatiledialogs.dialog_gui import DialogGui
 from versatiledialogs.terminal import Terminal
+from versatiledialogs.tk_template import TkTemplate
+from versatiledialogs.wx_template import WxTemplate
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
-
-#try:
-from ttyfun import blocks
-from versatiledialogs.dialog_gui import DialogGui
-from versatiledialogs.tk_template import TkTemplate
-    #import cjh.tk_template
-from versatiledialogs.wx_template import WxTemplate
-#except ImportError:
-#    sys.exit('import error')
 
 class Config(object):
     """
@@ -33,12 +27,9 @@ class Config(object):
         """
         Get directory name of config file.
         """
-        if Terminal().platform == 'android':
-            self.basedir = '/storage/emulated/0/qpython/lib/python2.7/site-packages/cjh'
-            #'/storage/sdcard0/com.hipipal.qpyplus/lib/python2.7/site-packages/cjh'
-                
-        else:
-            self.basedir = 'versatiledialogs'
+    # '/storage/sdcard0/com.hipipal.qpyplus/lib/python2.7/site-packages/cjh'
+        self.basedir = 'versatiledialogs' if Terminal().platform != 'android'\
+            else '/storage/emulated/0/qpython/lib/python2.7/site-packages/cjh'
         self.sh_class = Terminal()
 
 
@@ -46,8 +37,8 @@ class Config(object):
             self.read_config_file()
         except IOError:
             self.config_dict = {
-                'editor': './tk_text.py',
-                'shell': 'term',
+                'editor'  : './tk_text.py',
+                'shell'   : 'term',
                 'terminal': 'gnome-terminal -x',
                 'language': 'eo'
             }
@@ -96,25 +87,28 @@ class Config(object):
         Select appropriate UI class from cjh.shell module
         Perhaps move this to some other class, or no class.
         """
+        def try_to_open(sh_obj):
+
+            def fallback():
+                blocks.ellipses("Display not found.  Defaulting to 'term'.")
+                Terminal.output('')
+                sh_class = Terminal()
+                sh_class.output(traceback.format_exc())
+                time.sleep(4)
+                return sh_class
+
+            try:
+                sh_class = sh_obj()
+            except SystemExit:
+                sh_class = fallback()
+            return sh_class
+
         if shl in ['dialog', 'SL4A', 'zenity']:
             sh_class = DialogGui(shl)
         elif shl == 'Tk':
-            try:
-                sh_class = TkTemplate()
-            except SystemExit:
-                blocks.ellipses("Display not found.  Defaulting to 'term'.")
-                Terminal.output('')
-                sh_class = Terminal()
-                sh_class.output(traceback.format_exc())
-                time.sleep(4)
+            sh_class = try_to_open(TkTemplate)
         elif shl == 'wx':
-            try:
-                sh_class = WxTemplate()
-            except SystemExit:
-                blocks.ellipses("Display not found.  Defaulting to 'term'.")
-                Terminal.output('')
-                sh_class = Terminal()
-                sh_class.output(traceback.format_exc())
-                time.sleep(4)
-        else: sh_class = Terminal()
+            sh_class = try_to_open(WxTemplate)
+        else:
+            sh_class = Terminal()
         return sh_class
