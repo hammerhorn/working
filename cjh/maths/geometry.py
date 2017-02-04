@@ -91,13 +91,14 @@ class Point(Disp):
     def input(self, shell=Terminal, prompt=''):
         """prompts user for comma-separated tuple"""
         prompt += ' (x, y) : '
-        inp = lambda: eval(shell.input(prompt))
+        inp = lambda: tuple(eval(shell.input(prompt)))  # code injection risk?
+
         while True:
             try:
                 self.x_mag, self.y_mag = inp()
             except KeyboardInterrupt:
                 break
-            except (NameError, TypeError):  # What kind?
+            except (NameError, TypeError, ValueError):  # What kind?
                 continue
             else:
                 break
