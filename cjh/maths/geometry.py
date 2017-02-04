@@ -54,16 +54,10 @@ class Point(Disp):
         return '({}, {})'.format(round(self.x_mag, 4), round(self.y_mag, 4))
 
     def __eq__(self, other):
-        if self.tuple() == other.tuple():
-            return True
-        else:
-            return False
+        return self.tuple() == other.tuple()
 
     def __ne__(self, other):
-        if self.tuple() != other.tuple():
-            return True
-        else:
-            return False
+        return self.tuple() != other.tuple()
 
     def __add__(self, other):
         return Point(
@@ -73,7 +67,7 @@ class Point(Disp):
     def __sub__(self, other):
         """Get the distance between two points."""
         return math.hypot(self.x - other.x, self.y - other.y)
-    
+
     def _initialize(self):
         """
         Finds the distance from the origin and the angle.
@@ -91,7 +85,7 @@ class Point(Disp):
     def input(self, shell=Terminal, prompt=''):
         """prompts user for comma-separated tuple"""
         prompt += ' (x, y) : '
-        inp = lambda: tuple(eval(shell.input(prompt)))  # code injection risk?
+        inp = lambda: tuple(eval(shell.input(prompt)))  # pylint: disable=W0123
 
         while True:
             try:
@@ -221,7 +215,7 @@ class Ellipse(TwoDShape):
     def __init__(self, h_semiaxis, v_semiaxis=None,
                  center_point=Point(0.0, 0.0)):
         super(Ellipse, self).__init__()
-        if v_semiaxis == None:
+        if v_semiaxis is None:
             v_semiaxis = h_semiaxis
         self.area = Area(decimal.Decimal(math.pi) * decimal.Decimal(
             h_semiaxis) * decimal.Decimal(v_semiaxis))
@@ -440,7 +434,8 @@ class Graph(Thing):
                     self.sh_obj.msgtxt.set(self.__str__())
                     point = self.pt_at_cursor()
 
-                if type(point) == Point:
+                # if type(point) == Point:
+                if point.isinstance(Point):
                     string = ''
                     string += ('\t' + str(point)) + '\n'
                     string += ('\t[' + point.distance_str + ']') + '\n'
@@ -560,7 +555,7 @@ class Graph(Thing):
         """
         Prompt user for x,y coordinates and plot point.
         """
-        pair_x, pair_y = eval(self.sh_obj.input('(x, y):'))
+        pair_x, pair_y = tuple(eval(self.sh_obj.input('(x, y):')))
         self.plot_point(pair_x, pair_y, color)
 
     def plot_point(self, x_val, y_val, color='black'):
@@ -700,17 +695,17 @@ class Graph(Thing):
         Prompt user for specifications and draw circle
         """
         radius = float(self.sh_obj.input('radius: '))
-        center = 0, 0
-        center = eval(self.sh_obj.input('center (x, y): '))
+        # center = 0, 0
+        center = tuple(eval(self.sh_obj.input('center (x, y): ')))  # safe?
         self.add_ellipse(radius, radius, color, (float(center[0]), float(
             center[1])))
 
     def prompt_ellipse(self, color):
         """
         Prompt user for attributes and draw ellipse
-        """
-        semiaxes = eval(self.sh_obj.input('semiaxes (H, V): '))
-        center = eval(self.sh_obj.input('center (x, y): '))
+        """  # shoudl a Point object be used here?
+        semiaxes = tuple(eval(self.sh_obj.input('semiaxes (H, V): ')))
+        center = tuple(eval(self.sh_obj.input('center (x, y): ')))
         self.add_ellipse(float(semiaxes[0]), float(semiaxes[1]), color, (float(
             center[0]), float(center[1])))
 
