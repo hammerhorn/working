@@ -7,7 +7,6 @@ import os
 import random
 import subprocess
 import sys
-import time
 
 try:
     import androidhelper as android
@@ -39,12 +38,8 @@ class DialogGui(Terminal):
             self.__class__.interface = 'SL4A'
             self.__class__.droid = android.Android()
         else:
-            if len(args) >= 1:
-                self.__class__.interface = args[0]
-            else:
-                self.__class__.interface = [
-                    'dialog', 'zenity'][random.randint(0, 1)
-                ]
+            self.__class__.interface = args[0] if len(args) >= 1 else [
+                'dialog', 'zenity'][random.randint(0, 1)]
 
         #self.__class__.clear()
         #if __name__ == '__main__':
@@ -55,18 +50,18 @@ class DialogGui(Terminal):
 #    @classmethod
 #    def start_app(cls):
 #        super(DialogGui, cls).start_app()
-        
+
     ##################
     # SHARED METHODS #
     ##################
     @classmethod
     def output(cls, msg, heading='Output', width=None, height=None):
         """Display output dialog. Identical to message()."""
-        msg = str(msg).replace('$', '\$')
+        msg = str(msg).replace('$', r'\$')
         if cls.interface == 'dialog':
-            if not width:
+            if width is None:
                 width = 41
-            if not height:
+            if height is None:
                 height = 16
             wide, high = width, height
             cls.message(msg, heading, wide, high)
@@ -86,26 +81,27 @@ class DialogGui(Terminal):
         # There should really be an operator....
         msg = kwargs.get('msg', None)
         heading = kwargs.get('heading', None)
-        width = kwargs.get('width', None)        
+        width = kwargs.get('width', None)
         height = kwargs.get('height', None)
         file_ = kwargs.get('file_', None)
 
         if cls.interface == 'dialog':
             cls.output(msg, heading, width, height)
         elif cls.interface == 'SL4A':
-            print(heading + '\n')  # pylint: disable=C0325
-            print(msg + '\n')  # pylint: disable=C0325
+            print(heading + '\n\n' + msg + '\n')  # pylint: disable=C0325
         elif cls.interface == 'zenity':
             if 'file_' not in kwargs.keys():
                 with open('tmp', 'w') as file_handler:
                     file_handler.write(msg)
-                    file_handler.close()
-                os.system('zenity --text-info --filename=tmp --font=mono ' +
-                    '--text={0} --title={0}'.format(heading))
+
+                command = 'zenity --text-info --filename=tmp --font=mono ' +\
+                                        '--text={0} --title={0}'.format(heading)
             else:
-                os.system('zenity --text-info --filename={0} --font=mono ' +
-                    '--text={1} --title={1} --width=800 --height=700'.format(
-                    file_, heading))
+                command = 'zenity --text-info --filename={} '.format(file_) +\
+                          '--font=mono --text={0} --title={0}'.format(heading) +\
+                          ' --width=800 --height=700'
+            proc = subprocess.Popen(command, shell=True)
+            proc.wait()
 
     @classmethod
     def input(cls, prompt='Enter something:'):
@@ -211,7 +207,7 @@ class DialogGui(Terminal):
         elif cls.interface in ['zenity']:
             cmd = 'zenity --list --text="View list:" ' +\
                   '--column="{0}" --title="{0}" '.format(list_obj.label) +\
-                  '--height=300 --hide-header'.format(list_obj.label)
+                  '--height=300 --hide-header'
             for item in list_obj:
                 cmd += ' "{}"'.format(item)
             ans_str = subprocess.check_output("bash -c '{}'".format(
@@ -251,7 +247,7 @@ class DialogGui(Terminal):
         return selected_items.pop() + 1
 
     @classmethod
-    def notify(cls, msg, **kwargs):
+    def notify(cls, msg, **kwargs):  # pylint: disable=W0613
         """Pops up a breif notification."""
         if cls.interface in ['SL4A']:
             cls.droid.makeToast(msg)

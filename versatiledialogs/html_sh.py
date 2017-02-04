@@ -39,7 +39,8 @@ class HtmlShell(Shellib):
     </html>"""
         #if set('<>') & set(title):
         self.html_str = self.template.format(
-            title, location, bgcolor, color, title.replace('<', '&lt;').replace('>', '&gt;'), self.content)
+            title, location, bgcolor, color, title.replace('<', '&lt;').replace(
+                '>', '&gt;'), self.content)
         self.write_html_file()
 
     def __str__(self):
