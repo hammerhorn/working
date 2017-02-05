@@ -24,12 +24,7 @@ atexit.register(Terminal.unhide_cursor)
 Terminal()
 
 DELTA_T = 0.005
-
-if len(sys.argv[1:]) >= 1:
-    OUT_STR = sys.argv[1]
-else:
-    OUT_STR1 = ' TRUECOLOR'
-    OUT_STR2 = 'COLORTRANS'
+OUT_STR1, OUT_STR2 = ' TRUECOLOR', 'COLORTRANS'
 
 
 def side_by_side(red, green, blue):
@@ -40,14 +35,15 @@ def side_by_side(red, green, blue):
     hexcolor = color.color_dec_to_hex(red, green, blue)
     culler = color.Color(hexcolor, 'hex')
     Terminal.output(culler.__str__() + '\n')
-    easycat.write('  ')
-    color.write(
-        16, 'ansi', hexcolor, 'hex', OUT_STR1, truecolor=True)
-    Terminal.output('')
-    easycat.write('  ')
-    color.write(
-        16, 'ansi', hexcolor, 'hex', OUT_STR2, truecolor=False)
-    Terminal.output('')
+
+    def position_and_color(txt_str, tc_bool):
+        easycat.write('  ')
+        color.write(
+            16, 'ansi', hexcolor, 'hex', txt_str, truecolor=tc_bool)
+        Terminal.output('')
+
+    position_and_color(OUT_STR1, True)
+    position_and_color(OUT_STR2, False)    
     time.sleep(DELTA_T)
 
 
@@ -57,9 +53,9 @@ def main():
     terminal that supports Truecolor escapes.
     """
     Terminal.hide_cursor()
-    easycat.write('\nANSI escape:\nRGB hexcode\n\n' + OUT_STR1 + '\n' +
-                  OUT_STR2 + '\n')
-    Terminal.output('\n' * 3)
+    Terminal.output(''.join([
+        '\nANSI escape:\nRGB hexcode\n\n', OUT_STR1,
+        '\n', OUT_STR2, '\n' * 4]))
     time.sleep(DELTA_T * 4)
     Terminal.cursor_v(4)
     try:

@@ -16,17 +16,17 @@ def _parse_args():
     """./bin_text.py -d filename"""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-d', type=str, help='name of file to be decoded')
-    args = parser.parse_args() if __name__ == '__main__' else None
-    return args
+    return parser.parse_args() if __name__ == '__main__' else None
 
 def main():
     """Encode or decode"""
     if ARGS.d is None:
         buf = easycat.cat(return_str=True) if SHELL.platform != 'android' else\
               Terminal.input(hide_form=True)
-        out_str = ''
+        out_str_lst = []
         for char in buf:
-            out_str += '{0:b}'.format(ord(char)).zfill(8) + ' '
+            out_str_lst.extend(['{0:b}'.format(ord(char)).zfill(8), ' '])
+        out_str = ''.join(out_str_lst)
         SHELL.output(out_str)
 
         if Terminal.platform != 'android':

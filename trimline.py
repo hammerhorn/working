@@ -31,8 +31,6 @@ def main():
     """
     Reads in a specified file, removes trailing whitespace, and re-saves.
     """
-
-    # Open file and store lines as str list
     try:
         file_handler = open(ARGS.filename, 'r+')
     except IOError:
@@ -46,16 +44,17 @@ def main():
     # Preview and write text back to file and close file
     string = ''
     for line in lines_of_text:
-        string += line.rstrip() + '\n'
+        string = ''.join([string, line.rstrip(), '\n'])
+
     try:
         file_handler.write(string)
     finally:
         file_handler.close()
 
-
 if __name__ == '__main__':
     notebook("""    - add text-wrapping
     - learn argparse syntax better
     - allow multiple files
+    - there is probably a nicer way to write this code
     + fails to erase old file before writing new one""")
     main()

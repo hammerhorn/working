@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #coding=utf8
 """
 TONEROW EDITOR
@@ -23,8 +23,7 @@ def _parse_args():
         '-C', action='store_true', help="see developer's comments")
     parser.add_argument(
         '-n', '--length', help="notes/scale, row, etc....", nargs='?')
-    args = parser.parse_args() if __name__ == '__main__' else None
-    return args
+    return parser.parse_args() if __name__ == '__main__' else None
 
 
 def find_tonecount():
@@ -32,11 +31,11 @@ def find_tonecount():
     return default value of 12, unless specified in command-line args
     """
     try:
-        if ARGS is not None and ARGS.length is not None:
-            return int(ARGS.length)
-        else: return 12
-    except ValueError:
-        return 12
+        assert ARGS is not None and ARGS.length is not None
+        val = int(ARGS.length)
+    except (ValueError, AssertionError):
+        val = 12
+    return val
 
 
 REMARKS = """
@@ -68,19 +67,11 @@ if __name__ == '__main__':
 
 TONE_COUNT = find_tonecount()
 HEADER = 'TONE ROW EDITOR'
-MICROTONE_WARNING = """
-
-
-
-     ABC, PS, and MIDI functions do not
+MICROTONE_WARNING = ''.join(['\n' * 4,
+"""     ABC, PS, and MIDI functions do not
      currently support microtones.
      Therefore these results are merely
-     approximate.
-
-
-
-""" + '\n' * (TONE_COUNT - 5)
-
+     approximate.""", '\n' * (TONE_COUNT - 1)])
 
 def build_main_menu():
     """
@@ -93,11 +84,11 @@ def build_main_menu():
         'Play as MIDI',
         'Shuffle',
         'Quit (Ctrl-C)']
+
+    # learn the dictionary comprehension
     for index in gen_range(1, 4):
         menu_list[index] = SHELL.emphasis(menu_list[index])
-    menu = ListPrompt(menu_list)
-    menu_obj = menu
-    return menu_obj
+    return ListPrompt(menu_list)
 
 def visualization_menu(row_, obj_str_):
     """
@@ -108,8 +99,10 @@ def visualization_menu(row_, obj_str_):
         '..', 'Tone matrix (text-based)', 'Notenames, frequencies',
         'ABC notation']
     if 'DISPLAY' in os.environ:
-        menu_entries += [
-            'Pyplot         (X only)', 'Staff notation (X only)']
+        menu_entries.extend([
+            'Pyplot         (X only)',
+            'Staff notation (X only)'
+        ])
     view_menu = ListPrompt(menu_entries)
 
     if 12 % len(row_) != 0:
@@ -126,36 +119,45 @@ def visualization_menu(row_, obj_str_):
             SHELL.output(obj_str_)
             pressed = SHELL.list_menu(view_menu)
 
-        if pressed == 1:
-            break
+        def align_abc_txt():
+            """
+            Align the ABC notation code on the screen
+            with the right amount of space.
+            """
+            objstr = ''.join([
+                '\n', row_.generate_abc_str().strip()])
+            objstr = ''.join([objstr, '\n' * (len(row_) - objstr.count('\n') + 6)])
+            return objstr
 
-        elif pressed == 2:
-            obj_str_ = row_.draw(get_str=True)
-
-        elif pressed == 3:
-            obj_str_ = '\n' * 2 + row_.listfreqs(get_str=True) + '\n' * 4
-
-        elif pressed == 4:
-            obj_str_ = '\n'
-            obj_str_ += row_.generate_abc_str().strip()
-            k = len(row_) + 7 - len(obj_str_.split('\n'))
-            obj_str_ += '\n' * k
-
-        elif pressed == 5:
-            row_.plot()
-
-        elif pressed == 6:
+        def create_postscript():
+            """
+            Generate the postcript-format staff notation
+            """
             row_.write_abc_file()
             row_.abc2postscript()
             basename = row_.generate_basename()
+            objstrlst = [
+                '\n' * 9,
+                '** {}.abc written **'.format(basename).center(TERM.width()),
+                '\n',
+                '** {}.ps written **'.format(basename).center(TERM.width()),
+                '\n' * 8
+            ]
+            return ''.join(objstrlst)
 
-            obj_str_ = '\n' * 9
-            obj_str_ += '** {}.abc written **'.format(
-                basename).center(TERM.width())
-            obj_str_ += '\n'
-            obj_str_ += '** {}.ps written **'.format(
-                basename).center(TERM.width())
-            obj_str_ += '\n' * 8
+        views_dict = {
+            2: lambda: row_.draw(get_str=True),
+            3: lambda: ''.join(['\n' * 2, row_.listfreqs(get_str=True), '\n' * 4]),
+            4: align_abc_txt,
+            5: row_.plot,
+            6: create_postscript
+        }
+
+        obj_str_ = views_dict.get(pressed, lambda: obj_str_)()
+        if pressed == 1:
+            break
+    return obj_str_
+
 
 def midi_menu(row_, obj_str_):
     """
@@ -163,7 +165,7 @@ def midi_menu(row_, obj_str_):
     """
     menu_entries = ['..', 'Play MIDI     (timidity)']
     if 'DISPLAY' in os.environ:
-        menu_entries += ['Play MIDI     (audacious, X only)']
+        menu_entries.extend(['Play MIDI     (audacious, X only)'])
     play_menu = ListPrompt(menu_entries)
 
     while True:
@@ -179,10 +181,7 @@ def midi_menu(row_, obj_str_):
             break
         else:
             row_.write_abc_file()
-            if pressed == 2:
-                row_.play_midi()
-            elif pressed == 3:
-                row_.play_midi('audacious')
+            row_.play_midi('audacious' if pressed == 3 else 'timidity')
 
 def transform_menu(row_, obj_str_):
     """
@@ -190,29 +189,32 @@ def transform_menu(row_, obj_str_):
     """
     trans_menu = ListPrompt(
         ['..', 'retrograde', 'invert', 'rotate', 'transpose'])
-    while True:
-        if SHELL.interface == 'term':
-            pressed = TERM.make_page(
-                'TRANSFORM', obj_str_,
-                lambda: SHELL.list_menu(trans_menu))
-        elif SHELL.interface == 'Tk':
-            SHELL.main_window.title('TRANSFORM')
-            SHELL.output(obj_str_)
-            pressed = SHELL.list_menu(trans_menu)
-        if pressed == 1:
-            break
-        elif pressed == 2:
-            row_.reverse()
-            obj_str_ = row_.draw(get_str=True)
-        elif pressed == 3:
-            row_.invert()
-            obj_str_ = row_.draw(get_str=True)
-        elif pressed == 4:
-            row_.rotate()
-            obj_str_ = row_.draw(get_str=True)
-        elif pressed == 5:
-            halfsteps = float(TERM.input('+'))
-            row_.transpose(halfsteps)
+
+    # while True:    uncomment this line and the following break statement    #
+                   #     if you want this menu to hang open      #
+
+    if SHELL.interface == 'term':
+        pressed = TERM.make_page(
+            'TRANSFORM', obj_str_,
+            lambda: SHELL.list_menu(trans_menu))
+    elif SHELL.interface == 'Tk':
+        SHELL.main_window.title('TRANSFORM')
+        SHELL.output(obj_str_)
+        pressed = SHELL.list_menu(trans_menu)
+
+    transform_dict = {
+        2: lambda: row_.reverse().draw(get_str=True),
+        3: lambda: row_.invert().draw(get_str=True),
+        4: lambda: row_.rotate().draw(get_str=True),
+        5: lambda: row_.transpose(float(TERM.input('+')))
+    }
+
+    obj_str_ = transform_dict.get(pressed, lambda: obj_str_)()
+
+    #  if pressed == 1:
+    #      break
+
+    return obj_str_
 
 def main():
     """
@@ -223,9 +225,9 @@ def main():
     obj_str = row.draw(get_str=True)
     menu_obj = build_main_menu()
     main_func = lambda: SHELL.list_menu(menu_obj)
-    trans_head = menu_obj.items[1]
-    vmenu_head = menu_obj.items[2]
-    midi_head = menu_obj.items[3]
+    trans_head = menu_obj[1]
+    vmenu_head = menu_obj[2]
+    midi_head = menu_obj[3]
 
 
     # Main Menu
@@ -236,7 +238,8 @@ def main():
             SHELL.main_window.title(HEADER)
             SHELL.output(obj_str)
             pressed = main_func()
-        else: sys.exit('Sorry, {} is not supported'.format(SHELL.interface))
+        else:
+            sys.exit('Sorry, {} is not supported'.format(SHELL.interface))
 
         if pressed == menu_obj.index('Play') + 1:
             row.play()
@@ -245,14 +248,11 @@ def main():
             obj_str = row.draw(get_str=True)
             continue
         elif pressed == menu_obj.index(vmenu_head) + 1:
-            visualization_menu(row, obj_str)
-
+            obj_str = visualization_menu(row, obj_str)
         elif pressed == menu_obj.index(midi_head) + 1:
             midi_menu(row, obj_str)
-
         elif pressed == menu_obj.index(trans_head) + 1:
-            transform_menu(row, obj_str)
-
+            obj_str = transform_menu(row, obj_str)
         else:
             break
 

@@ -25,15 +25,11 @@ def _parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         '-C', action='store_true', help="see developer's comments")
-
     parser.add_argument('-b', type=str, help='background color')
     parser.add_argument('FILENAME', type=str, help='filename')
     parser.add_argument('ATTRIBUTES', nargs='*')
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else:
-        args = None
-    return args
+    return parser.parse_args() if __name__ == '__main__' else  None
+
 
 notebook(REMARKS)
 ARGS = _parse_args()
@@ -41,14 +37,12 @@ Terminal()
 
 def main():
     """Main function"""
-    if ARGS is not None and ARGS.b is not None:
-        bgcolor = 'on_' + ARGS.b
-    else:
-        bgcolor = None
+    
+    bgcolor = ''.join(['on_', ARGS.b]) if ARGS.b is not None else None
     string = easycat.cat(files=[ARGS.FILENAME], return_str=True)
     color = None
-
     styles = []
+
     for style in ARGS.ATTRIBUTES:
         if color is None and style in [
                 'grey',
@@ -61,7 +55,7 @@ def main():
                 'white']:
             color = style            
         else:
-            styles += [style]
+            styles.append(style)
 
     cprint(string, color, bgcolor, styles)
 

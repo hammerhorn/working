@@ -52,7 +52,7 @@ def alert():
     Print a visual alert using the toilet(/figlet) command.
     Print an audible alert using espeak speech synthesizer.
     """
-
+    # Use toilet obj
     proc = subprocess.Popen('toilet "Done"', shell=True)
     proc.wait()
 
@@ -83,24 +83,15 @@ def alert():
 ###############
 #  CONSTANTS  #
 ###############
-if __name__ == '__main__':# and ARGS.time_str is not None:
-    ARGS = _parse_args()
-else:
-    ARGS = None
-
-if ARGS is not None and ARGS.time_str is not None:
-    TIME_STR = ARGS.time_str
-else:
-    TIME_STR = '330'
-
+ARGS = _parse_args() if __name__ == '__main__' else None
+TIME_STR = ARGS.time_str if ARGS is not None and ARGS.time_str is not None\
+           else '330'
+    
 if TIME_STR[0] == ':':
-    TIME_STR = '0' + TIME_STR
+    TIME_STR = ''.join(['0', TIME_STR])
 
-if TIME_STR.isdigit():
-    SECONDS = float(TIME_STR)
-else: SECONDS = float(subprocess.check_output(\
-   './mmss.py {}'.format(TIME_STR), shell=True))
-
+SECONDS = float(TIME_STR) if TIME_STR.isdigit() else float(
+    subprocess.check_output('./mmss.py {}'.format(TIME_STR), shell=True))
 _SINCE = time.time()
 
 
@@ -114,7 +105,6 @@ def main():
     """
     Terminal()
     remaining = SECONDS
-
     string = (subprocess.check_output('./mmss.py {}'.format(
         int(remaining)), shell=True)).decode('utf-8')
     Terminal.hide_cursor()
@@ -124,7 +114,6 @@ def main():
         remaining = SECONDS - time.time() + _SINCE
         string = (subprocess.check_output('./mmss.py {}'.format(
             int(remaining)), shell=True)).decode('utf-8')
-
         easycat.write('\r{}'.format(string.strip()))
     alert()
 
@@ -132,7 +121,7 @@ def main():
 
 if __name__ == '__main__':
     try:
-        main()
+        main()  # use misc.current_time()
     except KeyboardInterrupt:
         today = datetime.datetime.today()
         now = today.strftime('%l:%M:%S %P')

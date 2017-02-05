@@ -21,8 +21,11 @@ notebook(REMARKS)
 Terminal()
 SHELL = Config().start_user_profile()
 if SHELL.platform != 'android':
-    catch_help_flag('\nusage: {} [FEN_NOTATION_STR]\n'.format(
-        sys.argv[0].replace('./', '')) + __doc__, SHELL)
+    script_name = sys.argv[0].replace('./', '')
+    catch_help_flag(
+        ''.join(
+            ['\nusage: {} [FEN_NOTATION_STR]\n'.format(script_name), __doc__]),
+        SHELL)
 
 
 def rank_list(fen_str='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'):

@@ -31,7 +31,7 @@ def main():
     elif SHELL.interface in ['dialog', 'zenity', 'SL4A']:
         SHELL.output(string)
     elif SHELL.interface == 'term':
-        SHELL.tty(string + '\n')
+        SHELL.tty(''.join([string, '\n']))
 
 if __name__ == '__main__':
     main()

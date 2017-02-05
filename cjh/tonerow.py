@@ -22,18 +22,20 @@ class Tonerow(Thing):
     """
     def __init__(self, length=12, int_list=None, sh_obj=Terminal()):
         #self.gen_range = range(length) if Terminal.py_version == 3 else xrange(length)
-        #self.lst_range = list(range(length)) if Terminal.py_version == 3 else range(length)        
+        #self.lst_range = list(range(length)) if Terminal.py_version == 3 else range(length)
         super(Tonerow, self).__init__()
         # sh_obj should belong to Thing
         self.sh_obj = sh_obj
         if int_list is not None:
             self.seq = int_list
         else:
-            Terminal()
+            self.seq = lst_range(length)
+            # list(range(length)) if Terminal.py_version == 3 else\
+            #            Terminal()
 
             # Time some of these constructions
-            self.seq = lst_range(length)  # list(range(length)) if Terminal.py_version == 3 else\
-                       #range(length)
+
+            #range(length)
 
             index = length - 1
             #itrbl = range(length) if Terminal.py_version == 3 else xrange(length)
@@ -87,44 +89,45 @@ class Tonerow(Thing):
         """
         draw tonerow diagram
         """
-        out_str = '\n\n '
+        out_str_lst = ['\n\n ']
         maximum = len(self)
         if maximum < 12:
-            out_str += ' '
-        out_str += str(self.seq)
+            out_str_lst.append(' ')
+        out_str_lst.append(str(self.seq))
 
         hrule_width = int(round(2.91666 * maximum)) + 7
         if self.sh_obj.interface == 'Tk':
             hrule_width = int(hrule_width * 0.55)
-        out_str += '\n' + '=' * (hrule_width) + '\n'
+        out_str_lst.extend(['\n', '=' * hrule_width, '\n\n'])
 
-        out_str += '\n'
-
-        #gen_rng = range(maximum) if Terminal.py_version == 3 else xrange(maximum)
         for row in gen_range(maximum):
-            str_row = ' {:>2} '.format(maximum - row - 1)
+            str_row_lst = [' {:>2} '.format(maximum - row - 1)]
             for index in gen_range(maximum):
                 if self.seq[index] == maximum - row - 1:
                     if self.sh_obj.interface == 'term':
                         if self.sh_obj.os_name == 'posix':
-                            str_row += colored('   ', attrs=['reverse', 'bold'])
+                            args = ()
+                            kwargs = {'attrs': ['reverse', 'bold']}
                         else:
-                            str_row += colored('   ', 'white', 'on_white')
+                            args = ('white', 'on_white')
+                            kwargs = {}
+                        str_row_lst.append(colored('   ', *args, **kwargs))
                     else:
-                        str_row += '[*]'
+                        str_row_lst.append('[*]')
                 else:
-                    str_row += '. .'
-            out_str += str_row + '\n'
-        out_str += '\n'
+                    str_row_lst.append('. .')
+                str_row = ''.join(str_row_lst)
+            out_str_lst.extend([str_row, '\n'])
+        out_str_lst.append('\n')
+        out_str = ''.join(out_str_lst)
         if get_str is True:
             return out_str
         else:
-            if self.sh_obj.interface == 'dialog':
-                wide, high = 46, 24
-            elif self.sh_obj.interface == 'Tk':
-                wide, high = 400, 300
-            else:
-                wide, high = None, None
+            xy_dict = {
+                'dialog': (46, 24),
+                'Tk'    : (400, 300)
+            }
+            wide, high = xy_dict.get(self.sh_obj.interface, (None, None))
             self.sh_obj.output(out_str, width=wide, height=high)
 
     def reverse(self):
@@ -134,6 +137,7 @@ class Tonerow(Thing):
         self.seq = self.seq[::-1]
         self.pseq = PitchSequence(
             PitchSet(len(self), start_pitch=self.get_lowest_tone()), [i + 1 for i in self.seq])
+        return self
 
     def invert(self):
         """
@@ -142,7 +146,7 @@ class Tonerow(Thing):
         self.seq = [len(self) - i - 1 for i in self.seq]
         self.pseq = PitchSequence(
             PitchSet(len(self), start_pitch=self.get_lowest_tone()), [i + 1 for i in self.seq])
-
+        return self
 
     def rotate(self):
         """
@@ -155,6 +159,7 @@ class Tonerow(Thing):
                     self.seq[outer] = len(backup) - inner - 1
         self.pseq = PitchSequence(
             PitchSet(len(self), start_pitch=self.get_lowest_tone()), self.seq)
+        return self
 
     def transpose(self, interval):
         """
@@ -169,7 +174,7 @@ class Tonerow(Thing):
 #        self.seq = [i + interval for i in self.seq]
 #        self.pseq = PitchSequence(PitchSet(), self.seq)
 #        self.draw_list_play()
-
+        return self
 
     def get_lowest_tone(self):
         """

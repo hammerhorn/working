@@ -130,9 +130,12 @@ def main():
             'zenity'
         ]
 
+#        print supported_modes
+#        print supported_modes.extend(['?', None])        
+#        sys.exit()
         if args_dict['shell'] not in (supported_modes + ['?', None]):
             args_dict['shell'] = CONFIG.config_dict['shell']
-            Terminal.output('\nsupported modes: ' + str(supported_modes)[1:-1] + '\n')
+            Terminal.output(''.join(['\nsupported modes: ', str(supported_modes)[1:-1], '\n']))
 
         nochangeneeded = noeditcommand
         for key in args_dict.keys():
@@ -150,12 +153,13 @@ def main():
         'default web browser'
     ]
 
+    msg_list = [string]
     for key_name, key_label in iter_zip(KEYNAME_LIST, keylabel_list):
         if (verbose > 0 and args_dict[key_name] is not None) or\
-           nocommand is True or args_dict[key_name] == '?':
-            string += generate_msg(key_name, key_label)
-
-
+            nocommand is True or args_dict[key_name] == '?':
+            msg_list.append(generate_msg(key_name, key_label))
+    string = ''.join(msg_list)
+            
     if len(string) > 0:
         Terminal.output(string + '\n')
 

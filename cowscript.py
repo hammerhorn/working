@@ -52,9 +52,6 @@ def define_text():
         except IndexError:
             SHELL.message('use: cowscript [message]')
             sys.exit()
-
-    #if text[-1] == '\n':
-    #    text = text[:-1]
     return text.strip()
 
 
