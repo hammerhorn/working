@@ -1,5 +1,7 @@
-#!/usr/bin/env python
-"""output the corresponding ordinal value for the pressed key character"""
+#!/usr/bin/env python3
+"""
+output the corresponding ordinal value for the pressed key character
+"""
 from easycat import write
 from versatiledialogs.terminal import Terminal
 

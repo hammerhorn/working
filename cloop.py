@@ -79,17 +79,15 @@ def main():
     include_dict = {
         'f90': '',
         'cpp': '#include <iostream>\n',
-        'c': '#include <stdio.h>\n'}
+        'c'  : '#include <stdio.h>\n'}
 
     startblock_dict = {
         'f90': 'PROGRAM Interactive\nIMPLICIT NONE\n',
-        'c': 'int main(int argc, char* argv[])\n{\n',
+        'c'  : 'int main(int argc, char* argv[])\n{\n',
         'cpp': 'using namespace std;\nint main(int argc, char* argv[])\n{\n'}
 
     prompt_dict = {'f90': '+', 'cpp': '%%', 'c': '%'}
-
     endblock_dict = {'f': 'END PROGRAM Interactive', 'c': '\n\treturn 0;\n}'}
-
     compiler_dict = {'f90': 'gfortran', 'c': 'gcc', 'cpp': 'g++'}
 
     includes = include_dict[EXTENSION]

@@ -3,7 +3,10 @@
 Base class for most classes
 """
 import os
-import pickle
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 import sys
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'

@@ -7,7 +7,10 @@ Stores data about the system and common methods for user interaction.
 
 import abc
 import os
-import pickle
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 import platform
 import sys
 import time
