@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Versatile Dialogs Preferences
 
@@ -23,6 +23,9 @@ import copy
 import sys
 import time
 
+if sys.version_info.major == 2:
+    from itertools import izip
+
 import easycat
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
@@ -35,7 +38,6 @@ REMARKS = """
     - go game client
     + include brower
     + use dict.get()"""
-
 
 def _parse_args():
     """
@@ -71,6 +73,12 @@ CONFIG = Config()
 FILENAME = 'versatiledialogs/config.json'
 KEYNAME_LIST = ['shell', 'editor', 'terminal', 'language', 'browser']
 
+def iter_zip(list1, list2):
+    if sys.version_info.major == 2:
+        return izip(list1, list2)
+    else:
+        return zip(list1, list2)
+    
 def lookup(key):
     """return the requested value"""
     return CONFIG.config_dict.get(key, None)
@@ -142,7 +150,7 @@ def main():
         'default web browser'
     ]
 
-    for key_name, key_label in zip(KEYNAME_LIST, keylabel_list):
+    for key_name, key_label in iter_zip(KEYNAME_LIST, keylabel_list):
         if (verbose > 0 and args_dict[key_name] is not None) or\
            nocommand is True or args_dict[key_name] == '?':
             string += generate_msg(key_name, key_label)
