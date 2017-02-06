@@ -12,9 +12,22 @@ import os
 __author__ = 'Chris Horn'
 __license__ = 'GPL'
 
-FILELIST = glob('*/*/*.py?') + glob('*/*.py?') + glob('*.py?') + glob('*/*/*~')\
-           + glob('*~') + glob('*/*~') + glob('__data__/*.tmp')
+FILE_LIST = []
+PATTERN_LIST = [
+    '*/*/*.py?',
+    '*/*.py?',
+    '*.py?',
+    '*/*/*~',
+    '*~',
+    '*/*~',
+    '__data__/*.tmp'
+]
 
-for filename in FILELIST:
-    os.remove(filename)
+for pattern in PATTERN_LIST:
+    FILE_LIST.extend(glob(pattern))
 
+for filename in FILE_LIST:
+    try:
+        os.remove(filename)
+    except FileNotFoundError:
+        pass

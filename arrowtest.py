@@ -42,7 +42,7 @@ def main():
     try:
         while True:
             try:
-                Terminal.output(''.join(['\b', get_arrow_key()]))
+                Terminal.output('\b' + get_arrow_key())
 
             # Fails when get_arrow_key() returns None
             except TypeError:

@@ -92,18 +92,15 @@ def roll_and_output():
 ##########
 #  DATA  #
 ##########
-if __name__ == '__main__':
-    notebook("""
+notebook("""
     - Pyplot histogram
 
     * Why not make a full Yahtzee or Craps game""")
-    ARGS = _parse_args()
-else:
-    ARGS = None
 
+ARGS = _parse_args() if __name__ == '__main__' else None
 CONFIG = Config()
 SHELL = CONFIG.launch_selected_shell(ARGS.shell) if ARGS is not None and\
-        ARGS.shell is True else CONFIG.start_user_profile()
+        ARGS.shell is not None else CONFIG.start_user_profile()
 SHELL_NAME = SHELL.interface
 LANG = CONFIG.get_lang_key()
 

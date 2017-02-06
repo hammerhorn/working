@@ -21,7 +21,7 @@ Examples:
 import argparse
 import copy
 import sys
-import time
+# import time
 
 if sys.version_info.major == 2:
     from itertools import izip

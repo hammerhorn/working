@@ -67,11 +67,11 @@ if __name__ == '__main__':
 
 TONE_COUNT = find_tonecount()
 HEADER = 'TONE ROW EDITOR'
-MICROTONE_WARNING = ''.join(['\n' * 4,
+MICROTONE_WARNING = ''.join(('\n' * 4,
 """     ABC, PS, and MIDI functions do not
      currently support microtones.
      Therefore these results are merely
-     approximate.""", '\n' * (TONE_COUNT - 1)])
+     approximate.""", '\n' * (TONE_COUNT - 1)))
 
 def build_main_menu():
     """
@@ -124,10 +124,8 @@ def visualization_menu(row_, obj_str_):
             Align the ABC notation code on the screen
             with the right amount of space.
             """
-            objstr = ''.join([
-                '\n', row_.generate_abc_str().strip()])
-            objstr = ''.join([objstr, '\n' * (len(row_) - objstr.count('\n') + 6)])
-            return objstr
+            objstr = '\n' + row_.generate_abc_str().strip()
+            return objstr + '\n' * (len(row_) - objstr.count('\n') + 6)
 
         def create_postscript():
             """
@@ -136,18 +134,18 @@ def visualization_menu(row_, obj_str_):
             row_.write_abc_file()
             row_.abc2postscript()
             basename = row_.generate_basename()
-            objstrlst = [
+            objstr_tup = (
                 '\n' * 9,
                 '** {}.abc written **'.format(basename).center(TERM.width()),
                 '\n',
                 '** {}.ps written **'.format(basename).center(TERM.width()),
                 '\n' * 8
-            ]
-            return ''.join(objstrlst)
+                )
+            return ''.join(objstr_tup)
 
         views_dict = {
             2: lambda: row_.draw(get_str=True),
-            3: lambda: ''.join(['\n' * 2, row_.listfreqs(get_str=True), '\n' * 4]),
+            3: lambda: ''.join(('\n' * 2, row_.listfreqs(get_str=True), '\n' * 4)),
             4: align_abc_txt,
             5: row_.plot,
             6: create_postscript
@@ -225,10 +223,8 @@ def main():
     obj_str = row.draw(get_str=True)
     menu_obj = build_main_menu()
     main_func = lambda: SHELL.list_menu(menu_obj)
-    trans_head = menu_obj[1]
-    vmenu_head = menu_obj[2]
-    midi_head = menu_obj[3]
 
+    trans_head, vmenu_head, midi_head = menu_obj[1:4]
 
     # Main Menu
     while True:

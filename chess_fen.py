@@ -23,8 +23,7 @@ SHELL = Config().start_user_profile()
 if SHELL.platform != 'android':
     script_name = sys.argv[0].replace('./', '')
     catch_help_flag(
-        ''.join(
-            ['\nusage: {} [FEN_NOTATION_STR]\n'.format(script_name), __doc__]),
+        '\nusage: {} [FEN_NOTATION_STR]\n'.format(script_name)+__doc__,
         SHELL)
 
 
