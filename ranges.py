@@ -1,11 +1,15 @@
 import sys
+if sys.version_info.major == 2:
+        from itertools import izip
 
 def gen_range(*args):
-    gen = range(*args) if sys.version_info.major == 3 else xrange(
+    return range(*args) if sys.version_info.major == 3 else xrange(
         *args)
-    return gen
 
 def lst_range(*args):
-    lst = list(range(*args)) if sys.version_info.major == 3 else range(
+    return list(range(*args)) if sys.version_info.major == 3 else range(
         *args)
-    return lst
+
+def iter_zip(list1, list2):
+    return zip(list1, list2) if sys.version_info.major == 3 else izip(
+        list1, list2)

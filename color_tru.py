@@ -56,12 +56,13 @@ def main():
     terminal that supports Truecolor escapes.
     """
     Terminal.hide_cursor()
-    Terminal.output(''.join((
-        '\nANSI escape:\nRGB hexcode\n\n',
-        OUT_STR1,
-        '\n',
-        OUT_STR2,
-        '\n' * 4)))
+    #Terminal.output(''.join((
+    #    '\nANSI escape:\nRGB hexcode\n\n',
+    #    OUT_STR1,
+    #    '\n',
+    #    OUT_STR2,
+    #    '\n' * 4)))
+    Terminal.output('\nANSI escape:\nRGB hexcode\n\n{}\n{}\n\n\n\n'.format(OUT_STR1, OUT_STR2))
     time.sleep(DELTA_T * 4)
     Terminal.cursor_v(4)
     try:

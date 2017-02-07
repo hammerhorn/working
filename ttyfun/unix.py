@@ -34,8 +34,9 @@ class Cow(object):
         return out_str
 
     def output(self, text, get_str=False):
-        out_str = '\n' + subprocess.check_output(
+        out_str = subprocess.check_output(
             'cowsay -f {} "{}"'.format(self.name, text), shell=True)
+        out_str = '\n' + out_str.decode('utf8')
         if get_str is True:
             return out_str
         else:

@@ -36,8 +36,7 @@ def main():
         print('Argument required.')  # pylint: disable=C0325
 
     except ValueError:
-        print('Invalid argument.')  # pylint: disable=C0325
-        print(__doc__)  # pylint: disable=C0325
+        print('Invalid argument.\n' + __doc__)  # pylint: disable=C0325
 
 if __name__ == '__main__':
     main()

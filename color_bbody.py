@@ -31,7 +31,8 @@ from cjh.misc       import fahr_to_kelvins, notebook
 from fiziko.waves   import kelvin_to_rgb
 
 from versatiledialogs.config      import Config
-from versatiledialogs.html_sh     import HtmlShell
+if sys.version_info.major == 2:
+    from versatiledialogs.html_sh     import HtmlShell
 from versatiledialogs.terminal    import Terminal
 from versatiledialogs.tk_template import TkTemplate
 

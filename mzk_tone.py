@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #coding=utf8
 """
 Play one musical tone.
@@ -22,20 +22,17 @@ REMARKS = """
     * German-style and Latin-style notenames
     * There should be a random note feature"""
 
+
+
+
 if __name__ == '__main__':
     notebook(REMARKS)
     catch_help_flag(__doc__)
-    if len(sys.argv[1:]) >= 1 and sys.argv[1].replace('.', '', 1).isdigit():
-        TONE = Pitch(freq=sys.argv[1])
-    elif len(sys.argv[1:]) == 1:
-        TONE = Pitch(sys.argv[1])
-    elif len(sys.argv[1:]) == 2:
-        TONE = Pitch(sys.argv[1], sys.argv[2])
-    elif len(sys.argv[1:]) == 3:
-        TONE = Pitch(sys.argv[1], sys.argv[2], sys.argv[3])
+    if len(sys.argv[1:]) >= 1:
+        TONE = Pitch(freq=sys.argv[1]) if sys.argv[1].replace(
+            '.', '', 1).isdigit() else Pitch(*sys.argv[1:])
     else:
         TONE = Pitch()
-
     print('{:.7} {}={}'.format(
         TONE.freq.mag, TONE.freq.units.abbrev, TONE.label))
     TONE.play()

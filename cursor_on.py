@@ -4,5 +4,4 @@ Restore a lost cursor.
 """
 from versatiledialogs.terminal import Terminal
 
-Terminal()
-Terminal.unhide_cursor()
+Terminal().unhide_cursor()

@@ -169,10 +169,10 @@ class TwoDShape(Thing):
         self.area = Area()
 
     def __str__(self):
-        s = '\n' + Terminal.fx('u', self.label)
-        s += '{:>9} = {}\n'.format('Area', self.area)
-        s += '{:>9} = {}'.format('Perimeter', self.perimeter.to_scalar())
-        return s
+        return ''.join(
+            ('\n', Terminal.fx('u', self.label),
+             '{:>9} = {}\n'.format('Area', self.area),
+             '{:>9} = {}'.format('Perimeter', self.perimeter.to_scalar())))
 
     @property
     def area_(self):
@@ -204,11 +204,10 @@ class Polygon(TwoDShape):
         self.angle_sum = Angle((self.sides - 2) * 180)
 
     def __str__(self):
-        out_str = 'In a figure with {} sides,\n'.format(self.sides)
-        out_str += '\n\tsum of all angles = {}\n'.format(self.angle_sum)
-        out_str += '\t    average angle = {}\n'.format(
-            self.angle_sum / self.sides)
-        return out_str
+        return ''.join(('In a figure with {} sides,\n'.format(self.sides),
+                        '\n\tsum of all angles = {}\n'.format(self.angle_sum),
+                        '\t    average angle = {}\n'.format(
+                            self.angle_sum / self.sides)))
 
 class Ellipse(TwoDShape):
     """Plot Ellipse, get area and circumference; parent for Circle"""
@@ -232,10 +231,13 @@ class Ellipse(TwoDShape):
             self.eccentricity = decimal.Decimal(f) / decimal.Decimal(v_semiaxis)
 
     def __str__(self):
-        s = '\n' + Terminal.ul(self.label) + '\n'
-        s += '{:>13} = {}\n'.format('Area', self.area)
+        s = ''.join(
+            ('\n', Terminal.ul(self.label), '\n',
+             '{:>13} = {}\n'.format('Area', self.area),
+             '{:>13} = {}\n'.format('Center', self.center)))
+
       # s += "{:>13} = {}".format('Circumference', self.perimeter.to_Scalar())
-        s += '{:>13} = {}\n'.format('Center', self.center)
+        
         if self.focus1 != self.focus2:
             s += '{:>13} = {} & {}\n'.format('Foci', self.focus1, self.focus2)
         s += '{:>13} = {}\n'.format('Eccentricity', self.eccentricity)
@@ -261,10 +263,10 @@ class Circle(Ellipse):
     def __call__(self, x_value):
         """Function of the upper half of the circle"""
         try:
-            f_of_x = self.center.y_mag + math.sqrt(
+            return self.center.y_mag + math.sqrt(
                 self.radius.mag ** 2 -decimal.Decimal(
                     x_value - self.center.x_mag) ** 2)
-            return f_of_x
+
         except ValueError:
             Terminal.notify(
                 'function is undefined at f({})'.format(x_value))
@@ -317,13 +319,13 @@ class Graph(Thing):
     #       -->#     col - self.max_domain, self.max_domain - rank):
     # ERASE!-->#     self.plane[col][rank].marker = 'hoshi'
 
-        if sys.version_info.major == 2:
-            self.skin_dict = json.load(open(
-                '{}/{}'.format(basedir, skinfile), 'rb'))
-        elif sys.version_info.major == 3:
-            file_handle = open(basedir + '/' + skinfile, 'rb')
-            file_str = file_handle.read().decode('utf-8')
-            self.skin_dict = json.loads(file_str)
+        #if sys.version_info.major == 2:
+        self.skin_dict = json.load(open(
+            '{}/{}'.format(basedir, skinfile), 'r'))
+        #elif sys.version_info.major == 3:
+        #    file_handle = open(basedir + '/' + skinfile, 'r')
+        #    file_str = file_handle.read()  # .decode('utf-8')
+        #    self.skin_dict = json.loads(file_str)
 
         #######################################################################
 ###
@@ -365,38 +367,33 @@ class Graph(Thing):
 
     def __str__(self):
         """this would be better if the cursor could be hidden"""
-        string = '\n' #'{}\n'.format(self.ul_label(self.size * 2 + 5))
-        string += ' ' * 3
+        str_list = ['\n'] #'{}\n'.format(self.ul_label(self.size * 2 + 5))
+        str_list.append(' ' * 3)
         for i in range(self.size):
-            string += '{:>2s}'.format(self.letters[i])
-        string += "\n"
+            str_list.append('{:>2s}'.format(self.letters[i]))
+        str_list.append('\n')
+
         for rank in range(self.size):
-            string += ('%3d ' % (self.size - rank))
+            str_list.append('%3d ' % (self.size - rank))
             for col in range(self.size):
                 xy_coords = col - self.max_domain, self.max_domain - rank
                 if xy_coords == tuple(self.cursor):
-                    string += '\b('
+                    str_list.append('\b(')
                 tag_list = self.skin_dict.keys()
                 tag = self.plane[col][rank].marker
-                if sys.version_info.major == 2:
-                    if tag in tag_list:
-                        string += self.skin_dict[tag].encode('utf-8')
-                    else: string += '??'.encode('utf-8')
-                elif sys.version_info.major == 3:
-                    if tag in tag_list:
-                        string += self.skin_dict[tag]
-                    else: string += '??'
+                symbol = self.skin_dict[tag] if tag in tag_list else '??'  # .encode('utf-8')
+                str_list.append(symbol)  # .encode('utf-8'))
                 if xy_coords == tuple(self.cursor):
-                    string += '\b)'
+                    str_list.append('\b)')
             if self.size > 9:
-                string += ('{:2d} '.format(self.size - rank))
-            else: string += ('{:1d} '.format(self.size - rank))
-            string += '\n'
-        string += ' '* 3
+                str_list.append('{:2d} '.format(self.size - rank))
+            else: str_list.append('{:1d} '.format(self.size - rank))
+            str_list.append('\n')
+        str_list.append(' '* 3)
         for i in range(self.size):
-            string += '{:>2s}'.format(self.letters[i])
-        string += '\n'
-        return string
+            str_list.append('{:>2s}'.format(self.letters[i]))
+        str_list.append('\n')
+        return ''.join(str_list)
 
 
      ###########
@@ -430,20 +427,19 @@ class Graph(Thing):
                 if self.sh_obj.interface == 'term':
                     point = Terminal.make_page(
                         'EDIT', self, self.pt_at_cursor)
-                else:
+                elif self.sh_obj.interface == 'Tk':
                     self.sh_obj.msgtxt.set(self.__str__())
                     point = self.pt_at_cursor()
 
-                # if type(point) == Point:
-                if point.isinstance(Point):
-                    string = ''
-                    string += ('\t' + str(point)) + '\n'
-                    string += ('\t[' + point.distance_str + ']') + '\n'
+                if isinstance(point, Point):
+                    string = ''.join(
+                        ('\t', point.__str__(), '\n\t[',point.distance_str,
+                        ']\n'))
 
                     if self.sh_obj.interface == 'term':
                         Terminal.output(string)
                     #self.sh_obj.output(string)
-                    else:
+                    elif self.sh_obj.interface == 'Tk':
                         tk.Label(self.sh_obj.main_window, text=str(point))
                         tk.Label(self.sh_obj.main_window, text='[{}]'.format(
                             point.distance_str))
@@ -454,50 +450,38 @@ class Graph(Thing):
                     'Use h, j, k, l to move the cursor',
                     'b=black, w=white, x=erase, *=star',
                     'Ctl-c to exit editor']
-                if self.cursor[0] >= -self.max_domain and\
-                    self.cursor[0] <= self.max_domain and\
-                    self.cursor[1] >= -self.max_domain and\
-                    self.cursor[1] <= self.max_domain:
+                if self.max_domain >= self.cursor[0] >= -self.max_domain and\
+                    self.max_domain >= self.cursor[1] >= -self.max_domain:
                     pass
                 else:
-                    rescue_key = 'l or h'
-                    if self.cursor[1] < -self.max_domain or\
-                        self.cursor[1] > self.max_domain:
-                        rescue_key = 'j or k'
+                    rescue_key = 'j or k' if self.max_domain < self.cursor[1] <\
+                                 -self.max_domain else 'l or h'
                     info_list[0] = 'Press {} to reveal cursor'.format(
                         rescue_key)
 
                 info = ItemList(info_list)
                 if self.sh_obj.interface == 'term':
                     Terminal.output(info)
-                else:
+                elif self.sh_obj.interface == 'Tk':
                     tk.Label(self.sh_obj.main_window, text=str(info)).pack()
 
                 char = Terminal.get_keypress()
                 if char == 'h':
-                    if self.cursor[0] > -self.max_domain:
-                        self.cursor[0] -= 1
-                    else:
-                        self.cursor[0] += self.size
+                    self.cursor[0] += -1 if self.cursor[0] > -self.max_domain\
+                                      else self.size
                 elif char == 'l':
                     if self.size % 2 == 0:
                         self.max_domain += 1
-                    if self.cursor[0] < self.max_domain:
-                        self.cursor[0] += 1
-                    else:
-                        self.cursor[0] -= self.size
+                    self.cursor[0] += 1 if self.cursor[0] < self.max_domain\
+                                      else -self.size
                     if self.size % 2 == 0:
                         self.max_domain += 1
                 elif char == 'j':
-                    if self.cursor[1] > -1 * self.max_domain:
-                        self.cursor[1] -= 1
-                    else:
-                        self.cursor[1] += self.size
+                    self.cursor[1] += -1 if self.cursor[1] > -self.max_domain\
+                                      else self.size
                 elif char == 'k':
-                    if self.cursor[1] < self.max_domain:
-                        self.cursor[1] += 1
-                    else:
-                        self.cursor[1] -= self.size
+                    self.cursor[1] += 1 if self.cursor[1] < self.max_domain\
+                                      else -self.size
                 elif char == 'b':
                     self.plot_point(self.cursor[0], self.cursor[1], 'black')
                 elif char == 'w':
@@ -535,21 +519,16 @@ class Graph(Thing):
         Prompt the user to choose a color; this should be in a go_stone class
         """
         choice = -1
-        while choice != 'b' and choice != 'w' and choice != 'x' and\
-            choice != '*':
+        while choice not in ('b', 'w', 'x', '*'):
             choice = self.sh_obj.get_keypress(
                 '\nPick up a color\n(b=black, w=white, x=erase, *=star)')
-        if choice == 'b':
-            return 'black'
-        elif choice == 'w':
-            return 'white'
-        elif choice == 'x':
-            return 'empty'
-        elif choice == '*':
-            return 'star'
-        else:
-            Terminal.output('Cancelling operation')
-            return -1
+        color_dict = {
+            'b': 'black',
+            'w': 'white',
+            'x': 'empty',
+            '*': 'star'
+            }
+        return color_dict[choice]
 
     def prompt_point(self, color):
         """
@@ -567,19 +546,16 @@ class Graph(Thing):
         elif x_val >= (-self.max_domain) and x_val <= self.max_domain and\
              y_val >= (-self.max_domain) and y_val <= self.max_domain:
 
-            # try: #WHAT'S THE ERROR?
-            if color == 'black' or color == 'white' or color == 'star':
+            #WHAT'S THE ERROR?
+            if color in ('black', 'white', 'star'):
                 self.plane[int(round(x_val) + self.max_domain)][int(
                     self.max_domain - round(y_val))].marker = color
-            # except:
-            #    pass
 
     def erase_point(self, x_val, y_val):
         """
         Erase point at x, y.
         """
-        x_val = int(round(x_val))
-        y_val = int(round(y_val))
+        x_val, y_val = int(round(x_val)), int(round(y_val))
 
         #if self.is_hoshi(x_val, -y_val):
         #    self.plane[x_val + self.max_domain][-y_val +\
@@ -646,6 +622,7 @@ class Graph(Thing):
         'auto-shapes, etc.'
         """
         enum = Enumeration(self.fx_list, 'attached functions')
+        # fix this in terminal class
         if self.sh_obj == 'term':
             Terminal.output(enum)
             self.sh_obj.wait()
@@ -714,9 +691,9 @@ class Graph(Thing):
         """
         draw ellipse on the plane; use a Point object instead of a tuple
         """
-        if not semiaxis_a:
+        if semiaxis_a is None:  # make sure this works
             semiaxis_a = self.max_domain
-        if not semiaxis_b:
+        if semiaxis_b is None:  # make sure this works
             semiaxis_b = semiaxis_a
         self.funct_cnt += 1
         for x_val in range(-1 * self.max_domain, self.max_domain + 1):
@@ -777,13 +754,14 @@ class Graph(Thing):
         #header = {'GM':1, 'SZ':self.BOARD_SIZE, 'KM':6.5}
 
         #Generate string
-        sequence = ''
+        sequence_lst = []
         for cols in range(self.size):
             for rows in range(self.size):
-                if   self.plane[rows][cols].marker == 'white':
-                    sequence += ' AW[%s%s]' % (chr(rows+97), chr(cols+97))
+                # this could be improved
+                if self.plane[rows][cols].marker == 'white':
+                    sequence_list.append(' AW[%s%s]' % (chr(rows+97), chr(cols+97)))
                 elif self.plane[rows][cols].marker == 'black':
-                    sequence += ' AB[%s%s]' % (chr(rows+97), chr(cols+97))
+                    sequence_list.append(' AB[%s%s]' % (chr(rows+97), chr(cols+97)))
 
         #Write to file
         if sys.version_info.major == 3:

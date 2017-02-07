@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #coding=utf8
 """
 usage: cowscript [message]
@@ -52,7 +52,7 @@ def define_text():
         except IndexError:
             SHELL.message('use: cowscript [message]')
             sys.exit()
-    return text.strip()
+    return text.strip().decode('utf8')
 
 
 def make_list_obj():

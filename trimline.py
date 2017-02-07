@@ -19,9 +19,7 @@ def _parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('filename', type=str, help='file to process', nargs="?")
     parser.add_argument('-C', action='store_true')
-    args = parser.parse_args() if __name__ == '__main__' else None
-    return args
-
+    return parser.parse_args() if __name__ == '__main__' else None
 
 Terminal()
 ARGS = _parse_args()
@@ -42,12 +40,12 @@ def main():
     file_handler.truncate()
 
     # Preview and write text back to file and close file
-    string = ''
+    fstring = ''
     for line in lines_of_text:
-        string = ''.join([string, line.rstrip(), '\n'])
+        fstring = ''.join((fstring, line.rstrip(), '\n'))
 
     try:
-        file_handler.write(string)
+        file_handler.write(fstring)
     finally:
         file_handler.close()
 

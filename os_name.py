@@ -9,11 +9,8 @@ from versatiledialogs.terminal import Terminal
 
 TERMINAL = Terminal()
 CONFIG = Config()
-if __name__ == '__main__':
-    SHELL = CONFIG.start_user_profile()
-else:
-    SHELL = TERMINAL
 
+SHELL = CONFIG.start_user_profile() if __name__ == '__main__' else TERMINAL
 
 if SHELL.interface == 'Tk':
     SHELL.msg.config(bg='black', fg='chartreuse', font=('mono', 10), width=525)
@@ -26,12 +23,14 @@ def main():
     """
     string = SHELL.view_info(get_str=True)
 
-    if SHELL.interface in ['Tk']:
+
+    # dictionary comprehension?    
+    if SHELL.interface == 'Tk':
         SHELL.output(string, width=525, height=200)
-    elif SHELL.interface in ['dialog', 'zenity', 'SL4A']:
+    elif SHELL.interface in ('dialog', 'zenity', 'SL4A'):
         SHELL.output(string)
     elif SHELL.interface == 'term':
-        SHELL.tty(''.join([string, '\n']))
+        SHELL.tty(''.join((string, '\n')))
 
 if __name__ == '__main__':
     main()

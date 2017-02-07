@@ -88,7 +88,7 @@ TIME_STR = ARGS.time_str if ARGS is not None and ARGS.time_str is not None\
            else '330'
     
 if TIME_STR[0] == ':':
-    TIME_STR = ''.join(['0', TIME_STR])
+    TIME_STR = '0' + TIME_STR
 
 SECONDS = float(TIME_STR) if TIME_STR.isdigit() else float(
     subprocess.check_output('./mmss.py {}'.format(TIME_STR), shell=True))

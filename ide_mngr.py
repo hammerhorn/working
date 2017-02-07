@@ -24,13 +24,11 @@ NUMBER_OF_PYFILES = len(PY_FILES)
 
 def main():
     """DOCSTR"""
-    index = randint(0, NUMBER_OF_PYFILES - 1)
-    if SHELL.interface in ['wx', 'Tk']:
-        SHELL.message(PY_FILES[index])
-    else:
-        SHELL.output(PY_FILES[index])
+    out_funct = SHELL.messages if SHELL.interface in ('wx', 'Tk') else\
+                SHELL.output
+    out_funct(PY_FILES[randint(0, NUMBER_OF_PYFILES - 1)])
     SHELL.exit()
-
+    
 if __name__ == '__main__':
     main()
     SHELL.start_app()

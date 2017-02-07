@@ -29,7 +29,7 @@ def get_filename():
     try:
         filename = subprocess.check_output(
             'youtube-dl --get-filename {}'.format(sys.argv[1]), shell=True)
-        filename = filename.strip()
+        filename = filename.strip().decode('utf8')
     except (OSError, subprocess.CalledProcessError):
         sys.exit('{} Unable to locate url: {}.'.format(
             Terminal.fx('bn', 'ERROR:'), sys.argv[1]))

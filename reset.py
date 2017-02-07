@@ -13,7 +13,7 @@ __author__ = 'Chris Horn'
 __license__ = 'GPL'
 
 FILE_LIST = []
-PATTERN_LIST = [
+PATTERN_TUPLE = (
     '*/*/*.py?',
     '*/*.py?',
     '*.py?',
@@ -21,9 +21,9 @@ PATTERN_LIST = [
     '*~',
     '*/*~',
     '__data__/*.tmp'
-]
+)
 
-for pattern in PATTERN_LIST:
+for pattern in PATTERN_TUPLE:
     FILE_LIST.extend(glob(pattern))
 
 for filename in FILE_LIST:

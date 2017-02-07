@@ -41,7 +41,7 @@ def main():
     today = datetime.datetime.today()
     now = today.strftime('%c')  # This is 100% portable!
 
-    Terminal.tty(''.join([' ' * 35, now]))
+    Terminal.tty(' ' * 35 + now)
     Terminal.output('\n' * 2)
     
     Terminal.tty(STRING)

@@ -11,8 +11,7 @@ def main():
     """Main function"""
     while True:
         prest = Terminal.get_keypress()
-        write(Terminal.fx('un', str(ord(prest))))
-        write(' ')
+        write(Terminal.fx('un', str(ord(prest))) + ' ')
 
 if __name__ == '__main__':
     main()

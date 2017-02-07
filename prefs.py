@@ -23,13 +23,14 @@ import copy
 import sys
 # import time
 
-if sys.version_info.major == 2:
-    from itertools import izip
+#if sys.version_info.major == 2:
+#    from itertools import izip
 
 import easycat
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 from cjh.misc import notebook  # catch_help_flag
+from ranges import iter_zip
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
@@ -73,12 +74,12 @@ CONFIG = Config()
 FILENAME = 'versatiledialogs/config.json'
 KEYNAME_LIST = ['shell', 'editor', 'terminal', 'language', 'browser']
 
-def iter_zip(list1, list2):
-    if sys.version_info.major == 2:
-        return izip(list1, list2)
-    else:
-        return zip(list1, list2)
-    
+#def iter_zip(list1, list2):
+#    if sys.version_info.major == 2:
+#        return izip(list1, list2)
+#    else:
+#        return zip(list1, list2)
+
 def lookup(key):
     """return the requested value"""
     return CONFIG.config_dict.get(key, None)
@@ -99,7 +100,7 @@ def main():
     Writes requested modifications to the 'config.json' file, and sends
     some kind of feedback to stdout.
     """
-    string = ''
+    outstring = ''
 
     def generate_msg(key_name, key_label):
         """
@@ -110,7 +111,7 @@ def main():
         return "\n{:>25s} = '{}'".format(key_label, value)
 
     if ARGS is not None:
-        args_dict = copy.deepcopy(ARGS.__dict__)
+        args_dict = copy.copy(ARGS.__dict__)
         verbose = 0 if args_dict['v'] is None else args_dict['v']
         del args_dict['v']
 
@@ -120,7 +121,7 @@ def main():
             if value is not None and value != '?':
                 noeditcommand = False
 
-        supported_modes = [
+        supported_modes = (
             'dialog',
             'html',
             'SL4A',
@@ -128,14 +129,14 @@ def main():
             'Tk',
             'wx',
             'zenity'
-        ]
+        )
 
 #        print supported_modes
-#        print supported_modes.extend(['?', None])        
+#        print supported_modes.extend(['?', None])
 #        sys.exit()
-        if args_dict['shell'] not in (supported_modes + ['?', None]):
+        if args_dict['shell'] not in (supported_modes + ('?', None)):
             args_dict['shell'] = CONFIG.config_dict['shell']
-            Terminal.output(''.join(['\nsupported modes: ', str(supported_modes)[1:-1], '\n']))
+            Terminal.output(''.join(('\nsupported modes: ', str(supported_modes)[1:-1], '\n')))
 
         nochangeneeded = noeditcommand
         for key in args_dict.keys():
@@ -145,23 +146,23 @@ def main():
     if nochangeneeded is False:
         edit_config_file()
 
-    keylabel_list = [
+    keylabel_list = (
         'mode',
         'default text editor',
         'default terminal emulator',
         'language',
         'default web browser'
-    ]
+    )
 
-    msg_list = [string]
+    msg_list = [outstring]
     for key_name, key_label in iter_zip(KEYNAME_LIST, keylabel_list):
         if (verbose > 0 and args_dict[key_name] is not None) or\
             nocommand is True or args_dict[key_name] == '?':
             msg_list.append(generate_msg(key_name, key_label))
-    string = ''.join(msg_list)
-            
-    if len(string) > 0:
-        Terminal.output(string + '\n')
+    outstring = ''.join(msg_list)
+
+    if len(outstring) > 0:
+        Terminal.output(outstring + '\n')
 
     if verbose >= 2 or (noeditcommand is True and verbose >= 1):
         Terminal.output('')

@@ -12,9 +12,9 @@ from versatiledialogs.terminal import Terminal
 
 def print_welcome():
     Terminal.clear()
-    Terminal.output(''.join([
+    Terminal.output(''.join((
         ' ' * 30, 'SINE WAVE\n',
-        ' ' * 15, 'CREATIVE COMPUTING  MORRISTOWN, NEW JERSEY\n']))    
+        ' ' * 15, 'CREATIVE COMPUTING  MORRISTOWN, NEW JERSEY\n')))
     Terminal.wait()
     Terminal.output('\n' * 4)
 

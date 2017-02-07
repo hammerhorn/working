@@ -38,8 +38,8 @@ Terminal()
 def main():
     """Main function"""
     
-    bgcolor = ''.join(['on_', ARGS.b]) if ARGS.b is not None else None
-    string = easycat.cat(files=[ARGS.FILENAME], return_str=True)
+    bgcolor = 'on_' + ARGS.b if ARGS.b is not None else None
+    fstring = easycat.cat(files=[ARGS.FILENAME], return_str=True)
     color = None
     styles = []
 
@@ -57,7 +57,7 @@ def main():
         else:
             styles.append(style)
 
-    cprint(string, color, bgcolor, styles)
+    cprint(fstring, color, bgcolor, styles)
 
 if __name__ == '__main__':
     main()

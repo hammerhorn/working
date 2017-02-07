@@ -3,48 +3,54 @@
 """
 Test & debug <class 'cjh.geometry.Graph'>.
 """
+# Std Lib
 import atexit
-#import sys
 
+# Add-ons
 from termcolor import colored
 
+# Local
 from cjh.maths.geometry import Graph
 from cjh.misc import notebook
-
 from versatiledialogs.config   import Config
 from versatiledialogs.terminal import Terminal
-
+from ranges import iter_zip
 REMARKS = """
     - (0, 1) is not displaying correctly
     * Swap colors"""
-
 SHELL = Config().start_user_profile()
 atexit.register(Terminal.unhide_cursor)
+
 def main():
-    g1 = Graph(size=21, sh_obj=SHELL, skinfile='test.json')
+    plane = Graph(size=21, sh_obj=SHELL, skinfile='test.json')
+
     if SHELL.interface == 'Tk':
         SHELL.center_window(width_=600, height_=600)
         SHELL.msg.config(font=('courier'))
+    elif SHELL.interface == 'term':
+        Terminal.hide_cursor()
 
-    SHELL.output(g1)
-#    if SHELL.interface == 'term':
-    Terminal.hide_cursor()
+    def action(func, lines):
+        func()
+        SHELL.clear(plane.size + lines)
+
+    SHELL.output(plane)
+    pos_txt = ('Please press one> ', 'F', 'E', 'P')
+    neg_txt = (' ', 'ill ', 'dit  ', 'lot ')
+    prompt_list = []
+    for p, n in iter_zip(pos_txt, neg_txt):
+        prompt_list.extend([p, colored(n, attrs=['reverse'])])
+    prompt = ''.join(prompt_list)
+
     while True:
-        pressed = Terminal.get_keypress(
-            'Please press one> ' + colored(' ', attrs=['reverse']) + 'F' + colored('ill  ', attrs=['reverse']) + 'E' +\
-            colored('dit  ', attrs=['reverse']) + 'P' + colored('lot ', attrs=['reverse']))
-        if pressed in 'Ff':
-            color = g1.prompt_color()
-            g1.fill(color)
-            SHELL.clear(g1.size + 6)
-
-        elif pressed in 'Ee':
-            g1.view_edit()
-            SHELL.clear(g1.size +11)
-
-        elif pressed in 'Pp':
-            g1.add_polynomial()
-        SHELL.output(g1)
+        pressed = Terminal.get_keypress(prompt)
+        cmd_dict = {
+            'f': lambda: action(lambda: plane.fill(plane.prompt_color()), 6),
+            'e': lambda: action(plane.view_edit, 11),
+            'p': plane.add_polynomial
+        }
+        cmd_dict.get(pressed.lower(), lambda: 0)()
+        SHELL.output(plane)
 
 if __name__ == '__main__':
     notebook(REMARKS)

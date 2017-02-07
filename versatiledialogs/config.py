@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #coding=utf8
 """
 Config objects stores configuration information and methods to read/write the
@@ -103,7 +102,7 @@ class Config(object):
                 sh_class = fallback()
             return sh_class
 
-        if shl in ['dialog', 'SL4A', 'zenity']:
+        if shl in ('dialog', 'SL4A', 'zenity'):
             sh_class = DialogGui(shl)
         elif shl == 'Tk':
             sh_class = try_to_open(TkTemplate)

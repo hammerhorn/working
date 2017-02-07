@@ -70,11 +70,11 @@ def main():
 
     elif ARGS.input is not None:
         answer = SHELL.input(ARGS.input)
-        string = "You said '{}'."
-        if SHELL.interface in ['zenity']:
-            string = string.replace("'", "\'")
+        fstring = "You said '{}'."
+        if SHELL.interface  ('dialog', 'zenity'):
+            fstring = string.replace("'", "\'")
 
-        SHELL.output(string.format(answer))
+        SHELL.output(fstring.format(answer))
         if SHELL.interface == 'term':
             SHELL.wait()
 
@@ -91,12 +91,12 @@ def main():
         if SHELL.interface == 'term':
             SHELL.clear()
 
-        string = "You chose '{}'."
-        if SHELL.interface in ['zenity', 'dialog']:
-            string = string.replace("'", "\'")
+        fstring = "You chose '{}'."
+        if SHELL.interface in ('dialog', 'zenity'):
+            fstring = string.replace("'", "\'")
         list_ = PlainList(ARGS.list.split())
         answer = list_[SHELL.list_menu(list_) - 1]
-        SHELL.output(string.format(answer))
+        SHELL.output(fstring.format(answer))
     bye()
 
 if __name__ == '__main__':
