@@ -232,8 +232,8 @@ class Ellipse(TwoDShape):
 
     def __str__(self):
         s = ''.join(
-            ('\n', Terminal.ul(self.label), '\n',
-             '{:>13} = {}\n'.format('Area', self.area),
+            ('\n', Terminal.ul(self.label),
+             '\n{:>13} = {}\n'.format('Area', self.area),
              '{:>13} = {}\n'.format('Center', self.center)))
 
       # s += "{:>13} = {}".format('Circumference', self.perimeter.to_Scalar())
