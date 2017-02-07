@@ -20,7 +20,6 @@ __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
 Terminal()
-#arg_dic = {}
 
 def _parse_args():
     """
@@ -37,16 +36,12 @@ def _parse_args():
         '-c', '--center',
         action='store_true',
         help='centered (default is left-aligned)')
-    #parser.add_argument("-s", "--string", action='store_true')
     return parser.parse_args()
 
-if __name__ == '__main__':
-    ARGS = _parse_args()
-else: ARGS = None
+ARGS = _parse_args() if __name__ == '__main__' else None
 
-# If ARGS.width is an integer, convert it to be of type int.
-# An int for this value means width in columns.
-# A decimal < 1 means a percentage of the width of the terminal.
+# If ARGS.width is an int, it means: width in columns.                       #
+#            If it's < 1,  it means: a percent of the width of the terminal. #
 if ARGS is not None and ARGS.width is not None and\
     (ARGS.width == int(ARGS.width)):
     ARGS.width = int(ARGS.width)

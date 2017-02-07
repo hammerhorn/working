@@ -21,17 +21,18 @@ notebook(REMARKS)
 Terminal()
 SHELL = Config().start_user_profile()
 if SHELL.platform != 'android':
-    script_name = sys.argv[0].replace('./', '')
+    SCRIPT_NAME = sys.argv[0].replace('./', '')
     catch_help_flag(
-        '\nusage: {} [FEN_NOTATION_STR]\n'.format(script_name)+__doc__,
+        '\nusage: {} [FEN_NOTATION_STR]\n'.format(SCRIPT_NAME)+__doc__,
         SHELL)
 
-
 def rank_list(fen_str='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'):
+    """return a list, a str for each rank"""
     fen_list = fen_str.split('/')
     return fen_list
-    
+
 def draw(fen_list):
+    """draw the board to stdout"""
     out_str = '\n'
     for rank in fen_list:
         for char in rank:

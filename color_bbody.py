@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #coding=utf8
 """
+Depends: web.py, so Python 3 is not supported.
+
 Accepts a valid color name (e.g., 'red') or hex string (e.g., '#FF0000'), and
 the window becomes that color.
 
@@ -8,8 +10,6 @@ adapted from:
 <http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/>
     and
 <http://www.zombieprototypes.com/?p=210>
-
-python 2 only because it uses web.py
 """
 import argparse
 import os
@@ -25,11 +25,10 @@ except ImportError:
     except ImportError:
         sys.exit('Tk could not be loaded.  Ending program.')
 
+from cjh.misc       import fahr_to_kelvins, notebook
 from colorful       import color
 from colorful.color import color_dec_to_hex
-from cjh.misc       import fahr_to_kelvins, notebook
 from fiziko.waves   import kelvin_to_rgb
-
 from versatiledialogs.config      import Config
 if sys.version_info.major == 2:
     from versatiledialogs.html_sh     import HtmlShell
@@ -65,8 +64,8 @@ def _parse_args():
     return args
 
 ARGS = _parse_args()
-if __name__ == '__main__':
-    notebook(REMARKS)
+#if __name__ == '__main__':
+notebook(REMARKS)
 
 FILENAME = 'results.html'
 CONFIG = Config()

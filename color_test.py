@@ -37,18 +37,21 @@ def side_by_side(red, green, blue):
     Terminal.output(culler.__str__() + '\n')
 
     def position_and_color(txt_str, tc_bool):
+        """indent & print colored text followed by a newline"""
         easycat.write('  ')
         color.write(
             16, 'ansi', hexcolor, 'hex', txt_str, truecolor=tc_bool)
         Terminal.output('')
 
     position_and_color(OUT_STR1, True)
-    position_and_color(OUT_STR2, False)    
+    position_and_color(OUT_STR2, False)
     time.sleep(DELTA_T)
 
 def wait_and_hide():
-    Terminal.wait()
-    Terminal.hide_cursor()
+    """wait for user acknowlegement and hide cursor"""
+    #Terminal.wait()
+    #Terminal.hide_cursor()
+    return
 
 def main():
     """

@@ -3,14 +3,17 @@
 """
 Calculate continuously-compounded interest
 """
+# Std Lib
 import argparse
 import atexit
 
-from cjh.money import Money
+# Add-ons
+import numpy as np  # only needed for plotting
+
+# Local
 from cjh.misc import notebook
-
+from cjh.money import Money
 from ttyfun.unix import Figlet
-
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 
@@ -57,10 +60,7 @@ def _parse_args():
 
 ### DATA ###
 notebook(REMARKS)
-if __name__ == '__main__':
-    ARGS = _parse_args()
-else:
-    ARGS = None
+ARGS = _parse_args() if __name__ == '__main__' else None
 CONFIG = Config()
 
 if ARGS is not None and ARGS.nox is True:
@@ -69,21 +69,21 @@ elif ARGS is not None and ARGS.shell is not None:
     SHELL = CONFIG.launch_selected_shell(ARGS.shell)
 else:
     SHELL = CONFIG.start_user_profile()
+
 if SHELL.interface in ['wx', 'Tk']:
     SHELL.center_window()
 
 # This seems abusive, but it seems to work
 atexit.register(SHELL.start_app)
 
+PRINCIPAL = Money(ARGS.PRINCIPAL)
+RATE = ARGS.RATE
+TIME = ARGS.TIME
 
 def main():
     """
     Calculate interest and print out the new total.
     """
-    PRINCIPAL = Money(ARGS.PRINCIPAL)
-    RATE = ARGS.RATE
-    TIME = ARGS.TIME
-
     def plot():
         """
         If GUI is available, plot the increase with respect to time, using
@@ -105,16 +105,11 @@ def main():
         's': 2.0,
         'm': 12.0}
 
-    if ARGS.PERIOD is not None:
-        ppy = time_dict[ARGS.PERIOD]
-    else:
-        ppy = None
-
+    ppy = time_dict[ARGS.PERIOD] if ARGS.PERIOD is not None else None
     result = PRINCIPAL.interest(RATE, TIME, ppy)
 
     if ARGS.plot is True:
         import matplotlib.pyplot as plt
-        import numpy as np
         Terminal.clear()
 
     result_str = result.__str__()

@@ -283,7 +283,7 @@ class Terminal(Shellib):
         width_ = cls.width()
         if not width:
             width = int(width_)
-        elif (width < 1.0 and width >= 0.0) or (type(width) == float):
+        elif (0.0 <= width < 1.0) or (isinstance(width, float)):
             width = int(round(width_ * width, 0))
         line = symbols * (width // len(symbols))
         if centered is True:
@@ -299,7 +299,6 @@ class Terminal(Shellib):
         Get input using the appropriate version of Python.
         """
         #cls.output('')
-
         stripped = Ansi.strip_ansi(prompt)
         ##ansi_escape = re.compile(r'\x1b[^m]*m')
         ##stripped = ansi_escape.sub('', prompt)
@@ -310,10 +309,11 @@ class Terminal(Shellib):
                 cls.output(' ' * (len(stripped) - 1) + '┌' + '─' * 22 + '┐')
             easycat.write(prompt)
             if hide_form is False:  # and cls.platform == 'Linux':
-                easycat.write('[' + colored(
-                    ' ' * 20, 'yellow', 'on_grey',
-                    attrs=['underline', 'bold']) + ']│' + ' ' * (
-                        cls.width() - (len(stripped) + 23)) + '\n')
+                easycat.write(
+                    ''.join((
+                        '[', colored(
+                            ' ' * 20, 'yellow', 'on_grey', attrs=['underline', 'bold']),
+                        ']│', ' ' * (cls.width() - (len(stripped) + 23)), '\n')))
                 #write('\033[G')
                 if cls.platform == 'Windows':
                     cls.cursor_v(1)
@@ -717,8 +717,9 @@ class ListPrompt(Enumeration):
         super(ListPrompt, self).__init__(l)  # , '')  implement heading
         Terminal()
         if len(l) > 0 and heading is None:
-            heading = 'Make a choice (1-{})'.format(len(self))
-        self.label = heading
+            self.label = 'Make a choice (1-{})'.format(len(self))
+        else:
+            self.label = heading
 
     def input(self, prompt='>', hidden=False):
         """
@@ -749,28 +750,26 @@ class ListPrompt(Enumeration):
                     sel_str = Terminal.input(prompt, hide_form=True)
                 else:
                     sel_str = Terminal.get_keypress(prompt)
-                if sel_str.isdigit():
-                    sel = int(sel_str)
-                else:
-                    sel = None
+                
+                sel = int(sel_str) if sel_str.isdigit() else None
+
             except KeyboardInterrupt:
                 Terminal.output('')
                 return None
 
-            while sel is None or sel > len(self) or sel < 1:
+            while sel is None or 1 > sel > len(self):
                 try:
                     if (sel is None or sel < 1) and\
-                        len(self) > 0 and len(self) < 10:
+                        10 > len(self) > 0:
                         sel_str = Terminal.get_keypress(prompt)
                     else:
                         sel_str = Terminal.input(prompt, hide_form=True)
-                    if sel_str.isdigit():
-                        sel = int(sel_str)
-                    else:
-                        sel = None
+                    sel = int(sel_str) if sel_str.isdigit() else None
+
                 except KeyboardInterrupt:
                     Terminal.output('')
-                    return None
-            return sel
+                    return_val = None
+            return_val = sel
         else:
-            return None
+            return_val = None
+        return return_val

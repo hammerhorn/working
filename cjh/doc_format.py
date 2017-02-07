@@ -40,13 +40,14 @@ class Paragraph(Thing):
     def __str__(self):
         lines2 = list(self.word_wrap)
         pstr = '\n'
-        if self.__class__.invisibles is True:
-            pstr += '¶'
-        else: pstr += ' '
-        pstr += ' ' * (self.lmargin - 1) + lines2[0] + '\n'
+        pstr += '¶' if self.__class__.invisibles is True else ' '
+        pstr = ''.join((pstr, ' ' * (self.lmargin - 1), lines2[0], '\n'))
+        appndx_lst = []
         for index in gen_range(1, len(lines2)):
-            pstr += ' ' * self.lmargin + lines2[index] + '\n'
-        return pstr
+            appndx_lst.extend([' ' * self.lmargin, lines2[index], '\n'])
+        str_list = [pstr]
+        str_list.extend(appndx_lst)
+        return ''.join(str_list)
 
     def __mul__(self, multi):
         plist = []
@@ -58,9 +59,10 @@ class Paragraph(Thing):
         '''
         list() or [] will give you a list of sentences
         '''
-        buf = ''
+        buf_lst = []
         for line in self.naive_wrap:
-            buf += line
+            buf_lst.append(line)
+        buf = ''.join(buf_lst)
         sentences = buf.split('.')
         sentences = [sentence.lstrip('_ ') + '.' for sentence in sentences]
         return sentences[index]
@@ -83,19 +85,22 @@ class Paragraph(Thing):
 
     def cat(self, para2):
         """concatenate paragraphs?"""
-        tmp_str1 = ""
-        tmp_str2 = ""
+        tmp_lst1, tmp_lst2 = [], []
         noindent = True
+
         for line in self.naive_wrap:
-            tmp_str1 += line
+            tmp_lst1.append(line)
+        tmp_str1 = ''.join(tmp_list1)
+
         if len(tmp_str1) > 0 and tmp_str1[0] == '_':
             noindent = False
             tmp_str1 = tmp_str1.lstrip('_')
+
         for line in para2.naive_wrap:
-            tmp_str2 += line
-            tmp_str2 = tmp_str2.lstrip('_')
+            tmp_lst2.append(line)
+        tmp_str2 = ''.join(tmp_lst2).lstrip('_')
         return Paragraph(\
-            tmp_str1.rstrip() + "  " + tmp_str2, no_indent=noindent)
+            ''.join((tmp_str1.rstrip(), '  ', tmp_str2)), no_indent=noindent)
 
     @property
     def wordcount(self):
@@ -128,12 +133,10 @@ class Paragraph(Thing):
         Returns a list of lines.
         """
         buf = self.buffer
-        if self.__class__.no_indent is True:
-            i = ''
-        else: i = ' ' * 5
-        lines = textwrap.fill(\
+        i = '' if self.__class__.no_indent is True else ' ' * 5
+        return textwrap.fill(\
             buf, width=self.width, initial_indent=i).split('\n')
-        return lines
+
 
 class Section(Thing):
     """
@@ -141,10 +144,8 @@ class Section(Thing):
     """
     def __init__(self, hstr='', p_list=None):
         super(Section, self).__init__()
-        if p_list is None:
-            p_list = []
+        self.pgraph_list = p_list if p_list is not None else []
         self.heading = "{}.".format(self.__class__.count) if len(hstr) else hstr
-        self.pgraph_list = p_list
 
     def __getitem__(self, index):
         return self.pgraph_list[index]

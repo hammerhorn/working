@@ -12,16 +12,18 @@ Current version is based on this:
 import argparse
 import sys
 
+#mod_name = 'Tkinter' if sys.version_info == 2 else 'tkinter'
+#exec('from {} import TclError'.format(mod_name))
+
 try:
     from Tkinter import TclError
 except ImportError:
-    from tkinter import TclError
+    from tkinter import TclError  # pylint: disable=E0401
 
-from colorful.color import color_dec_to_hex, nm_to_rgb, write
 from cjh import misc
+from colorful.color import color_dec_to_hex, nm_to_rgb, write
 from fiziko.scalars import Unit
 from fiziko.waves import EMWave
-
 from versatiledialogs.config import Config
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
@@ -51,7 +53,7 @@ def _parse_args():
 
 ARGS = _parse_args()
 CONFIG = Config()
-SHELL = CONFIG.laungh_selected_shell(ARGS.shell) if ARGS is not None and\
+SHELL = CONFIG.launch_selected_shell(ARGS.shell) if ARGS is not None and\
         ARGS.shell is not None else CONFIG.start_user_profile()
 
 if ARGS is not None and ARGS.C:
