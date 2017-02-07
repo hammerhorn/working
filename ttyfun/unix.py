@@ -8,16 +8,16 @@ from versatiledialogs.terminal import Terminal
 class Figlet(object):
     def __init__(self, font='ascii9', color=None):
         self.font = font
-        if color is None:
-            self.color = ''
-        else: self.color = color
+        
+        self.color = '' if color is None else color
 
     def __str__(self):
         command = 'toilet -f {} --{} '.format(self.font, self.color)
         return command
 
     def output(self, text, get_str=False):
-        art_str = subprocess.check_output(self.__str__() + text, shell=True)
+        art_str = subprocess.check_output(
+            self.__str__() + text, shell=True).decode('utf8')
         if get_str is True:
             return art_str
         else:

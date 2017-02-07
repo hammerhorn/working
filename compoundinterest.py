@@ -121,7 +121,7 @@ def main():
 
     if SHELL.interface == 'term' and SHELL.platform == 'Linux':
         SHELL.output(
-            '\n\n{}\n'.format(Figlet('mono9').output(
+            '\n\n{}\n'.format(Figlet('future').output(
                 result_str, get_str=True)))
     else:
         SHELL.message(result_str)
