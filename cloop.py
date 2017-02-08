@@ -86,9 +86,19 @@ def main():
         'c'  : 'int main(int argc, char* argv[])\n{\n',
         'cpp': 'using namespace std;\nint main(int argc, char* argv[])\n{\n'}
 
-    prompt_dict = {'f90': '+', 'cpp': '%%', 'c': '%'}
-    endblock_dict = {'f': 'END PROGRAM Interactive', 'c': '\n\treturn 0;\n}'}
-    compiler_dict = {'f90': 'gfortran', 'c': 'gcc', 'cpp': 'g++'}
+    prompt_dict = {
+        'f90': '+',
+        'cpp': '%%',
+        'c': '%'}
+
+    endblock_dict = {
+        'f': 'END PROGRAM Interactive',
+        'c': '\n\treturn 0;\n}'}
+
+    compiler_dict = {
+        'f90': 'gfortran',
+        'c': 'gcc',
+        'cpp': 'g++'}
 
     includes = include_dict[EXTENSION]
 
@@ -101,27 +111,23 @@ def main():
                 try:
                     line = TERMINAL.input('', hide_form=True)
                     if line.startswith('#include'):
-                        includes += line + '\n'
+                        includes = ''.join((includes, line, '\n'))
                     else:
-                        block += ('\t{}\n'.format(line))
+                        block = ''.join((block, '\t{}\n'.format(line)))
 
                 except EOFError:
-                    block += endblock_dict[EXTENSION[0]]
+                    block = ''.join((block, endblock_dict[EXTENSION[0]]))
                     break
 
-            filename = './tmp.' + EXTENSION
+            filename = ''.join(('./tmp.', EXTENSION))
 
-            try:
-                file_ptr = open(filename, 'w')
+            with open(filename, 'w') as file_ptr:
                 file_ptr.write('{}\n{}'.format(includes, block))
-            finally:
-                file_ptr.close()
-
 
             command = compiler_dict[EXTENSION]
             if EXTENSION == 'c' and 'math.h' in includes:
                 command += ' -lm'
-            command += ' ./tmp.' + EXTENSION
+            command = ''.join((command, ' ./tmp.', EXTENSION))
 
             try:
                 return_val = subprocess.check_call(command, shell=True)

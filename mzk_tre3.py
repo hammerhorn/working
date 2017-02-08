@@ -88,6 +88,7 @@ def build_main_menu():
     # learn the dictionary comprehension
     for index in gen_range(1, 4):
         menu_list[index] = SHELL.emphasis(menu_list[index])
+
     return ListPrompt(menu_list)
 
 def visualization_menu(row_, obj_str_):
@@ -125,8 +126,9 @@ def visualization_menu(row_, obj_str_):
             with the right amount of space.
             """
             objstr = '\n' + row_.generate_abc_str().strip()
-            return objstr + '\n' * (len(row_) - objstr.count('\n') + 6)
-
+            objstr += '\n' * (len(row_) - objstr.count('\n') + 6)
+            return objstr
+            
         def create_postscript():
             """
             Generate the postcript-format staff notation
@@ -134,14 +136,13 @@ def visualization_menu(row_, obj_str_):
             row_.write_abc_file()
             row_.abc2postscript()
             basename = row_.generate_basename()
-            objstr_tup = (
+            return ''.join((
                 '\n' * 9,
                 '** {}.abc written **'.format(basename).center(TERM.width()),
                 '\n',
                 '** {}.ps written **'.format(basename).center(TERM.width()),
                 '\n' * 8
-                )
-            return ''.join(objstr_tup)
+                ))
 
         views_dict = {
             2: lambda: row_.draw(get_str=True),

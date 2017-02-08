@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #coding=utf8
 """
 DOCSTRING
@@ -8,8 +7,6 @@ import os
 
 from versatiledialogs.terminal import Terminal, ListPrompt
 import easycat
-#from cjh.cli import Cli, ListPrompt
-#from cjh.lists import ItemList
 
 __author__ = 'Chris Horn'
 __license__ = 'GPL'
@@ -50,7 +47,8 @@ class Fileman(object):
         elif list_prompt[response - 1].endswith('/'):
             os.chdir(list_prompt[response - 1][:-1])
             cls.commander()
-        else: return list_prompt[response - 1]
+        else:
+            return list_prompt[response - 1]
 
     @staticmethod
     def list_files(*args, **kwargs):
@@ -67,7 +65,7 @@ class Fileman(object):
         # else, add the requested files
         else:
             for arg in args:
-                file_list += glob.glob(arg)
+                file_list.extend(glob.glob(arg))
 
         # if opts='B', filter out emacs backup files
         if 'opts' in kwargs and 'B' in kwargs['opts']:

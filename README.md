@@ -15,3 +15,4 @@ Scripts to test these packages, and also scripts for 12-tone music
 
 ##Future plans
 - go game to music converter
+- chess ruleset designer?

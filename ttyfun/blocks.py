@@ -47,7 +47,7 @@ def box(msg, symbol='*', position=None, width=None):
     content += star_bar + messagef + star_bar
     return content
     
-def ellipses(msg):
+def ellipses(msg, iters=3, restore_cursor=True):
     """
     Print message to stdout followed by an animated '....'.
     """
@@ -55,7 +55,7 @@ def ellipses(msg):
     easycat.write(msg)
     easycat.write('...')
     delta_t = 0.125
-    iters = 3
+    #iters = repeat
     try:
         Terminal.hide_cursor()
         for _ in gen_range(iters):
@@ -74,4 +74,5 @@ def ellipses(msg):
             Terminal.cursor_h(-1, '. ')
             Terminal.cursor_h(-1)
     finally:
-        Terminal.unhide_cursor()
+        if restore_cursor is True:
+            Terminal.unhide_cursor()

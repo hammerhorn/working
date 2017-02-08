@@ -44,7 +44,7 @@ def main():
     styles = []
 
     for style in ARGS.ATTRIBUTES:
-        if color is None and style in [
+        if color is None and style in (
                 'grey',
                 'red',
                 'green',
@@ -52,7 +52,7 @@ def main():
                 'blue',
                 'magenta',
                 'cyan',
-                'white']:
+                'white'):
             color = style            
         else:
             styles.append(style)

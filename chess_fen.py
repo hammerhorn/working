@@ -28,25 +28,27 @@ if SHELL.platform != 'android':
 
 def rank_list(fen_str='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'):
     """return a list, a str for each rank"""
-    fen_list = fen_str.split('/')
-    return fen_list
+    return fen_str.split('/')
 
 def draw(fen_list):
     """draw the board to stdout"""
-    out_str = '\n'
+    out_str_lst = ['\n']
     for rank in fen_list:
         for char in rank:
             if char.isdigit():
-                out_str += '. ' * int(char)
+                out_str_lst.append('. ' * int(char))
             elif char.isalpha():
-                out_str += char + ' '
-        out_str += '\n' #newline at end of each rank
-    out_str += '\n' # end with a newline
-    return out_str
+                out_str_lst.extend([char, ' '])
+        out_str_lst.append('\n') #newline at end of each rank
+    out_str_lst.append('\n') # end with a newline
+    return ''.join(out_str_lst)
 
 
 def main():
     """ Main function """
+    if SHELL.interface == 'Tk':
+        SHELL.msg.config(font=('courier'))
+    
     # Use class Section from cjh.doc_format
     board_position = rank_list() if len(sys.argv[1:]) == 0 else rank_list(
         sys.argv[1])

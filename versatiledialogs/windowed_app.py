@@ -47,7 +47,7 @@ class WindowedApp(Shellib):
         cls.message(msg)
 
     @staticmethod
-    def notify(msg):
+    def notify(msg, **kwargs):
         """
         Uses zenity and bash to provide notifications.
         """

@@ -3,6 +3,8 @@
 """
 Tries to generate a QR code for each Python file in the directory.
 Many files will be too large.
+
+qrencode library is Python 2 only
 """
 # Std Lib
 import glob
@@ -20,8 +22,8 @@ from versatiledialogs.terminal import Terminal
 from cjh.misc import notebook
 
 REMARKS = """
-    - convert bytes to kilobytes
-    - break larger files up into pieces"""
+    - break larger files up into pieces
+    + convert bytes to kilobytes"""
 
 notebook(REMARKS)
 
@@ -34,13 +36,11 @@ def main():
     If the file is too big, an error message is displayed.
     """
     Terminal.output('')
-    if len(sys.argv[1:]) > 0:
-        expr_list = sys.argv[1:]
-    else:
-        expr_list = ['*.py']
+    
+    expr_list = sys.argv[1:] if len(sys.argv[1:]) > 0 else ['*.py']
     file_list = []
     for expr in expr_list:
-        file_list += glob.glob(expr)
+        file_list.extend(glob.glob(expr))
     file_list.sort()
 
     for file_ in glob.glob('*.qr.png'):
@@ -49,12 +49,13 @@ def main():
     for py_fname in file_list:
         try:
             dir_tkns = py_fname.split('/')
-            dirname = ''
+            dirnamelist = []
             if len(dir_tkns) > 1:
                 for tkn in dir_tkns[:-1]:
-                    dirname += tkn + '/'
-            f_handler = open(py_fname)
-            txt_str = f_handler.read()
+                    dirnamelist.extend([tkn, '/'])
+            dirname = ''.join(dirnamelist)
+            with open(py_fname) as f_handler:
+                txt_str = f_handler.read()
             img = qrcode.make(txt_str)
             img_fname = '__data__/qr/{}.qr.png'.format(py_fname.replace('.', '_'))
             img.save(img_fname)
@@ -70,7 +71,9 @@ def main():
 
     Terminal.wait()
     Terminal.clear()
-    easycat.less(' ' + ItemList(sorted(glob.glob('__data__/qr/{}*.png'.format(dirname)))).__str__().lstrip())
+    easycat.less(
+        ' ' + ItemList(sorted(glob.glob(
+            '__data__/qr/{}*.png'.format(dirname)))).__str__().lstrip())
 
 if __name__ == '__main__':
     main()

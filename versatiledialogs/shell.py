@@ -247,7 +247,7 @@ class Shellib(object):
         if get_str is True:
             return colored(message, 'green')
         else:
-            if cls.interface not in ['zenity', 'dialog']:
+            if cls.interface not in ['zenity', 'dialog', 'Tk']:
                 message = colored(cls.notify(message, get_str=True), 'green')
                 cls.output(message)
             else:

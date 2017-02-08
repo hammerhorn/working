@@ -24,7 +24,7 @@ NUMBER_OF_PYFILES = len(PY_FILES)
 
 def main():
     """DOCSTR"""
-    out_funct = SHELL.messages if SHELL.interface in ('wx', 'Tk') else\
+    out_funct = SHELL.message if SHELL.interface in ('wx', 'Tk') else\
                 SHELL.output
     out_funct(PY_FILES[randint(0, NUMBER_OF_PYFILES - 1)])
     SHELL.exit()

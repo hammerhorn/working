@@ -394,7 +394,7 @@ class Note(Pitch):
 #        string += self.halfsteps_info()
 #        return string
 
-    def play(self, voice='tri'):
+    def play(self, voice='sin'):
         """
         Currently uses a system call to sox
         """

@@ -73,7 +73,7 @@ class Thing(object):
              #except KeyboardInterrupt:
              #    return
 
-        mode = 'wb' if ext == 'p' else 'w'
+        mode = 'w' if ext == 'p' else 'wb'
         with open(filename, mode) as handler:
             save_func(handler)        
 

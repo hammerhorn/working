@@ -4,6 +4,7 @@ Converts text from stdin into 1's and 0's and writes them to a file.
 With -d followed by the filename, the message is decoded and written to stdout.
 """
 import argparse
+import textwrap
 
 import easycat
 from versatiledialogs.config import Config
@@ -21,13 +22,20 @@ def _parse_args():
 def main():
     """Encode or decode"""
     if ARGS.d is None:
-        buf = easycat.cat(return_str=True) if SHELL.platform != 'android' else\
-              Terminal.input(hide_form=True)
+        buf = easycat.cat(return_str=True) if SHELL.platform != 'android' and\
+              SHELL.interface == 'term' else SHELL.input(hide_form=True)
         out_str_lst = []
         for char in buf:
             out_str_lst.extend(['{0:b}'.format(ord(char)).zfill(8), ' '])
         out_str = ''.join(out_str_lst)
-        SHELL.output(out_str)
+        kwarg_dict = {}
+        lines = len(out_str) // 45
+        if SHELL.interface == 'Tk':
+            kwarg_dict.update({
+                'width': 400,
+                'height': lines * 20})
+        out_str = textwrap.fill(out_str, width=45)        
+        SHELL.output(out_str, **kwarg_dict)
 
         if Terminal.platform != 'android':
             with open('__data__/binary.txt', 'w') as fhandler:

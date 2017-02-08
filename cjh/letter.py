@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #coding=utf8
 import time
 from cjh.music import Pitch, Note
@@ -113,7 +112,7 @@ class Letter(object):
         self.radio_name = self.__class__.radio_dict[char.upper()]
         self.braille = self.__class__.braille_dict[char.upper()]
         self.morse = self.__class__.morse_dict[char.upper()]
-        self.mora = 0.06
+        self.mora = 0.075
         self.wpm = 1.2 / self.mora
         self.hz = 1000
         
@@ -124,17 +123,20 @@ class Letter(object):
         for x in self.morse:
             if x == '.':
                 Note(Pitch(freq=self.hz), self.mora).play()
-                time.sleep(.025)
+                #time.sleep(.025)
             elif x == '-':
                 Note(Pitch(freq=self.hz), self.mora * 3).play()
             elif x == ' ':
-                time.sleep(6 * self.mora)
+                time.sleep(7 * self.mora)
             time.sleep(self.mora)
         time.sleep(3 * self.mora)
 
     def radio_speak(self):
-        if self.majuscule == 'J': speak('Julie-et')
-        elif self.majuscule == 'O': speak('Oska')        
-        elif self.majuscule == 'P': speak('Pawpaw')
-        elif self.majuscule == 'Q': speak('Kebec')
-        else: speak(self.radio_name)
+        spoken_forms = {
+            'J': 'Julie-et',
+            'O': 'Oska',
+            'P': 'Pawpaw',
+            'Q': 'Kebec'
+            }
+        speak(spoken_forms.get(self.majuscle, self.radio_name))
+

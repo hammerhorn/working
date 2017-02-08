@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #coding=utf8
 """
 Classes for monomial and polynomial arithmetic and evaluation.
@@ -28,13 +27,14 @@ class Term(Thing, Minusable):
         self.exp = decimal.Decimal(exp)
 
     def __repr__(self):
-        string = ""
+        string = ''
         if self.coef != 1.0 or self.exp == 0.0:
             if self.coef == -1.0:
                 string += '-'
                 if self.exp == 0:
                     string += '1'
-            else: string += '{:.5g}'.format(self.coef)
+            else:
+                string += '{:.5g}'.format(self.coef)
         if self.coef != 0.0 and self.exp != 0.0:
             string += 'x'
             if self.exp != 1.0: # use unicode superscripts here
@@ -45,7 +45,7 @@ class Term(Thing, Minusable):
         return Term(abs(self.coef), self.exp)
 
     def __add__(self, other):
-        if type(other) == Polynom:
+        if isinstance(other, Polynom):
             return other + self
         else:
             term_list = [self, other]
@@ -78,7 +78,7 @@ class Term(Thing, Minusable):
         return quotient
 
     def __rdiv__(self, other):
-        if type(other) == int or type(other) == float:
+        if isinstance(other, int) or isinstance(other, float):
             return Term(other, 0) / self
 
     def __pow__(self, power):
@@ -88,25 +88,24 @@ class Term(Thing, Minusable):
 
     def __eq__(self, other):
         try:                   # if other is a Term
-            if self.coef == other.coef and self.exp == other.exp:
-                value = True
-            else: value = False
+            value = True if self.coef == other.coef and self.exp == other.exp\
+                    else False
         except AttributeError: # if other is a float
-            if self.coef == other and self.exp == 1:
-                value = True
-            else: value = False
+            value = True if self.coef == other and self.exp == 1 else False
         return value
 
     def __gt__(self, other):
         if self.exp > other.exp or\
             self.exp == other.exp and self.coef > other.coef:
             return True
-        else: return False
+        else:
+            return False
 
     def __ge__(self, other):
         if self > other or self == other:
             return True
-        else: return False
+        else:
+            return False
 
     def __lt__(self, other):
         if self.exp < other.exp or\
@@ -117,7 +116,8 @@ class Term(Thing, Minusable):
     def __le__(self, other):
         if self < other or self == other:
             return True
-        else: return False
+        else:
+            return False
 
     def __call__(self, x_val):
         """
@@ -131,7 +131,8 @@ class Term(Thing, Minusable):
         """
         if self.exp == 0:
             return self.coef
-        else: return self.coef * decimal.Decimal(x_val) ** self.exp
+        else:
+            return self.coef * decimal.Decimal(x_val) ** self.exp
 
 
     def dx(self, *args):
@@ -144,8 +145,10 @@ class Term(Thing, Minusable):
         if len(args) > 0:
             args = list(args)
             value = float(args[0])
-            return result(value)
-        else: return result
+            return_val = result(value)
+        else:
+            return_val = result
+        return return_val
 
     def S_dx(self, *args):
         """
@@ -157,14 +160,16 @@ class Term(Thing, Minusable):
         if len(args) > 0:
             args = list(args)
             value = float(args[0])
-            return result(value)
-        else: return result
+            return_val = result(value)
+        else:
+            return_val = result
+        return return_val
+
 
 class Polynom(Thing, Minusable):
     """
     Polynom is a polynomial, composed of the sum of monomial Terms.
     """
-
     letter_maker = Letter.lower_gen(start_letter='f')
 
     def __init__(self, term_list=None):
@@ -183,7 +188,8 @@ class Polynom(Thing, Minusable):
             # add to dictionary
             if exp in self.dict.keys():
                 self.dict[exp] += term.coef
-            else: self.dict[exp] = term.coef
+            else:
+                self.dict[exp] = term.coef
 
         try:
             exps = list(self.dict.keys())
@@ -203,7 +209,7 @@ class Polynom(Thing, Minusable):
         if len(self) == 0  or (len(self) == 1 and self.list_[0].coef == 0.0):
             string += '0'
         else:
-            string += str(self.list_[0])
+            string += self.list_[0].__str__()
             for item in range(1, len(self)):
                 if self.list_[item].coef > 0:
                     string += ' + {}'.format(self.list_[item])
