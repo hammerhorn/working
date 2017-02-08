@@ -8,13 +8,12 @@ dialogs: welcome, output, outputf, input, wait, message, list
 usage: widget.py (--SHELL shell) [--WIDGET widget] [TEXT]
 """
 import argparse
-# import atexit
-# import sys
+import copy
+import string
 
 from cjh.misc import bye
 from versatiledialogs.config import Config
 from versatiledialogs.lists import PlainList
-
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
@@ -39,8 +38,7 @@ def _parse_args():
         '--notify', type=str, help='Notification Widget')
     parser.add_argument('--message', type=str, help='Message Dialog')
     parser.add_argument('--list', type=str, help='List Dialog')
-    args = parser.parse_args() if __name__ == '__main__' else None
-    return args
+    return parser.parse_args() if __name__ == '__main__' else None
 
 
 ##########
@@ -51,52 +49,57 @@ CONFIG = Config()
 SHELL = CONFIG.launch_selected_shell(ARGS.shell) if ARGS is not None and\
         ARGS.shell is not None else CONFIG.start_user_profile()
 
+def get_input():
+    input_dict = {'input': SHELL.input(ARGS.input)}
+    fstring = string.Template("You said '$input'.")
+    if SHELL.interface in ('dialog', 'zenity'):
+        fstring = string.replace("'", "\'")
+    SHELL.output(fstring.substitute(input_dict))
+    if SHELL.interface == 'term':
+        SHELL.wait()
+
+def make_list():
+    if SHELL.interface == 'term':
+        SHELL.clear()
+
+    list_ = PlainList(ARGS.list.split())
+    answer = list_[SHELL.list_menu(list_) - 1]
+    fstring = string.Template("You chose '$choice'.")
+    select_dict = {'choice': answer}
+    if SHELL.interface in ('dialog', 'zenity'):
+        fstring = string.replace("'", "\'")
+    SHELL.output(fstring.substitute(select_dict))
+
+def output():
+    if SHELL.interface == 'Tk':
+        SHELL.center_window(height_=100, width_=200)
+        SHELL.msg.config(width=200)
+    SHELL.output(ARGS.output)
+
 def main():
     """
     Display welcome message on first run, then display requested combination of
     dialog box and shell.
     """
-    if ARGS.welcome is not None:
-        SHELL.welcome(description=ARGS.welcome)
+    args_dict = copy.copy(ARGS.__dict__)
+    del args_dict['shell']
 
-    elif ARGS.message is not None:
-        SHELL.message(ARGS.message)
+    # comprehension?
+    widget_dict = {
+        'input'  : get_input,
+        'list'   : make_list,
+        'message': lambda: SHELL.message(ARGS.message),
+        'notify' : lambda: SHELL.notify(ARGS.notify),
+        'output' : output,
+        'outputf': lambda: SHELL.outputf(msg=ARGS.outputf + ' '),
+        'wait'   : lambda: SHELL.wait(ARGS.wait),
+        'welcome': lambda: SHELL.welcome(description=ARGS.welcome)
+    }
 
-    elif ARGS.output is not None:
-        if SHELL.interface == 'Tk':
-            SHELL.center_window(height_=100, width_=200)
-            SHELL.msg.config(width=200)
-        SHELL.output(ARGS.output)
+    for key in args_dict:
+        if args_dict[key] is not None:
+            widget_dict.get(key, lambda: 0)()
 
-    elif ARGS.input is not None:
-        answer = SHELL.input(ARGS.input)
-        fstring = "You said '{}'."
-        if SHELL.interface  ('dialog', 'zenity'):
-            fstring = string.replace("'", "\'")
-
-        SHELL.output(fstring.format(answer))
-        if SHELL.interface == 'term':
-            SHELL.wait()
-
-    elif ARGS.wait is not None:
-        SHELL.wait(ARGS.wait)
-
-    elif ARGS.outputf is not None:
-        SHELL.outputf(msg=ARGS.outputf + ' ')
-
-    elif ARGS.notify is not None:
-        SHELL.notify(ARGS.notify)
-
-    elif ARGS.list:
-        if SHELL.interface == 'term':
-            SHELL.clear()
-
-        fstring = "You chose '{}'."
-        if SHELL.interface in ('dialog', 'zenity'):
-            fstring = string.replace("'", "\'")
-        list_ = PlainList(ARGS.list.split())
-        answer = list_[SHELL.list_menu(list_) - 1]
-        SHELL.output(fstring.format(answer))
     bye()
 
 if __name__ == '__main__':

@@ -37,7 +37,7 @@ def prelims():
     notebook("""    - there should be a cow: object? interface? shell method?
     - maybe a dropdown list would be better?""")
     catch_help_flag(__doc__, SHELL)
-    Terminal.welcome(description=__doc__)
+    SHELL.welcome(description=__doc__)
 
 def define_text():
     """

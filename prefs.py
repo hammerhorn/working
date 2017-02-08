@@ -21,10 +21,6 @@ Examples:
 import argparse
 import copy
 import sys
-# import time
-
-#if sys.version_info.major == 2:
-#    from itertools import izip
 
 import easycat
 from versatiledialogs.config import Config
@@ -37,7 +33,7 @@ __license__ = 'GPL'
 
 REMARKS = """
     - go game client
-    + include brower
+    + include browser
     + use dict.get()"""
 
 def _parse_args():
@@ -64,7 +60,7 @@ def _parse_args():
             '-v', action='count', help="verbose; the more v's, the more vebose")
         args = parser.parse_args()
     finally:
-        if helpflag:
+        if helpflag is True:
             Terminal.output('')
     return args
 
@@ -73,12 +69,6 @@ ARGS = _parse_args() if __name__ == '__main__' else None
 CONFIG = Config()
 FILENAME = 'versatiledialogs/config.json'
 KEYNAME_LIST = ['shell', 'editor', 'terminal', 'language', 'browser']
-
-#def iter_zip(list1, list2):
-#    if sys.version_info.major == 2:
-#        return izip(list1, list2)
-#    else:
-#        return zip(list1, list2)
 
 def lookup(key):
     """return the requested value"""
@@ -90,7 +80,7 @@ def edit_config_file():
     """
     for key_name in KEYNAME_LIST:
         if ARGS.__dict__[key_name] is not None and\
-           ARGS.shell not in ['?', lookup(key_name)]:  # redundent, but safer
+           ARGS.shell not in ('?', lookup(key_name)):  # redundent, but safer
             CONFIG.config_dict[key_name] = ARGS.__dict__[key_name]
     CONFIG.write_to_config_file(**CONFIG.config_dict)
 
@@ -131,9 +121,6 @@ def main():
             'zenity'
         )
 
-#        print supported_modes
-#        print supported_modes.extend(['?', None])
-#        sys.exit()
         if args_dict['shell'] not in (supported_modes + ('?', None)):
             args_dict['shell'] = CONFIG.config_dict['shell']
             Terminal.output(''.join(('\nsupported modes: ', str(supported_modes)[1:-1], '\n')))

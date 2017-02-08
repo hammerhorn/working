@@ -101,7 +101,7 @@ class DialogGui(Terminal):
             proc.wait()
 
     @classmethod
-    def input(cls, prompt='Enter something:'):
+    def input(cls, prompt='Enter something:', **kwargs):
         """Input dialog"""
         if cls.interface == 'dialog':
             os.system('dialog --title "Inputbox - To take input from you"\

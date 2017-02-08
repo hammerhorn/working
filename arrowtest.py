@@ -7,7 +7,10 @@ from cjh.misc import catch_help_flag, notebook
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 
-REMARKS = '    - Move the function to versatiledialogs.terminal.Terminal'
+REMARKS = """
+    - Move the function to versatiledialogs.terminal.Terminal
+    - create get_keypress method for Tk"""
+
 notebook(REMARKS)
 
 SHELL = Config().start_user_profile()

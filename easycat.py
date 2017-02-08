@@ -30,7 +30,7 @@ def cat(**kwargs):
         lines = []
         for file_ in filelist:
             filehandler = open(file_)
-            lines += filehandler.readlines()
+            lines.extend(filehandler.readlines())
             filehandler.close()
         lines = [line.strip() for line in lines]
         return lines
@@ -48,8 +48,9 @@ def cat(**kwargs):
                 else:
                     line = input()  # pylint: disable=bad-builtin
                 line = line.rstrip()
-                lines += [line]
-                write(line + '\n')
+                lines.append(line)
+                if not ('quiet'in kwargs and kwargs['quiet'] is True):
+                    write(line + '\n')
         except EOFError:
             pass
 
