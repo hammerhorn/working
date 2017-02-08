@@ -43,10 +43,9 @@ def main():
             except ValueError:
                 if len(sys.argv[1:]) == 0:
                     continue
-                else:
-                    Pitch('A', 4).play()
-                    SHELL.message('ERROR--Invalid argument')
-                    sys.exit()
+                Pitch('A', 4).play()
+                SHELL.message('ERROR--Invalid argument')
+                sys.exit()
 
         die.draw_face(shellib=SHELL)
 
