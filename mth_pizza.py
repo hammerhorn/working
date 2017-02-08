@@ -51,8 +51,7 @@ def _parse_args():
         help="'bash', 'Tk', 'dialog', 'zenity', 'wx', etc....")
     parser.add_argument(
         '-C', action='store_true', help="read developer's comments")
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 #def print_welcome():
@@ -72,11 +71,7 @@ def linear_units():
     Gets unit abbrev (cm or in.) from command line or stdin and returns as
     a str.
     """
-    if ARGS is not None and ARGS.metric is True:
-        abbrev = 'cm'
-    else:
-        abbrev = 'in.'
-    return abbrev
+    return 'cm' if ARGS is not None and ARGS.metric is True else 'in.'
 
 
 def set_diameter(abbrev):
@@ -86,14 +81,12 @@ def set_diameter(abbrev):
     if ARGS is not None and ARGS.diameter is not None:
         diameter_dec = decimal.Decimal(ARGS.diameter)
     else:
-        if ARGS is not None and ARGS.metric is True:
-            prompt = 'centimeters'
-        else:
-            prompt = 'inches'
-        #Cli.output('')
+        prompt = 'centimeters' if ARGS is not None and ARGS.metric is True else\
+                 'inches'
         while True:
             try:
-                diameter_dec = decimal.Decimal(SHELL.input('{}? '.format(prompt)))
+                diameter_dec = decimal.Decimal(
+                    SHELL.input('{}? '.format(prompt)))
                 break
             except decimal.InvalidOperation:
                 Terminal.clear(1)
@@ -108,20 +101,15 @@ def make_circle(diameter):
     <cjh.geometry.Circle> circle
     """
     radius = diameter.mag / decimal.Decimal(2.0)
-    pizza = Circle(radius)
-    return pizza
-
+    return Circle(radius)
 
 def _set_area_units(pizza):
     """
     Takes 1 arg <cjh.geometry.Circle>, returns type <cjh.geometry.Circle>
     """
-    if ARGS is not None and ARGS.metric is True:
-        pizza.area.units = Unit('cm^2')
-    else:
-        pizza.area.units = Unit('sq. in.')
+    unit_str = 'cm^2' if ARGS is not None and ARGS.metric is True else 'sq. in.'
+    pizza.area.units = Unit(unit_str)
     return pizza
-
 
 def set_price():
     """
@@ -189,10 +177,7 @@ def main():
     """
     notebook(REMARKS)
     if ARGS.diameter is None and ARGS.price is None:
-    #    #Cli.print_header()
         SHELL.welcome(__doc__, 'Pizza Price Tool')
-    #    pass
-    #else:
     Terminal.output('')
 
     while True:

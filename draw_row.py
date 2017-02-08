@@ -59,9 +59,8 @@ if __name__ == '__main__':
     ## Set up Tk window ##
     if SHELL.interface in ['Tk']:
         #SHELL.msg.config(font=('mono', 9, 'bold'))
-        #SHELL.msg.config(font=('mono', 9, 'bold'))
         SHELL.center_window(width_=400, height_=300)
-        #SHELL.center_window(width_=500, height_=300)
+
 #    elif SHELL.interface in ['dialog']:
 #        w, h = 46, 24
 else:
@@ -79,10 +78,8 @@ def main():
     Terminal()
     SHELL.welcome(
         'Draw Tonerow', 'draw a diagram of an n-tone row.  Default is 12.')
-    if ARGS.p is True:
-        in_str = Terminal.input(prompt='', hide_form=True)
-    else:
-        in_str = SHELL.input()
+    in_str = Terminal.input(prompt='', hide_form=True) if ARGS.p is True else\
+             SHELL.input()
     Terminal.clear(0)
     str_list = in_str.split()
     ints = [int(s) for s in str_list]

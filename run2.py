@@ -17,7 +17,6 @@ except ImportError:
         print('Unable to import Tk toolkit.')  # pylint: disable=C0325
 
 from cjh.misc import notebook
-
 from versatiledialogs.config import Config
 from versatiledialogs.lists import PlainList
 from versatiledialogs.terminal import Terminal
@@ -55,10 +54,13 @@ def run_script(scriptname_, shellname_):
     CONFIG.write_to_config_file(shell=shellname_)
     os.system('chmod +x {}'.format(scriptname_))
     if SHELL.interface == 'Tk' and checked.get() == 1:
-        cmd = [
-            word.encode('utf-8') for word
-            in CONFIG.config_dict['terminal'].split()
-        ] + cmd_list
+        #cmd = [
+            #word.encode('utf-8') for word
+         #   word.encode('utf-8') for word
+         #   in CONFIG.config_dict['terminal'].split()
+        #]
+        cmd.append(cmd_list)
+        print(cmd)
         proc = subprocess.Popen(cmd, shell=True)
     else:
         proc = subprocess.Popen(cmd_list, shell=True)

@@ -43,6 +43,7 @@ class TkTemplate(WindowedApp):
             sys.exit()
         cls.main_window = tkinter.Tk()
         cls.main_window.wm_title(mod_name)
+        cls.main_window.config(bg='white')
         cls.center_window(width_=width, height_=height, x_offset=x, y_offset=y)
 
         #cls.main_window.call(
@@ -59,6 +60,7 @@ class TkTemplate(WindowedApp):
         #cls.msgtxt.set("'" + sys.argv[0].split('/')[-1] + "' is running")
         cls.msgtxt.set("'{}' is running".format(sys.argv[0].split('/')[-1]))
         cls.msg = tkinter.Message(cls.main_window, textvariable=cls.msgtxt, width=600)
+        cls.msg.config(bg='white')
         cls.msg.pack(pady=10)
 
     @classmethod

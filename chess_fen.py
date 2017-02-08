@@ -46,22 +46,22 @@ def draw(fen_list):
 
 def main():
     """ Main function """
+    kwarg_dict = {}
     if SHELL.interface == 'Tk':
         SHELL.msg.config(font=('courier'))
-    
+        kwarg_dict.update({'height': 200})
+
     # Use class Section from cjh.doc_format
     board_position = rank_list() if len(sys.argv[1:]) == 0 else rank_list(
         sys.argv[1])
-    SHELL.output(draw(board_position), height=200)
+    SHELL.output(draw(board_position), **kwarg_dict)
 
     while True:
         fen_str = SHELL.input()
         if len(fen_str) == 0:
             break
         board_position = rank_list(fen_str)
-        SHELL.output(draw(board_position), height=200)
-
-
+        SHELL.output(draw(board_position), **kwarg_dict)
 
 if __name__ == '__main__':
     main()

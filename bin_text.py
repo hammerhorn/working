@@ -33,14 +33,14 @@ def main():
         if SHELL.interface == 'Tk':
             kwarg_dict.update({
                 'width': 400,
-                'height': lines * 20})
+                'height': (lines + 1) * 18})
         out_str = textwrap.fill(out_str, width=45)        
         SHELL.output(out_str, **kwarg_dict)
 
         if Terminal.platform != 'android':
             with open('__data__/binary.txt', 'w') as fhandler:
                 fhandler.write(out_str)
-            SHELL.report_filesave('__data__/binary.txt')
+            SHELL.report_filesave('__data__/binary.txt', fast=True)
 
     else:
         with open(ARGS.d, 'r') as fhandler:

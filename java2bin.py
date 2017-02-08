@@ -11,6 +11,7 @@
 """
 
 import os
+import subprocess
 import sys
 
 from cjh.misc import catch_help_flag, notebook
@@ -54,11 +55,13 @@ def main():
         """
         Compile to an executable, strip, and mark as executable.
         """
-        command = 'gcj-5 -c -g -O'
-        command += '{} && gcj-5 --main={}'.format(classfiles, sys.argv[1])
-        command += '{0} -o {1} && rm -f {0} && '.format(ofiles, sys.argv[1])
-        command += 'strip -s {0} && chmod +x {0}'.format(sys.argv[1])
-        os.system(command)
+        cmd_tup = ('gcj-5 -c -g -O',
+                   '{} && gcj-5 --main={}'.format(classfiles, sys.argv[1]),
+                   '{0} -o {1} && rm -f {0} && '.format(ofiles, sys.argv[1]),
+                   'strip -s {0} && chmod +x {0}'.format(sys.argv[1]))
+        command = ''.join(cmd_tup)
+        proc = subprocess.Popen(command)
+        proc.wait()
 
     javafiles, classfiles, ofiles = initialize_all()
 

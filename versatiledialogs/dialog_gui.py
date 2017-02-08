@@ -59,11 +59,8 @@ class DialogGui(Terminal):
         """Display output dialog. Identical to message()."""
         msg = str(msg).replace('$', r'\$')
         if cls.interface == 'dialog':
-            if width is None:
-                width = 41
-            if height is None:
-                height = 16
-            wide, high = width, height
+            wide = 41 if width is None else width
+            high = 16 if height is None else height
             cls.message(msg, heading, wide, high)
         elif cls.interface == 'SL4A':
             cls.droid.dialogCreateAlert(title=heading, message=str(msg))
