@@ -131,18 +131,17 @@ def main():
     else:
         # "Hang up" on main Tk window when done
         SHELL.message(out_str1 + out_str2, stats.__str__())
-        SHELL.exit()
+        # SHELL.exit()
 
     Terminal.hrule()
     while True:
         member = SHELL.input('outcome: ')
         zscore = (
             decimal.Decimal(member) - stats.mean)/decimal.Decimal(stats.std_dev)
-        SHELL.output('z-score: {:g}'.format(zscore))
-        SHELL.output('normal pdf(x): {}'.format(
+        out_str = 'z-score: {:g}\n'.format(zscore) + 'normal pdf(x): {}'.format(
             (decimal.Decimal(2.0 * math.pi) * stats.variance * decimal.Decimal(
-                math.e) ** (zscore ** 2)) ** decimal.Decimal(-0.5)))
-
+                math.e) ** (zscore ** 2)) ** decimal.Decimal(-0.5))
+        SHELL.output(out_str, height=67, width=400)
     SHELL.start_app()
 
 
