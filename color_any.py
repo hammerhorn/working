@@ -75,8 +75,8 @@ def main():
 
     if len(ARGS.value) == 1:
         ARGS.value = '0' + ARGS.value
-
-    ARGS.value = int(ARGS.value) if ARGS.type != 'kelvin' else float(ARGS.value)
+    if ARGS.type != 'hex':
+        ARGS.value = int(ARGS.value) if ARGS.type != 'kelvin' else float(ARGS.value)
     new_color = Color(ARGS.value, ARGS.type)
     SHELL.output(new_color)
     Terminal.output('Truecolor is {}.\n'.format(ARGS.t))
