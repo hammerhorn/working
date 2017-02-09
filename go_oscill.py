@@ -42,12 +42,10 @@ def _parse_args():
 ARGS = _parse_args()
 notebook(REMARKS)
 
-
 if ARGS is not None:
     T_INTERVAL = 0.1 if ARGS.deltat is None else ARGS.deltat    
     D_INTERVAL = 2 if ARGS.deltad is None else ARGS.deltad
     SIZE_ = 19 if ARGS.size is None else ARGS.size
-
 
 def main():
     """

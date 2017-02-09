@@ -16,6 +16,7 @@ __license__ = 'GPL'
 
 def _parse_args():
     """./bin_text.py -d filename"""
+
     # this should be a form of catch_help_flag
     helpflag = True if {'-h', '--help'} & set(sys.argv[1:]) else False
     if helpflag is True:

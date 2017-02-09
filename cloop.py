@@ -19,6 +19,9 @@ from versatiledialogs.terminal import Terminal
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
+REMARKS = """
+    * This could become an IDE if you want to go that route"""
+
 ################
 #  PROCEDURES  #
 ################
@@ -26,6 +29,7 @@ def _parse_args():
     """
     Parse arguments.
     """
+    notebook(REMARKS)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         '--cpp', action='store_true', help='set language to C++')
