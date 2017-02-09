@@ -2,7 +2,7 @@
 A collection of scripts i am working on.
 
 ##Python Packages
-- **cjh**
+- **`cjh`**
     - maths
     - tablegames
 - **colorful**
