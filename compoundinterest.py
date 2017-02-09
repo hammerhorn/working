@@ -145,9 +145,10 @@ if __name__ == '__main__':
     try:
         if ARGS.plot is True:
             if SHELL.interface == 'term':
-                plot()
+
                 t2 = threading.Thread(target=main)
                 t2.start()
+                plot()
                 t2.join()
 
             else:

@@ -88,6 +88,25 @@ class Terminal(Shellib):
         colorama.init()
 
     @classmethod
+    def get_arrow_key(cls):
+        """
+        distinguish between arrow keys being pressed                                                                                                                                                                      """
+        CODE_DICT = {
+            'A': 'up',
+            'B': 'down',
+            'C': 'right',
+            'D': 'left'
+        }
+        direction = None
+        pressed = cls.get_keypress()
+        if pressed == chr(27):
+            pressed = cls.get_keypress()
+            if pressed == '[':
+                pressed = cls.get_keypress()
+                direction = CODE_DICT.get(pressed, None)
+        return direction
+
+    @classmethod
     def center_window(cls, *args, **kwargs):
         """
         a dummy function
@@ -302,7 +321,7 @@ class Terminal(Shellib):
         stripped = Ansi.strip_ansi(prompt)
         ##ansi_escape = re.compile(r'\x1b[^m]*m')
         ##stripped = ansi_escape.sub('', prompt)
-        #stripped = stripped.decode('utf8')
+        stripped = stripped.decode('utf8')
         #stripped = Shellib().input(Shellib())
         try:
             if hide_form is False:  # and cls.platform == 'Linux':

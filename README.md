@@ -8,7 +8,9 @@ A collection of scripts i am working on.
 - **colorful**
 - **fiziko**
 - **ttyfun**
-- **versatiledialogs**
+- **versatiledialogs** - the idea of this package is to provide a collection of
+  dialogs that will work in Python 2 or 3; Linux, Windows, or Android; several
+  different modes: terminal, Tk, wx, dialog, zenity, html, gtk?, qt? other?
 
 ##Scripts
 Scripts to test these packages, and also scripts for 12-tone music

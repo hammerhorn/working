@@ -4,39 +4,18 @@
 detect pressing the arrowkeys
 """
 from cjh.misc import catch_help_flag, notebook
+import easycat
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 
 REMARKS = """
-    - Move the function to versatiledialogs.terminal.Terminal
+    + Move the function to versatiledialogs.terminal.Terminal
     - create get_keypress method for Tk"""
 
 notebook(REMARKS)
 
 SHELL = Config().start_user_profile()
 catch_help_flag(__doc__)
-
-CODE_DICT = {
-    'A': 'up',
-    'B': 'down',
-    'C': 'right',
-    'D': 'left'
-}
-
-
-def get_arrow_key():
-    """
-    distinguish between arrow keys being pressed
-    """
-    direction = None
-    pressed = Terminal.get_keypress()
-    if pressed == chr(27):
-        pressed = Terminal.get_keypress()
-        if pressed == '[':
-            pressed = Terminal.get_keypress()
-            direction = CODE_DICT.get(pressed, None)
-    return direction
-
 
 def main():
     """
@@ -45,8 +24,11 @@ def main():
     try:
         while True:
             try:
-                Terminal.output('\b' + get_arrow_key())
-
+                whichway = Terminal.get_arrow_key()
+               # easycat.write('\b')
+                Terminal.clear(0)
+                easycat.write(whichway)
+                #
             # Fails when get_arrow_key() returns None
             except TypeError:
                 pass
