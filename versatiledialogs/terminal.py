@@ -321,7 +321,8 @@ class Terminal(Shellib):
         stripped = Ansi.strip_ansi(prompt)
         ##ansi_escape = re.compile(r'\x1b[^m]*m')
         ##stripped = ansi_escape.sub('', prompt)
-        stripped = stripped.decode('utf8')
+        if isinstance(stripped, bytes):
+            stripped = stripped.decode('utf8')
         #stripped = Shellib().input(Shellib())
         try:
             if hide_form is False:  # and cls.platform == 'Linux':
@@ -376,7 +377,7 @@ class Terminal(Shellib):
         return func()
 
     @classmethod
-    def message(cls, msg, heading=''):  # , **kwargs): #add width and height
+    def message(cls, msg='', heading=''):  # , **kwargs): #add width and height
         """
         Like cls.notify(), but with an optional heading.
         """

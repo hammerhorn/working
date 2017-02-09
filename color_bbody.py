@@ -1,8 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #coding=utf8
 """
-Depends: web.py, so Python 3 is not supported.
-
 Accepts a valid color name (e.g., 'red') or hex string (e.g., '#FF0000'), and
 the window becomes that color.
 
@@ -10,6 +8,8 @@ adapted from:
 <http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/>
     and
 <http://www.zombieprototypes.com/?p=210>
+
+(web.py has been removed, so this is now compatible with Python 3)
 """
 import argparse
 import os
@@ -30,8 +30,8 @@ from colorful       import color
 from colorful.color import color_dec_to_hex
 from fiziko.waves   import kelvin_to_rgb
 from versatiledialogs.config      import Config
-if sys.version_info.major == 2:
-    from versatiledialogs.html_sh     import HtmlShell
+#if sys.version_info.major == 2:
+from versatiledialogs.html_sh     import HtmlShell
 from versatiledialogs.terminal    import Terminal
 from versatiledialogs.tk_template import TkTemplate
 
@@ -91,7 +91,7 @@ def main():
         html_obj.output(
             'Welcome!  Enter a temperature into your terminal to begin.')
 
-        html_obj.open_file_in_browser(BROWSER)
+        # html_obj.open_file_in_browser(BROWSER)
 
     if SHELL.interface == 'term':
 #       Terminal.output('\nWelcome.')
@@ -115,7 +115,7 @@ def main():
                 _heading = '{:,.5}K'.format(kelvins)  # unused?
                 if ARGS.html is True:
                     html_obj = HtmlShell(
-                        title, FILENAME, bgcolor, color_str)
+                        title, FILENAME, bgcolor, color_str, dont_open=True)
                         # , heading, bgcolor)
                     html_obj.output(color_str)
                 #Terminal.output('\x1b[48;5;0;38;2;{};{};{}m{}\x1b[0m'.format(
@@ -150,7 +150,7 @@ def main():
             heading = '{:,.5}K'.format(kelvins)
             if ARGS.html is True:
                 html_sh = HtmlShell(
-                    title, FILENAME, bgcolor, color_str)
+                    title, FILENAME, bgcolor, color_str, dont_open=True)
                 html_sh.output(heading)
             try:
                 SHELL.main_window.config(bg=bgcolor)

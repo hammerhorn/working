@@ -1,17 +1,18 @@
-#!/usr/bin/env python
 #coding=utf8
 """html shell"""
 import os
 import subprocess
 
-from web import form
+#from web import form
 
+from versatiledialogs.config import Config
 from versatiledialogs.shell import Shellib
 from versatiledialogs.terminal import Terminal
 
 # make setters for attributes
 
-DEFAULT_BROWSER = 'google-chrome'
+CONFIG = Config()
+DEFAULT_BROWSER = CONFIG.config_dict.get('browser', 'firefox') 
 
 class HtmlShell(Shellib):
     """
@@ -19,8 +20,9 @@ class HtmlShell(Shellib):
     """
     def __init__(
             self, title='class <cjh.html_sh>', location='./untitled.html', bgcolor='',
-            color=''):
+            color='', dont_open=False):
         super(HtmlShell, self).__init__()
+        Terminal()
         self.title = title
         self.filename = location
         self.color_info = bgcolor, color
@@ -29,7 +31,7 @@ class HtmlShell(Shellib):
     <html lang="en">
       <head>
         <title>{}</title>
-        <meta charset="UTF-8" http-equiv=REFRESH CONTENT="10; URL={}">
+        <meta charset="UTF-8" http-equiv=REFRESH CONTENT="5; URL={}">
       </head>
       <body style="background-color:{}; color:{}">
         <h1>{}</h1>
@@ -42,6 +44,8 @@ class HtmlShell(Shellib):
             title, location, bgcolor, color, title.replace('<', '&lt;').replace(
                 '>', '&gt;'), self.content)
         self.write_html_file()
+        if dont_open is False:
+            self.open_file_in_browser()
 
     def __str__(self):
         return self.html_str
@@ -82,14 +86,15 @@ class HtmlShell(Shellib):
         self.output('<pre>{}</pre>'.format(output_str))
 
     def input(self, prompt):
-        get_txt = form.Form(form.Textbox('input_form', description=prompt), form.Button('OK'))
-        f = get_txt()
-        snippet = f.render()
-        self.content += snippet
-        self.html_str = self.template.format(
-            self.title, self.filename, self.color_info[0], self.color_info[1],
-            self.title.replace('<', '&lt;').replace('>', '&gt;'), self.content)
-        self.write_html_file()
+        pass
+        # get_txt = form.Form(form.Textbox('input_form', description=prompt), form.Button('OK'))
+        # f = get_txt()
+        # snippet = f.render()
+        # self.content += snippet
+        # self.html_str = self.template.format(
+         #    self.title, self.filename, self.color_info[0], self.color_info[1],
+         #   self.title.replace('<', '&lt;').replace('>', '&gt;'), self.content)
+        #self.write_html_file()
 
     def message(self):
         pass

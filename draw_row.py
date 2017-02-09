@@ -3,13 +3,14 @@
 """
 Draw Tonerow
 
-Generate an ASCII diagram of a sequence of consecutive numbers 0 through (n - 1).
+Generate an ASCII diagram of a sequence of consecutive numbers 0
+through (n - 1).
 
 Example
     ./tonerow -n 11 | ./draw_row.py -p
 
-'tonerow' generated a sequence of shuffled 0 thru 10, and draw_row.py draws the
-picture.
+'tonerow' generated a sequence of shuffled 0 thru 10, and draw_row.py
+draws the picture.
 """
 import argparse
 
@@ -57,7 +58,7 @@ if __name__ == '__main__':
     notebook(REMARKS)
 
     ## Set up Tk window ##
-    if SHELL.interface in ['Tk']:
+    if SHELL.interface == 'Tk':
         #SHELL.msg.config(font=('mono', 9, 'bold'))
         SHELL.center_window(width_=400, height_=300)
 
@@ -72,8 +73,8 @@ else:
 ##########
 def main():
     """
-    Takes  a space-delimited int list (e.g., '0 1 2 3 4 5 6 7 8 9 10 11') as
-    input; generates and ouputs an ASCII diagram.
+    Takes  a space-delimited int list (e.g., '0 1 2 3 4 5 6 7 8 9 10 11')
+    as input; generates and ouputs an ASCII diagram.
     """
     Terminal()
     SHELL.welcome(

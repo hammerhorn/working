@@ -3,8 +3,8 @@
 """
 Letter Frequency
 
-Generate a table of all the characters used in a text file, sorted according to
-their frequency
+Generate a table of all the characters used in a text file, sorted
+according to their frequency
 
 usage: ./encod_table.py [INPUT_FILE]
 """
@@ -26,7 +26,7 @@ def main():
         bin_ord = '{0:b}'.format(ordinal).zfill(8)
         if char == '\n':
             char = '\\n'
-        lines += ["{:>3}\t{}\t{}".format(ordinal, bin_ord, char)]
+        lines.append('{:>4}\t{}\t{}'.format(ordinal, bin_ord, char))
     freq = 1
     lines.sort()
     prev_line = lines[0]
@@ -35,21 +35,27 @@ def main():
         if line == prev_line:
             freq += 1
         else:
-            freq_lines += ['{:>3}\t{}'.format(freq, prev_line)]
+            freq_lines.append('{:>4}\t{}'.format(freq, prev_line))
             freq = 1
         prev_line = line
     if lines[-1] != lines[-2]:
-        freq_lines += ['{:>3}\t{}'.format(freq, lines[-1])]
-    out_str = ''
-    out_str += (
-        Terminal.fx('un', 'Frq') +
-        '\t' + Terminal.fx('un', 'Ord') +
-        '\t' + Terminal.fx('un', 'Bin') +
-        '\t\t' + Terminal.fx('un', 'Char') + '\n')
+        freq_lines.append('{:>4}\t{}'.format(freq, lines[-1]))
+
+    out_str = ''.join((
+        Terminal.fx('un', 'Frq'),
+        '\t', Terminal.fx('un', 'Ord'),
+        '\t', Terminal.fx('un', 'Bin'),
+        '\t\t', Terminal.fx('un', 'Char'), '\n'))
+
+    #for line in sorted(freq_lines, key=lambda line: line.split())[0]
     freq_lines.sort()
+    freq_lines.reverse()
+    #reversed(freq_lines)
+    out_str_list = []
     for line in freq_lines:
-        out_str += line + '\n'
-    easycat.less(out_str)
+        out_str_list.extend([line, '\n'])
+    out_str = ''.join(out_str_list)
+    easycat.less('\b' + out_str)
     Terminal.output('')
 
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #coding=utf8
 """
 An attractive clock for your terminal.
@@ -49,7 +49,7 @@ MONTH_DICT = {
 
 
 ## SHORT CIRCUITS ##
-catch_help_flag(__doc__, SHELL, SHELL.interface in ['zenity'])
+catch_help_flag(__doc__, SHELL, SHELL.interface == 'zenity')
 notebook("""
     - add '-s' option
     - merge some functions

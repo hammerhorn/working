@@ -15,7 +15,7 @@ __license__ = 'GPL'
 
 CONFIG = Config()
 SHELL = CONFIG.start_user_profile()
-if SHELL.interface in ['wx', 'Tk']:
+if SHELL.interface in ('wx', 'Tk'):
     SHELL.center_window()
 
 ALL_FILES = os.listdir('.')

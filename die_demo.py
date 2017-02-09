@@ -180,7 +180,7 @@ if SHELL.interface == 'Tk':
     SHELL.main_window.bind('<Button-3>', main_callback)
 #frame.pack()
 
-if SHELL_NAME in ['wx', 'Tk']:
+if SHELL_NAME in ('wx', 'Tk'):
     SHELL.center_window(width_=200, height_=200, x_offset=100)
 
 if ARGS is not None and ARGS.sides is not None and ARGS.sides > 0:
@@ -199,11 +199,11 @@ def main():
     if SHELL_NAME != 'Tk':
         try:
             for _ in gen_range(100):
-                if SHELL_NAME in ['term', 'dialog', 'zenity']:
+                if SHELL_NAME in ('term', 'dialog', 'zenity'):
                     if ARGS is not None and ARGS.anim:
                         DIE.animate() # make this return a value
                     else:
-                        value_list += [roll_and_output()]
+                        value_list.append(roll_and_output())
 
                     Terminal.clear(1)
                     Terminal.output(str(value_list) + '\n') # write to titlebar

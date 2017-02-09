@@ -135,7 +135,7 @@ def output_results(pizza, price):
     results1 = '    Area of the pizza is {}'.format(pizza.area)
     results2 = '    The unit price of the pizza is {}/{}'.format(
         Money(price / pizza.area.mag), pizza.area.units.abbrev)
-    if SHELL.interface in ['zenity'] or ARGS.shell == 'zenity':
+    if SHELL.interface == 'zenity' or ARGS.shell == 'zenity':
         results1 = results1.replace('$', r'\\$')
         results2 = results2.replace('$', r'\\$')
     if ARGS.diameter is None and ARGS.price is None or SHELL.interface == 'Tk':

@@ -33,17 +33,17 @@ def bye():
 
 
 
-def catch_help_flag(help_str, sh_obj=Terminal(), condition=None, cleanup=lambda: 0):
+def catch_help_flag(help_str, sh_obj=Terminal(), condition=None, cleanup=lambda: 0, heading=sys.argv[0].replace('./', '').rstrip('.py')):
     """
     Help dialogs for bash and Tk.
     """
     if {'-h', '--help'} & set(sys.argv) or condition is True:
         #sh_obj.output(__doc__[1:])
         #                    sys.exit(0)
-        module = sys.argv[0].replace('./', '')[:-3]
+        module = heading
         if sh_obj.interface == 'Tk':
         #sh_obj.main_window.title(module)
-            sh_obj.message(help_str, module)
+            sh_obj.message(msg=help_str, heading=module)
         else:
             module = "'{}'".format(module.replace('_', ' ').title())
             Terminal.output(Terminal.ul(module, position=1))

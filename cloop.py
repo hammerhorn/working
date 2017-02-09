@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
 def cleanup():
     """Remove temporary files."""
-    for cleanup_file in ['tmp.' + EXTENSION, 'a.out']:
+    for cleanup_file in ('tmp.' + EXTENSION, 'a.out'):
         try:
             os.remove(cleanup_file)
         except OSError:

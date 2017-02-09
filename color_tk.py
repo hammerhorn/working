@@ -46,6 +46,7 @@ def main():
     SHELL.msg.destroy()
 
     pane = tk.Frame(SHELL.main_window)
+    pane.config(bg='#eeeeee')
     entry = tk.Entry(pane, width=15, font=('sans', 12))
     bottom = tk.Button(
         pane, text="Change Color", command=lambda: change_colour(

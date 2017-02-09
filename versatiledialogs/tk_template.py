@@ -43,7 +43,7 @@ class TkTemplate(WindowedApp):
             sys.exit()
         cls.main_window = tkinter.Tk()
         cls.main_window.wm_title(mod_name)
-        cls.main_window.config(bg='white')
+        cls.main_window.config(bg='#EEEEEE')
         cls.center_window(width_=width, height_=height, x_offset=x, y_offset=y)
 
         #cls.main_window.call(

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Converts text from stdin into 1's and 0's and writes them to a file.
-With -d followed by the filename, the message is decoded and written to stdout.
+With -d followed by the filename, the message is decoded and written to
+stdout.
 """
 import argparse
 import sys
@@ -15,9 +16,9 @@ __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
 def _parse_args():
-    """./bin_text.py -d filename"""
-
-    # this should be a form of catch_help_flag
+    """
+    ./bin_text.py -d filename
+    """
     helpflag = True if {'-h', '--help'} & set(sys.argv[1:]) else False
     if helpflag is True:
         Terminal.output('')
@@ -31,10 +32,13 @@ def _parse_args():
     return args
 
 def main():
-    """Encode or decode"""
+    """
+    Encode or decode
+    """
     if ARGS.d is None:
-        buf = easycat.cat(return_str=True, quiet=True) if SHELL.platform != 'android' and\
-              SHELL.interface == 'term' else SHELL.input(hide_form=True)
+        buf = easycat.cat(return_str=True, quiet=True) if\
+              SHELL.platform != 'android' and SHELL.interface == 'term' else\
+              SHELL.input(hide_form=True)
         out_str_lst = []
         for char in buf:
             out_str_lst.extend(['{0:b}'.format(ord(char)).zfill(8), ' '])
@@ -45,7 +49,7 @@ def main():
             kwarg_dict.update({
                 'width': 400,
                 'height': (lines + 1) * 18})
-        out_str = textwrap.fill(out_str, width=45)        
+        out_str = textwrap.fill(out_str, width=45)
         SHELL.output(''.join(('\n', out_str, '\n')), **kwarg_dict)
 
         if Terminal.platform != 'android':
@@ -57,10 +61,8 @@ def main():
     else:
         with open(ARGS.d, 'r') as fhandler:
             in_str = fhandler.read()
-        #Terminal.wait(in_str)
         in_str = in_str.replace('\n', ' ')
         bin_list = in_str.split(' ')
-        #print(bin_list)
         char_list = []
         for token in bin_list:
             try:
@@ -68,6 +70,7 @@ def main():
             except ValueError:
                 pass
         SHELL.output(''.join(char_list))
+
 Terminal()
 if __name__ == '__main__':
     ARGS = _parse_args()

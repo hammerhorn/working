@@ -28,9 +28,9 @@ REMARKS = """
     + add PyPlot
     + add periodic compounding
 
-    * add LaTeX
-    + figure out how to do parallel processes so the action doesn't have to stop
-      for PyPlot"""
+    + figure out how to do parallel processes so the action doesn't
+      have to stop for PyPlot
+    * add LaTeX"""
 
 
 def _parse_args():
@@ -76,6 +76,7 @@ if ARGS is not None and ARGS.plot is True:
     Terminal.clear()
 
 # Start the appropriate versatiledialogs mode
+# This construction should be in config
 if ARGS is not None and ARGS.nox is True:
     SHELL = Terminal()
 elif ARGS is not None and ARGS.shell is not None:

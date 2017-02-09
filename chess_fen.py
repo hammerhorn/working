@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Convert chessboard position in Forsythe-Edwards notation to an ASCII diagram and
-print board position to standard output.
+Convert chessboard position in Forsythe-Edwards notation to an ASCII
+diagram and print board position to standard output.
 """
 import sys
 

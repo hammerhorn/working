@@ -158,7 +158,7 @@ elif ARGS is not None and ARGS.shell is not None:
     SHELL = CONFIG.launch_selected_shell(ARGS.shell)
 else:
     SHELL = CONFIG.start_user_profile()
-    if SHELL.interface in ['wx', 'Tk']:
+    if SHELL.interface in ('wx', 'Tk'):
         SHELL.center_window()
 
 

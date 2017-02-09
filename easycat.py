@@ -1,6 +1,7 @@
 #coding=utf8
 """
-Collection of input/output functions which are similar to the cat command
+Collection of input/output functions which are similar to the cat
+command
 """
 import os
 import pydoc

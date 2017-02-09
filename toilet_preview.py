@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Allow the user to preview the available fonts for toilet (or figlet).
 
@@ -11,9 +11,7 @@ import os
 import sys
 
 from cjh.misc import notebook
-
 from ttyfun.unix import Figlet
-
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 from versatiledialogs.lists import PlainList
@@ -67,7 +65,7 @@ if ARGS is not None and ARGS.nox is True:
 else:
     Terminal()
     SHELL = CONFIG.start_user_profile()
-    if SHELL.interface in ['Tk', 'wx']:
+    if SHELL.interface in ('Tk', 'wx'):
         SHELL.center_window()
 atexit.register(Terminal.unhide_cursor)
         
@@ -89,7 +87,7 @@ def main():
     Terminal.hide_cursor()
     while True:
 #        try:
-            if SHELL.interface in ['dialog'] and not _first_pass:
+            if SHELL.interface == 'dialog' and not _first_pass:
                 Terminal.wait()
             else:
                 _first_pass = False

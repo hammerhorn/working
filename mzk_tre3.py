@@ -59,7 +59,7 @@ SHELL = CONFIG.launch_selected_shell('term')
 
 if __name__ == '__main__':
     SHELL = CONFIG.start_user_profile()
-    if SHELL.interface in ['Tk']:
+    if SHELL.interface == 'Tk':
         SHELL.msg.config(font=('mono', 10, 'bold'))
         SHELL.center_window(width_=400, height_=300)
 

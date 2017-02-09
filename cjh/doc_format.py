@@ -115,7 +115,7 @@ class Paragraph(Thing):
         """
         buf = self.buffer
         lines = []
-        line_cnt = len(buf) / self.width + 1
+        line_cnt = len(buf) // self.width + 1
         for _ in gen_range(line_cnt):
             if len(buf) >= self.width:
                 lines.append(buf[0:self.width - 1])

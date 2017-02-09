@@ -54,14 +54,14 @@ def run_script(scriptname_, shellname_):
     CONFIG.write_to_config_file(shell=shellname_)
     os.system('chmod +x {}'.format(scriptname_))
     if SHELL.interface == 'Tk' and checked.get() == 1:
-        #cmd = [
+        cmd = [
             #word.encode('utf-8') for word
-         #   word.encode('utf-8') for word
-         #   in CONFIG.config_dict['terminal'].split()
-        #]
+            word.encode('utf-8') for word
+            in CONFIG.config_dict['terminal'].split()
+        ]
         cmd.append(cmd_list)
-        print(cmd)
-        proc = subprocess.Popen(cmd, shell=True)
+        print(str(cmd))
+        proc = subprocess.Popen(cmd) # , shell=True)
     else:
         proc = subprocess.Popen(cmd_list, shell=True)
     proc.wait()
@@ -149,7 +149,7 @@ def choose_file(script_list_):
         val = menu1.curselection()
         scriptname_ = script_list_[val[0]]
 
-    elif SHELL.interface in ['dialog', 'term']:
+    elif SHELL.interface in ('dialog', 'term'):
         listobj = PlainList(script_list_)
         script_menu = lambda: SHELL.list_menu(listobj)
         number = Terminal.make_page(func=script_menu)
@@ -161,7 +161,7 @@ def select_shell(shell_list_):
     """
     Select shell to use.
     """
-    if SHELL.interface in ['dialog', 'term']:
+    if SHELL.interface in ('dialog', 'term'):
         listobj = PlainList(shell_list_)
         shell_menu = lambda: SHELL.list_menu(listobj)
         number = Terminal.make_page(func=shell_menu)
@@ -204,7 +204,7 @@ if SHELL.interface == 'Tk':
 
 def main():
     """Launch an interface, i.e., main loop."""
-    if SHELL.interface in ['term', 'dialog', 'zenity']:
+    if SHELL.interface in ('term', 'dialog', 'zenity'):
         while True:
             menu_func = lambda: SHELL.list_menu(MENU_OPTS)
             action = Terminal.make_page(func=menu_func)
