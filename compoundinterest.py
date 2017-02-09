@@ -6,6 +6,7 @@ Calculate continuously-compounded interest
 # Std Lib
 import argparse
 import atexit
+import threading
 
 # Add-ons
 import numpy as np  # only needed for plotting
@@ -28,7 +29,7 @@ REMARKS = """
     + add periodic compounding
 
     * add LaTeX
-    * figure out how to do parallel processes so the action doesn't have to stop
+    + figure out how to do parallel processes so the action doesn't have to stop
       for PyPlot"""
 
 
@@ -54,15 +55,27 @@ def _parse_args():
     parser.add_argument(
         'PERIOD', type=str, nargs='?',
         help='y=yearly, s=semiannually, m=monthly, d=daily, c=continuously')
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 ### DATA ###
+time_dict = {
+    'c': None,
+    'y': 1.0,
+    'd': 365.24,
+    's': 2.0,
+    'm': 12.0}
+
 notebook(REMARKS)
 ARGS = _parse_args() if __name__ == '__main__' else None
 CONFIG = Config()
 
+# Get PyPlot if you need it and hide lots of scrolling messages
+if ARGS is not None and ARGS.plot is True:
+    import matplotlib.pyplot as plt
+    Terminal.clear()
+
+# Start the appropriate versatiledialogs mode
 if ARGS is not None and ARGS.nox is True:
     SHELL = Terminal()
 elif ARGS is not None and ARGS.shell is not None:
@@ -70,52 +83,48 @@ elif ARGS is not None and ARGS.shell is not None:
 else:
     SHELL = CONFIG.start_user_profile()
 
-if SHELL.interface in ['wx', 'Tk']:
+# Mode-specific operations
+if SHELL.interface in ('wx', 'Tk'):
     SHELL.center_window()
 
-# This seems abusive, but it seems to work
+def exit_funct():
+    SHELL.start_app()
+	
 atexit.register(SHELL.start_app)
 
+# Read args in from command line
 PRINCIPAL = Money(ARGS.PRINCIPAL)
 RATE = ARGS.RATE
 TIME = ARGS.TIME
+ppy = time_dict[ARGS.PERIOD] if ARGS.PERIOD is not None else None
+
+
+def plot():
+    """
+    If GUI is available, plot the increase with respect to time, using
+    PyPlot
+    """
+    if SHELL.interface == 'Tk':
+        SHELL.exit()
+        Terminal.notify(
+            Terminal.fx('bn', 'Close PyPlot window to continue...'))
+ 
+    Terminal.output('')
+    domain = np.arange(0.0, TIME, 0.1) 
+    plt.figure(1)
+    plt.plot(domain, PRINCIPAL.interest(RATE, domain, ppy).amount, 'r')
+    plt.show()
+
 
 def main():
     """
     Calculate interest and print out the new total.
     """
-    def plot():
-        """
-        If GUI is available, plot the increase with respect to time, using
-        PyPlot
-        """
-        Terminal.output('')
-        Terminal.notify(
-            Terminal.fx('bn', 'Close PyPlot window to continue...'))
-        domain = np.arange(0.0, TIME, 0.1)
-        plt.figure(1)
-        plt.plot(domain, PRINCIPAL.interest(RATE, domain, ppy).amount, 'r')
-        plt.show()
-        Terminal.clear(2)
-
-    time_dict = {
-        'c': None,
-        'y': 1.0,
-        'd': 365.24,
-        's': 2.0,
-        'm': 12.0}
-
-    ppy = time_dict[ARGS.PERIOD] if ARGS.PERIOD is not None else None
     result = PRINCIPAL.interest(RATE, TIME, ppy)
-
-    if ARGS.plot is True:
-        import matplotlib.pyplot as plt
-        Terminal.clear()
-
     result_str = result.__str__()
 
     # Move this to Money class
-    if SHELL.interface in ['term', 'dialog', 'zenity'] and\
+    if SHELL.interface in ('term', 'dialog', 'zenity') and\
        SHELL.platform != 'Windows':
         result_str = '\\' + result_str
 
@@ -123,14 +132,29 @@ def main():
         SHELL.output(
             '\n\n{}\n'.format(Figlet('future').output(
                 result_str, get_str=True)))
-    else:
+    else: 
         SHELL.message(result_str)
 
-    if ARGS.plot is True:
+    if SHELL.interface == 'Tk' and ARGS.plot is True:
         plot()
+        Terminal.clear(2)
 
-    SHELL.exit()
 
 if __name__ == '__main__':
-    main()
-    SHELL.start_app()
+    # So ugly calling main more than once
+    try:
+        if ARGS.plot is True:
+            if SHELL.interface == 'term':
+                plot()
+                t2 = threading.Thread(target=main)
+                t2.start()
+                t2.join()
+
+            else:
+                main()
+        else:
+            main()
+            SHELL.exit()
+    except:
+        pass
+
