@@ -20,6 +20,7 @@ __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
 REMARKS = """
+    - readline would be killer
     * This could become an IDE if you want to go that route"""
 
 ################

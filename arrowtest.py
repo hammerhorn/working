@@ -9,8 +9,9 @@ from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 
 REMARKS = """
-    + Move the function to versatiledialogs.terminal.Terminal
-    - create get_keypress method for Tk"""
+    - create get_keypress method for Tk
+    + Move the function to versatiledialogs.terminal.Terminal"""
+
 
 notebook(REMARKS)
 
