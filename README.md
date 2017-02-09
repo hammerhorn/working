@@ -20,6 +20,7 @@ Scripts to test these packages, and also scripts for 12-tone music
 - **`compoundinterest.py`** - basic interest calculator featuring `matplotlib.pyplot` and
                             `toilet`, if desired
 - **`time_peace.py`** - nifty-looking clock; works in terminal or Tk
+
 ##Future plans
 - go game to music converter
 - chess ruleset designer?
