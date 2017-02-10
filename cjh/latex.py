@@ -31,7 +31,7 @@ class LatexObj(Thing):
                 If no regular file exists, print an error message and exit.
                 """
                 current_dir = os.getcwd()
-                if filename in ['.', '..', '/'] or filename in os.listdir(
+                if filename in ('.', '..', '/') or filename in os.listdir(
                         current_dir):
                     error = '{}: {}: Is a directory'
                 else:

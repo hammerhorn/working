@@ -14,29 +14,29 @@ __license__ = 'GPL'
 class TextGen(object):
     WORD_MAXLENGTH = 10
     SENTENCE_LENGTH = 20
-    sentence_count = 0 #Number of sentences within the last chunk() written
-    sentence_total = 0 #Total number of sentences written
+    sentence_count = 0  # Number of sentences within the last chunk() written
+    sentence_total = 0  # Total number of sentences written
 
     @classmethod
     def word(cls):
         """
         Words will be between 1 and WORD_MAXLENGTH letters long.
         """
-        word = ''
+        letter_list = []
         for _ in gen_range(randint(1, cls.WORD_MAXLENGTH)):
-            word += chr(randint(97, 122))
-        return word
+            letter_list.append(chr(randint(97, 122)))
+        return ''.join(letter_list)
 
     @classmethod
     def sentence(cls):
         """
         Sentences will have exactly SENTENCE_LENGTH words.
         """
-        sentence = cls.word().capitalize()
+        word_list = [cls.word().capitalize()]
         for _ in gen_range(1, cls.SENTENCE_LENGTH):
-            sentence += ' ' + cls.word()
-        sentence += '.'
-        return sentence
+            word_list.append(cls.word())
+        sentence = ' '.join(word_list)
+        return sentence + '.'
 
     @classmethod
     def chunk(cls):
@@ -46,7 +46,7 @@ class TextGen(object):
         chunk = cls.sentence()
         sentence_count = 1
 
-        #An interesting type of probability curve
+        # An interesting type of probability curve
         while True:
             if sentence_count == 2 and randint(1, 100) > 98.75:
                 break
@@ -64,7 +64,7 @@ class TextGen(object):
                 break
             elif sentence_count == 9:
                 break
-            chunk += '  ' + cls.sentence()
+            chunk = '  '.join((chunk, cls.sentence()))
             sentence_count += 1
 
         cls.sentence_count = sentence_count
