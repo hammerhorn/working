@@ -141,7 +141,7 @@ def main():
         out_str = 'z-score: {:g}\n'.format(zscore) + 'normal pdf(x): {}'.format(
             (decimal.Decimal(2.0 * math.pi) * stats.variance * decimal.Decimal(
                 math.e) ** (zscore ** 2)) ** decimal.Decimal(-0.5))
-        SHELL.output(out_str, height=67, width=400)
+        SHELL.output(out_str + '\n', height=67, width=400)
     SHELL.start_app()
 
 
