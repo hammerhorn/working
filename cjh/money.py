@@ -25,25 +25,18 @@ class Money(object):
         self.unit = unit
 
     def __str__(self):
-        if self.unit == 'USD':
-            return money(self.amount)
-        else:
-            return self.unit + ' ' + money(self.amount)[1:]
+        return money(self.amount) if self.unit == 'USD' else\
+            ' '.join((self.unit, money(self.amount)[1:]))
 
     def __sub__(self, other):
-        if self.unit == other.unit:
-            return Money(self.amount - other.amount)
-        else:
-            return None
+        return Money(self.amount - oterh.amount) if self.unit == other.unit\
+            else None
 
     def __div__(self, other):
         return Money(self.amount / other)
 
     def __lt__(self, other):
-        if self.amount < other.amount:
-            return True
-        else:
-            return False
+        return True if self.amount < other.amount else False
 
     def __mul__(self, other):
         return self.amount * other
