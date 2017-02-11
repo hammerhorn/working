@@ -27,19 +27,20 @@ class Term(Thing, Minusable):
         self.exp = decimal.Decimal(exp)
 
     def __repr__(self):
+        str_list = []
         string = ''
         if self.coef != 1.0 or self.exp == 0.0:
             if self.coef == -1.0:
-                string += '-'
+                str_list.append('-')
                 if self.exp == 0:
-                    string += '1'
+                    str_list.append('1')
             else:
-                string += '{:.5g}'.format(self.coef)
+                str_list.append('{:.5g}'.format(self.coef))
         if self.coef != 0.0 and self.exp != 0.0:
-            string += 'x'
+            str_list.append('x')
             if self.exp != 1.0: # use unicode superscripts here
-                string += '^{:.5g}'.format(float(self.exp))
-        return string
+                str_list.append('^{:.5g}'.format(float(self.exp)))
+        return ''.join(str_list)
 
     def __abs__(self):
         return Term(abs(self.coef), self.exp)

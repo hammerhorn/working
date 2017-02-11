@@ -13,13 +13,8 @@ import datetime
 import os
 import subprocess
 import sys
-# import time
-
 
 from versatiledialogs.terminal import Terminal
-
-# from colorful import color
-# from cjh.music import PitchSequence, PitchSet, Pitch
 
 
 def bye():
@@ -30,7 +25,6 @@ def bye():
     # PitchSequence(PitchSet(pattern=[1, 3, 5, 6, 8, 10, 12], start_pitch=Pitch\
     # ('C', 4)), [5, 1]).play()
     sys.exit('\nBye.')
-
 
 
 def catch_help_flag(help_str, sh_obj=Terminal(), condition=None, cleanup=lambda: 0, heading=sys.argv[0].replace('./', '').rstrip('.py')):
@@ -53,10 +47,11 @@ def catch_help_flag(help_str, sh_obj=Terminal(), condition=None, cleanup=lambda:
             sh_obj.main_window.destroy()
         sys.exit()
 
+
 def chomp(text):
     """removes trailing whitespace, turns internal newlines into spaces"""
-    text = text.replace('\n', ' ')
-    text = text.strip()
+    text = text.replace('\n', ' ').strip()
+    #text = text.strip()
     return text
 
 
@@ -71,6 +66,7 @@ def fahr_to_kelvins(fahr):
     celsius = (fahr - 32) * 5.0 / 9.0
     kelvins = celsius + 273.15
     return kelvins
+
 
 def notebook(remarks):
     """
@@ -102,9 +98,9 @@ def notebook(remarks):
 def speak(phrase):
     """use a speech synthesizer to read text"""
     command = 'espeak -s 150 -v en-us -p 30 "{}" > /dev/null 2>&1'
-#    try:
+#   try:
     proc = subprocess.Popen(command.format(phrase), shell=True)
     proc.wait()
-#    except:
+#   except:
 #        Terminal.notify('espeak failed')
 

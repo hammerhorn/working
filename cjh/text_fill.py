@@ -35,8 +35,8 @@ class TextGen(object):
         word_list = [cls.word().capitalize()]
         for _ in gen_range(1, cls.SENTENCE_LENGTH):
             word_list.append(cls.word())
-        sentence = ' '.join(word_list)
-        return sentence + '.'
+        sentence = ' '.join(word_list) + '.'
+        return sentence
 
     @classmethod
     def chunk(cls):
@@ -47,6 +47,7 @@ class TextGen(object):
         sentence_count = 1
 
         # An interesting type of probability curve
+        # Very odd brute force method
         while True:
             if sentence_count == 2 and randint(1, 100) > 98.75:
                 break

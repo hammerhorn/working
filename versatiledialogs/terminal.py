@@ -31,18 +31,12 @@ __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
 
-# class TxtFx(object):
-#
+# class TxtFx(object)
 # class Cursor
-#
 # class Widgets
-#
 # class Cat
-#
 # class Boxes
-
 # AnimatedText? TuiBits?
-
 # Windows only
 
 
@@ -90,7 +84,8 @@ class Terminal(Shellib):
     @classmethod
     def get_arrow_key(cls):
         """
-        distinguish between arrow keys being pressed                                                                                                                                                                      """
+        distinguish between arrow keys being pressed
+        """
         CODE_DICT = {
             'A': 'up',
             'B': 'down',
@@ -174,12 +169,9 @@ class Terminal(Shellib):
                        title=sys.argv[0].split('.')[0].split('/')[-1].title(),
                        year=datetime.date.today().year, duration=.5):
         """
-        There is probably a simpler syntax for getting the default title....
+        There is probably a simpler syntax for getting the default title
         """
-        if cls.os_name == 'posix':
-            copyleft = '(ↄ)'
-        else:
-            copyleft = '(copyleft)'
+        copyleft = '(ↄ)' if cls.os_name == 'posix' else '(copyleft)'
         cls.text_splash(title, duration, 1)
         cls.text_splash('{}{} {}'.format(
             copyleft, int(year), __author__), .5, 1)
@@ -202,10 +194,10 @@ class Terminal(Shellib):
         attributes = []
 
         if 'b' in cmds:
-            attributes += ['bold']
+            attributes.append('bold')
 
         if 'u' in cmds:
-            attributes += ['underline']
+            attributes.append('underline')
 
         if 'n' not in cmds:
             out_str += '\n'
@@ -251,9 +243,10 @@ class Terminal(Shellib):
         """
         Terminal height.  Only accurate for bash.
         """
+        sizey = None
         if cls.bash_available is True:
-            return int(subprocess.check_output('tput lines', shell=True))
-        else:
+            sizey = int(subprocess.check_output('tput lines', shell=True))
+        elif cls.platform == 'Windows':
             from ctypes import windll, create_string_buffer
 
             # stdin handle is -10
@@ -268,12 +261,9 @@ class Terminal(Shellib):
                 (bufx, bufy, curx, cury, wattr,
                  left, top, right, bottom, maxx, maxy) = struct.unpack(
                      "hhhhHhhhhhh", csbi.raw)
-                # sizex = right - left + 1
                 sizey = bottom - top + 1
-            else:
-                sizey = 25  # can't determine actual size -
-                                        #  return default values
-        #print sizex, sizey
+        if sizey is None:
+            sizey = 25
         return sizey
 
     @classmethod
@@ -317,16 +307,13 @@ class Terminal(Shellib):
         """
         Get input using the appropriate version of Python.
         """
-        #cls.output('')
         stripped = Ansi.strip_ansi(prompt)
-        ##ansi_escape = re.compile(r'\x1b[^m]*m')
-        ##stripped = ansi_escape.sub('', prompt)
         if isinstance(stripped, bytes):
             stripped = stripped.decode('utf8')
-        #stripped = Shellib().input(Shellib())
         try:
             if hide_form is False:  # and cls.platform == 'Linux':
-                cls.output(' ' * (len(stripped) - 1) + '┌' + '─' * 22 + '┐')
+                cls.output(''.join(
+                    (' ' * (len(stripped) - 1), '┌', '─' * 22, '┐')))
             easycat.write(prompt)
             if hide_form is False:  # and cls.platform == 'Linux':
                 easycat.write(
@@ -337,17 +324,15 @@ class Terminal(Shellib):
                 #write('\033[G')
                 if cls.platform == 'Windows':
                     cls.cursor_v(1)
-                cls.output(' ' * (len(stripped) - 1) + '└' + '─' * 22 + '┘')
+                cls.output(''.join(
+                    (' ' * (len(stripped) - 1), '└', '─' * 22, '┘')))
                 easycat.write('\r')
 
                 cls.cursor_v(2)
                 cls.cursor_h(len(stripped) + 1)
-                easycat.write(
-                    Fore.YELLOW + Back.BLACK + Style.BRIGHT + Ansi.UNDERLINE)
-            if cls.py_version == 2:
-                return_str = raw_input()
-            elif cls.py_version == 3:
-                return_str = input()
+                easycat.write(''.join(
+                    (Fore.YELLOW, Back.BLACK, Style.BRIGHT, Ansi.UNDERLINE)))
+            return_str = input() if cls.py_version == 3 else raw_input()
 
         except KeyboardInterrupt:
             easycat.write(Style.RESET_ALL)
@@ -355,7 +340,6 @@ class Terminal(Shellib):
         finally:
             easycat.write(Style.RESET_ALL)
         cls.cursor_v(-2)
-        #cls.clear(2)
 
         return return_str
 
@@ -413,8 +397,7 @@ class Terminal(Shellib):
         """
         cls.output() + '\n'
         """
-        cls.output('')
-        cls.output(msg + '\n', head)
+        cls.output(''.join(('\n', msg, '\n')), head)
 
     @classmethod
     def print_header(cls, message=None):
@@ -456,24 +439,24 @@ class Terminal(Shellib):
             'duration'
             """
             cls.clear()
+
             if v_center is True:
                 cls.output('\n' * (cls.height() // 2 - 2))
             cls.output(text.center(cls.width()))
-            if flashes > 1:
 
-                time.sleep(duration / (2.0 * flashes - 1.0))
-            else:
-                time.sleep(duration)
+            if flashes > 1:
+                duration /= (2.0 * flashes - 1.0)
+            time.sleep(duration)
 
         def message_off():
             """
             blank screen, for an amount of time 'duration'
             """
             cls.clear()
+
             if flashes > 1:
-                time.sleep(duration / (2.0 * flashes - 1.0))
-            else:
-                time.sleep(duration)
+                duration /= (2.0 * flashes - 1.0)
+            time.sleep(duration)
 
        # message_on()
         cls.hide_cursor()
@@ -500,19 +483,17 @@ class Terminal(Shellib):
         cls.clear()
         bracketed = '[ {} ]'.format(text)
         length = (cls.width() - len(bracketed)) // 2
-        if cls.os_name == 'posix':
-            symbol = colored(' ', attrs=['reverse', 'bold'])
-        else:
-            symbol = colored(' ', 'white', 'on_white')
+        
+        symbol = colored(' ', attrs=['reverse', 'bold']) if cls.os_name ==\
+                 'posix' else colored(' ', 'white', 'on_white')
         hemibar = symbol * length
-        easycat.write(hemibar + bracketed + hemibar)
+        easycat.write('{0}{1}{0}'.format(hemibar, bracketed))        
         total_len = 2 * length + len(bracketed)
 
         #print 'while {} < {}'.format(total_len, cls.width())
 
         # Does this work?
         while total_len < cls.width():
-
             easycat.write(symbol)
             total_len += 1
         cls.output('\n')
@@ -540,24 +521,17 @@ class Terminal(Shellib):
         """
         text_width = len(text) + 2
         understroke = (symbol * (text_width // len(symbol)))
-        sym_gen = iter(symbol)
-        while len(understroke) < text_width:
-            understroke += next(sym_gen)  # sym_gen.next()
-        if position and position >= 0:
+
+        if position is not None and position >= 0:
             indent_pad = ' ' * position
             understroke = indent_pad + understroke
             text = indent_pad + text
         else:
-            if width:
-                screen_width = width
-            else:
-                screen_width = cls.width()
+            screen_width = width if width is not None else cls.width()
             if position and position < 0:
                 screen_width += (2 * position)
             understroke = understroke.center(screen_width)
-            text = text.strip()
-            text = text.center(screen_width)
-            text = text[1:-1]
+            text = text.strip().center(screen_width)[1:-1]
         return "\n  {}\n {}".format(text, understroke)
 
     @classmethod
@@ -579,9 +553,9 @@ class Terminal(Shellib):
         lines = super(Terminal, cls).view_info(get_str=True).split('\n')
         lines = lines[2:]
         text = ''
-        for line in lines:
-            text += line + '\n'
-        text = '\n' + cls.fx('u', 'Shell Info') + text
+        for line in lines: # convert to list
+            text = ''.join((text, line, '\n'))
+        text = ''.join(('\n', cls.fx('u', 'Shell Info'), text))
         if get_str is True:
             return text
         else:
@@ -595,16 +569,11 @@ class Terminal(Shellib):
         try:
             cls.hide_cursor()
             if text is None:
-                if cls.bash_available is False:
-                    what2press = 'enter'
-                else:
-                    what2press = 'a key'
+                what2press = 'enter' if cls.bash_available is False else 'a key'
                 text = 'Press {}'.format(what2press)
-
-            text = '\n' + (" " * 5) + Fore.BLUE + Back.WHITE + '[' +\
-                Ansi.UNDERLINE + text[0] + '\033[24m' + text[1:] + ']' +\
-                Style.RESET_ALL
-
+            text = ''.join(
+                ('\n', ' ' * 5, Fore.BLUE, Back.WHITE, '[', Ansi.UNDERLINE,
+                 text[0], '\033[24m', text[1:], ']', Style.RESET_ALL))
             cls.get_keypress(text)
             cls.clear(1)
             if cls.platform == 'Windows':
@@ -627,22 +596,19 @@ class Terminal(Shellib):
             return
         script_name = sys.argv[0].split('/')[-1].split('.')[0].title()
         formatted = textwrap.dedent(description).strip()
-
-        if cls.width() >= 40:
-            width_ = 40
-        else:
-            width_ = cls.width() - 5
+        width_ = 40 if cls.width() >= 40 else cls.width() - 5
         formatted = textwrap.fill(formatted, initial_indent=' ' * 5,
                                   subsequent_indent=' ' * 5, width=width_)
-        formatted = cls.ul(script_name, symbol='-', width=width_) +\
-            '\n' + formatted
+        formatted = ''.join(
+            (cls.ul(script_name, symbol='-', width=width_), '\n', formatted)
+        )
 
         if get_str:
             return formatted
         if cls.is_first_run():
             cls.default_splash()
             cls.titlebar()
-            cls.output('\n' + formatted + '\n')
+            cls.output('\n%s\n' % formatted)
             cls.wait()
             cls.clear()
             cls.titlebar()
@@ -705,19 +671,20 @@ class CompactMenu(PlainList):
 
     def __str__(self):
         """work on this"""
-        string = self.label
+        str_list = [self.label]
         options = self.items
-        used_letters = ''
+        used_letters = []
         for option in options:
-            if not option[0] in used_letters:
-                used_letters += option[0]
+            if option[0] not in used_letters:
+                used_letters.append(option[0])
                 option = '[{}]{}'.format(option[0], option[1:])
             #else:
-            string += ' {},'.format(option)
+            str_list.append(' {},'.format(option))
         #string.rstrip()
         #string.rstrip(',')
-        string = string[0:-1]
-        return string
+        return ''.join(str_list)[:-1]
+        # string = string[0:-1]
+        #return string
 
     def input(self):
         """Gets the users selection"""
@@ -766,13 +733,9 @@ class ListPrompt(Enumeration):
 
         if len(self) > 0:
             try:
-                if long_:
-                    sel_str = Terminal.input(prompt, hide_form=True)
-                else:
-                    sel_str = Terminal.get_keypress(prompt)
-                
+                sel_str = Terminal.input(prompt, hide_form=True) if long_ else\
+                          Terminal.get_keypress(prompt)
                 sel = int(sel_str) if sel_str.isdigit() else None
-
             except KeyboardInterrupt:
                 Terminal.output('')
                 return None
