@@ -22,7 +22,9 @@ __license__ = 'GPL'
 
 def cat(**kwargs):
     """
-    This should be improved; re-write without **kwargs?
+    keywords: files, quiet, return_list, return_str
+
+    (This should be improved; re-write without **kwargs?)
     """
     def read_from_files(filelist):
         """

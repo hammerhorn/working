@@ -62,25 +62,21 @@ def _parse_args():
     parser.add_argument(
         '-C', action='store_true', help="see developer's comments")
     parser.add_argument("ADDENDS", help="numbers to be summed", nargs="*")
+    return parser.parse_args() if __name__ == '__main__' else None
 
-    args = parser.parse_args() if __name__ == '__main__' else None
-    return args
 
 def getdata_stdin():
     """
     Input numerical data line by line until EOF
     """
-    if Terminal.os_name == 'posix':
-        eof_key = '^D'
-    else:
-        eof_key = '^Z[enter]'
+    eof_key = '^D' if Terminal.os_name == 'posix' else '^Z[enter]'
     s_dict = {
         'EN':"Enter addends, followed by '{}'".format(eof_key),
         'EO':"Provizu adiciatojn, finigita de '{}'".format(eof_key)}
     Terminal.output(s_dict[LANG.upper()])
     input_str = sys.stdin.read().strip()
-    str_list = input_str.split()
-    return str_list
+    return input_str.split()
+
 
 def reset_frame():
     """
@@ -89,17 +85,15 @@ def reset_frame():
     Terminal.clear()
     Terminal.titlebar()
 
+
 def main():
     """
     Get a list of numbers from the user, and sum them up three ways.
     """
-
     if ARGS.w is True and SHELL.interface == 'term':
         reset_frame()
-    if len(ARGS.ADDENDS) == 0:
-        str_list = getdata_stdin()
-    else:
-        str_list = ARGS.ADDENDS
+
+    str_list = getdata_stdin() if len(ARGS.ADDENDS) == 0 else ARGS.ADDENDS
     num_list = [decimal.Decimal(i) for i in str_list]
     stats = DataSet(num_list)
 
@@ -111,17 +105,16 @@ def main():
 
     if ARGS.verbose:
         out_str1 = out_str1[:-1]
-        out_str1 += Terminal.hrule(string=True) + '\n'
+        out_str1 = ''.join((out_str1, Terminal.hrule(string=True), '\n'))
         if ARGS.w is True and SHELL.interface == 'term':
             reset_frame()
         Terminal.output(out_str1)
         Terminal.wait()
 
-
-    out_str2 = '\n{}'.format(stats.range_str(LANG))
-    out_str2 += '\n{}'.format(stats.averages_str(LANG))
     s_dict = {'EN':'std. deviation', 'EO':'norma diferenco'}
-    out_str2 += '\n{} = {}'.format(s_dict[LANG.upper()], stats.std_dev)
+    out_str2 = '\n'.join(('\n{}'.format(stats.range_str(LANG)),
+                          '{}'.format(stats.averages_str(LANG)),
+                          '{} = {}'.format(s_dict[LANG.upper()], stats.std_dev)))
 
     if SHELL.interface == 'term':
         SHELL.output(out_str2 + '\n')
@@ -130,7 +123,7 @@ def main():
             Terminal.wait()
     else:
         # "Hang up" on main Tk window when done
-        SHELL.message(out_str1 + out_str2, stats.__str__())
+        SHELL.message(''.join((out_str1, out_str2, stats.__str__())))
         # SHELL.exit()
 
     Terminal.hrule()

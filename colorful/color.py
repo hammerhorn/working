@@ -45,12 +45,11 @@ def color_ansi_to_hex(ansi_code):
 
 
 def color_dec_to_hex(red, green, blue):
-    hex_color_str = '#'
-    hex_color_str += hex(red).split('x')[1].zfill(2)
-    hex_color_str += hex(green).split('x')[1].zfill(2)
-    hex_color_str += hex(blue).split('x')[1].zfill(2)
-    hex_color_str = hex_color_str.upper()
-    return hex_color_str
+    hex_color_str = ''.join(('#',
+                             hex(red).split('x')[1].zfill(2),
+                             hex(green).split('x')[1].zfill(2),
+                             hex(blue).split('x')[1].zfill(2)))
+    return hex_color_str.upper()
 
 
 def color_hex_to_dec(hexstring):
@@ -64,6 +63,9 @@ def color_hex_to_ansi(hexstring):
     return int(colortrans.rgb2short(hexstring[1:])[0])
 
 def nm_to_rgb(wavelength):
+    """
+    This might should be in fiziko.waves
+    """
     gamma = 0.80
     intensity_max = 255
     factor = 1.0
@@ -88,7 +90,6 @@ def nm_to_rgb(wavelength):
         red = 1.0
         green = -(wavelength - 645) / (645 - 580)
         blue = 0.0
-
     elif 645 <= wavelength < 781:
         red = 1.0
         green = 0.0

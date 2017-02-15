@@ -21,25 +21,33 @@ class Money(object):
     Handles formatting of dollars; also calculates interest and sales tax
     """
     def __init__(self, amount, unit='USD'):
-        self.amount = amount
+        self.amount = float(amount)
         self.unit = unit
+
+    def __float__(self):
+        return self.amount
 
     def __str__(self):
         return money(self.amount) if self.unit == 'USD' else\
             ' '.join((self.unit, money(self.amount)[1:]))
 
     def __sub__(self, other):
-        return Money(self.amount - oterh.amount) if self.unit == other.unit\
+        return Money(self.amount - other.amount) if self.unit == other.unit\
             else None
 
     def __div__(self, other):
-        return Money(self.amount / other)
+        result = self.amount / float(other)
+        if not isinstance(other, Money):
+            #print other, 'is not Money'
+            result = Money(result)
+        return result
 
     def __lt__(self, other):
         return True if self.amount < other.amount else False
 
     def __mul__(self, other):
-        return self.amount * other
+#        return self.amount * other
+        return Money(self.amount * other)
 
     def interest(self, rate, years, periods_per_yr=None):
         """ calcultate compound interest """

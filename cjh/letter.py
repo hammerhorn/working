@@ -112,7 +112,7 @@ class Letter(object):
         self.radio_name = self.__class__.radio_dict[char.upper()]
         self.braille = self.__class__.braille_dict[char.upper()]
         self.morse = self.__class__.morse_dict[char.upper()]
-        self.mora = 0.085
+        self.mora = 0.125
         self.wpm = 1.2 / self.mora
         self.hz = 1000
         

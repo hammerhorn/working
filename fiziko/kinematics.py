@@ -41,7 +41,6 @@ class Vector(Scalar):
         #if th == None: self.theta = Angle()
         #else:
         self.theta = th
-
         self.x_mag, self.y_mag = self._resolve()
         self.label = next(self.__class__.letter_seq)
 

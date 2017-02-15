@@ -9,6 +9,7 @@ contains: bye(),
           help_dialog(),
           speak()
 """
+import argparse
 import datetime
 import os
 import subprocess
@@ -27,7 +28,7 @@ def bye():
     sys.exit('\nBye.')
 
 
-def catch_help_flag(help_str, sh_obj=Terminal(), condition=None, cleanup=lambda: 0, heading=sys.argv[0].replace('./', '').rstrip('.py')):
+def catch_help_flag(help_str='', sh_obj=Terminal(), condition=None, cleanup=lambda: 0, heading=sys.argv[0].replace('./', '').rstrip('.py')):
     """
     Help dialogs for bash and Tk.
     """
@@ -41,11 +42,17 @@ def catch_help_flag(help_str, sh_obj=Terminal(), condition=None, cleanup=lambda:
         else:
             module = "'{}'".format(module.replace('_', ' ').title())
             Terminal.output(Terminal.ul(module, position=1))
-            sh_obj.output(help_str + '\n')
+            sh_obj.output(help_str)
+            sys.argv.append('-h')
+            parser = argparse.ArgumentParser()
+            try:
+                parser.parse_args()
+            finally:
+                Terminal.output('')
         cleanup()
         if sh_obj.interface == 'Tk':
             sh_obj.main_window.destroy()
-        sys.exit()
+#        sys.exit()
 
 
 def chomp(text):

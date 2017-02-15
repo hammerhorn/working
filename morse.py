@@ -7,18 +7,21 @@ import sys
 import time
 
 from cjh.letter import Letter
-
+from cjh.misc import notebook
 import easycat
 from versatiledialogs.terminal import Terminal
 
 
 REMARKS = """
     - figure out multitasking
+    - there is a problem with sox on some systems which necessitates very
+      slow timing
     - add Tk
     + build it into the letter object"""
 
 Terminal()
 atexit.register(Terminal.unhide_cursor)
+notebook(REMARKS)
 
 def play_and_print(char):
     """

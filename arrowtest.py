@@ -23,6 +23,7 @@ def main():
     Get a keypress and echo back the name of any arrowkeys pressed.
     """
     try:
+        Terminal.hide_cursor()
         while True:
             try:
                 whichway = Terminal.get_arrow_key()
@@ -35,6 +36,9 @@ def main():
                 pass
     except KeyboardInterrupt:
         pass
+    finally:
+        Terminal.output('')
+        Terminal.unhide_cursor()
 
 Terminal()
 if __name__ == '__main__':

@@ -42,7 +42,7 @@ __license__ = 'GPL'
 
 class _CursorInfo(ctypes.Structure):
     """
-    Windows-related
+    Windows OS stuff
     """
     _fields_ = [
         ("size", ctypes.c_int),
@@ -65,19 +65,17 @@ class Terminal(Shellib):
         # Get OS and system info.
         super(Terminal, self).__init__()
         self.msgtxt = None
-        self.msg = None        
+        self.msg = None
         self.main_window = None
 
         # Fixes unicode for Python 2
         if self.py_version == 2:
             reload(sys)
             sys.setdefaultencoding('utf8')
-        
+
         #Use bash if available
-        if 'bin' in os.listdir('/') and 'bash' in os.listdir('/bin'):
-            self.__class__.bash_available = True
-        else:
-            self.__class__.bash_available = False
+        self.__class__.bash_available = bool(
+            'bin' in os.listdir('/') and 'bash' in os.listdir('/bin'))
         self.__class__.interface = 'term'
         colorama.init()
 
@@ -86,19 +84,19 @@ class Terminal(Shellib):
         """
         distinguish between arrow keys being pressed
         """
-        CODE_DICT = {
+        code_dict = {
             'A': 'up',
             'B': 'down',
             'C': 'right',
             'D': 'left'
         }
         direction = None
-        pressed = cls.get_keypress()
+        pressed = cls.get_keypress(hide=True)
         if pressed == chr(27):
-            pressed = cls.get_keypress()
+            pressed = cls.get_keypress(hide=True)
             if pressed == '[':
-                pressed = cls.get_keypress()
-                direction = CODE_DICT.get(pressed, None)
+                pressed = cls.get_keypress(hide=True)
+                direction = code_dict.get(pressed, None)
         return direction
 
     @classmethod
@@ -115,7 +113,7 @@ class Terminal(Shellib):
         else clear n previous lines
         """
         # use termcolor, figure out what is best for Windows
-        
+
         # if no args, clear the screen
         if len(args) == 0:
             if cls.os_name == 'posix':
@@ -127,7 +125,7 @@ class Terminal(Shellib):
         # if arg == 0, clear the current line
         elif args[0] == 0:
             easycat.write('\r\033[K\r')
-            
+
         # if arg > 0, erase that many lines back (.i.e., up)
         elif args[0] > 0:
             easycat.write('\r\033[K')
@@ -177,7 +175,7 @@ class Terminal(Shellib):
             copyleft, int(year), __author__), .5, 1)
         cls.clear()
 
-    
+
     @staticmethod
     def exit():
         sys.exit() #  'Goodbye.')
@@ -210,7 +208,7 @@ class Terminal(Shellib):
             return out_str
 
     @classmethod
-    def get_keypress(cls, prompt=''):
+    def get_keypress(cls, prompt='', hide=False):
         """
         Accepts one char of input.  If bash is available, it is not necessary to
         hit <ENTER>.
@@ -222,11 +220,15 @@ class Terminal(Shellib):
         if cls.platform == 'Windows':
             try:
                 key = cls.input(prompt, hide_form=True)[0]
-                cls.cursor_v(1)                
+                cls.cursor_v(1)
             except IndexError:
                 key = ' '
         elif cls.os_name == 'posix':
-            key = subprocess.check_output("bash -c 'read -n 1 x;\
+            if hide is True:
+                key = subprocess.check_output("bash -c 'read -sn 1 x;\
+                    echo -en \"$x\"'", shell=True)
+            else:
+                key = subprocess.check_output("bash -c 'read -n 1 x;\
                 echo -en \"$x\"'", shell=True)
 
         if len(key) > 1:
@@ -433,11 +435,14 @@ class Terminal(Shellib):
         """
         make it sleep while it does this on mobile
         """
+        dur_dict = {'secs': duration}
+        #duration = duration
         def message_on():
             """
             centered string on a cleared screen, for an amount of time
             'duration'
             """
+
             cls.clear()
 
             if v_center is True:
@@ -445,8 +450,9 @@ class Terminal(Shellib):
             cls.output(text.center(cls.width()))
 
             if flashes > 1:
-                duration /= (2.0 * flashes - 1.0)
-            time.sleep(duration)
+                #duration /= (2.0 * flashes - 1.0)
+                dur_dict['secs'] /= (2.0 * flashes - 1.0)
+            time.sleep(dur_dict['secs'])
 
         def message_off():
             """
@@ -455,8 +461,8 @@ class Terminal(Shellib):
             cls.clear()
 
             if flashes > 1:
-                duration /= (2.0 * flashes - 1.0)
-            time.sleep(duration)
+                dur_dict['secs'] /= (2.0 * flashes - 1.0)
+            time.sleep(dur_dict['secs'])
 
        # message_on()
         cls.hide_cursor()
@@ -483,11 +489,11 @@ class Terminal(Shellib):
         cls.clear()
         bracketed = '[ {} ]'.format(text)
         length = (cls.width() - len(bracketed)) // 2
-        
+
         symbol = colored(' ', attrs=['reverse', 'bold']) if cls.os_name ==\
                  'posix' else colored(' ', 'white', 'on_white')
         hemibar = symbol * length
-        easycat.write('{0}{1}{0}'.format(hemibar, bracketed))        
+        easycat.write('{0}{1}{0}'.format(hemibar, bracketed))
         total_len = 2 * length + len(bracketed)
 
         #print 'while {} < {}'.format(total_len, cls.width())

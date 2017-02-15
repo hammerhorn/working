@@ -17,6 +17,7 @@ from versatiledialogs.terminal import Terminal
 from ranges import iter_zip
 REMARKS = """
     - (0, 1) is not displaying correctly
+    - improve the animation by not redrawing the whole screen each time
     * Swap colors"""
 SHELL = Config().start_user_profile()
 atexit.register(Terminal.unhide_cursor)

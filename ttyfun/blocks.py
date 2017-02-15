@@ -19,17 +19,15 @@ def box(msg, symbol='*', position=None, width=None):
         #msg = codecs.decode(msg, 'utf8')
     Terminal()        
     banner_width = len(msg) + 2 * (len(symbol) + 1)
-    if width:
-        column_total = width
-    else:
-        column_total = Terminal.width()
+    
+    column_total = width if width is not None else Terminal.width()
     content = '\n'
     star_bar = (symbol * (banner_width // len(symbol)))
-    sym_gen = iter(symbol)
-    while len(star_bar) < banner_width:
-        star_bar += next(sym_gen)  # sym_gen.next()
+    # sym_gen = iter(symbol)
+    # while len(star_bar) < banner_width:
+    #     star_bar += next(sym_gen)  # sym_gen.next()
     padding = ' '
-    messagef = symbol + padding + msg + padding + symbol
+    messagef = ''.join((symbol, padding, msg, padding, symbol))
 
     if position is None or position < 0:
         if position is None:
@@ -44,7 +42,7 @@ def box(msg, symbol='*', position=None, width=None):
 
     star_bar += '\n'
     messagef += '\n'
-    content += star_bar + messagef + star_bar
+    content = ''.join((content, star_bar, messagef, star_bar))
     return content
     
 def ellipses(msg, iters=3, restore_cursor=True):
