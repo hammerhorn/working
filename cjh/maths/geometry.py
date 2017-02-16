@@ -9,7 +9,8 @@ import decimal
 import json
 import math
 import sys
-# import time
+import time
+
 try:
     import Tkinter as tk
 except ImportError:
@@ -26,6 +27,7 @@ from cjh.maths.angles import Angle
 import easycat
 from fiziko.kinematics import Disp
 from fiziko.scalars import Scalar, Unit
+from ranges import gen_range
 from things import Thing
 from versatiledialogs.lists import Enumeration, ItemList, PlainList
 from versatiledialogs.terminal import Terminal
@@ -39,15 +41,14 @@ class Point(Disp):
     """
     def __init__(self, x, y):
         super(Point, self).__init__(0, Angle())
-        self.label = 'a point'
-        self.x_mag = float(x)
-        self.y_mag = float(y)
+        # self.label = 'a point'
+        self.x_mag, self.y_mag = float(x), float(y)
         self.units = Unit()
-        self.marker = 'none'  # should be put into child class go_stone?
+        # self.marker = 'none'  # should be put into child class go_stone?
         self._initialize()
         self.mag = math.sqrt(self.x_mag**2 + self.y_mag**2)
-        if self.x_mag < 0.0:
-            self.mag *= -1.0
+        # if self.x_mag < 0.0:  # what does this do?
+        #    self.mag *= -1.0
         self.theta.units = Unit('rad')
 
     def __repr__(self):
@@ -284,7 +285,7 @@ class Graph(Thing):
         if self.sh_obj.platform == 'android':
             basedir =\
                 '/storage/sdcard0/com.hipipal.qpyplus/lib/python2.7/\
-                site-packages/' + basedir
+                site-packages/' + basedir  # should read from config
         super(Graph, self).__init__()
         self.size = int(size)
 
@@ -297,54 +298,50 @@ class Graph(Thing):
                 self.size = Terminal.height() - deduct
         shrink(-adjust_ssize)
 
-        self.max_domain = self.size // 2
+        max_domain = self.size // 2        
+        min_domain = -max_domain        
         if self.size % 2 == 0:
-            self.max_domain -= 1
+            min_domain += 1
 
-        self.cursor = [-self.max_domain - 1, self.max_domain]
+        self.domain = (min_domain, max_domain)
+        self.cursor = [self.domain[0], self.domain[1]]
+        #if self.size % 2 == 0:  # wtf
+        #    self.cursor[0] -= 1 # idk
         self.plane = [[0 for _ in range(self.size)] for _ in range(self.size)]
         for col in range(self.size):
             for rank in range(self.size):
                 self.plane[col][rank] = Point(
-                    col - self.max_domain, self.max_domain - rank)
-                if col == self.max_domain and rank == self.max_domain:
+                    col - self.domain[1], self.domain[1] - rank)
+                if col == -self.domain[0] and rank == self.domain[1]:
                     self.plane[col][rank].marker = 'origin'
-                elif col == self.max_domain:
+                elif col == -self.domain[0]:
                     self.plane[col][rank].marker = 'y_axis'
-                elif rank == self.max_domain:
+                elif rank == self.domain[1]:
                     self.plane[col][rank].marker = 'x_axis'
                 else: self.plane[col][rank].marker = 'empty'
+
 
     # DO NOT--># if self.is_hoshi(
     #       -->#     col - self.max_domain, self.max_domain - rank):
     # ERASE!-->#     self.plane[col][rank].marker = 'hoshi'
 
         #if sys.version_info.major == 2:
+
         self.skin_dict = json.load(open(
             '{}/{}'.format(basedir, skinfile), 'r'))
+
         #elif sys.version_info.major == 3:
         #    file_handle = open(basedir + '/' + skinfile, 'r')
         #    file_str = file_handle.read()  # .decode('utf-8')
         #    self.skin_dict = json.loads(file_str)
 
-        #######################################################################
-###
-#####################
         ##    reader = codecs.getreader('utf-8')
-                   ##
         ##    self.skin_dict = json.load(reader('skins/' + skinfile))
-                   ##
         ##    self.skin_dict = json.load(f)
-                   ##
         ##    raw_input('Press enter to try opening ' + skinfile)
-                   ##
         ##    self.skin_dict = json.load(str(open('skins/' + skinfile, 'rb'), en
 #co
 #ding='UTF-8'))     ##
-        ########################################################################
-##
-#####################
-
 #        except: # else:
 #            self.skin_dict = {"black"  : u"● ",
 #                              "white"  : u"o ",
@@ -355,6 +352,7 @@ class Graph(Thing):
 #                              "x_axis" : u"--",
 #                              "empty"  : u"  "}
         #self.skin = skinfile
+
         self.fx_list = []
         self.funct_cnt = len(self.fx_list)
         seq = Letter.caps_gen()
@@ -376,7 +374,8 @@ class Graph(Thing):
         for rank in range(self.size):
             str_list.append('%3d ' % (self.size - rank))
             for col in range(self.size):
-                xy_coords = col - self.max_domain, self.max_domain - rank
+                # xy_coords = self.indices_to_point(col, rank).tuple()
+                xy_coords = col + self.domain[0], self.domain[1] - rank + 1
                 if xy_coords == tuple(self.cursor):
                     str_list.append('\b(')
                 tag_list = self.skin_dict.keys()
@@ -411,9 +410,16 @@ class Graph(Thing):
         """
         some problems under python3?
         """
-        for col in range(-self.max_domain, self.max_domain + 1):
-            for rank in range(-self.max_domain, self.max_domain + 1):
+        for col in gen_range(self.domain[0], self.domain[1] + 1):
+            for rank in gen_range(self.domain[0], self.domain[1] + 1):
+                #try:
                 self.plot_point(col, rank, color)
+                #except:
+                #    print 'fail: ' + str(col) + ', ' + str(rank)
+                #time.sleep(0.1)  #  / self.size ** 2)
+                #Terminal.cursor_v(self.size + 5)
+                #print('(' + str(col) + ', ' + str(rank) + ')\n' + self.__str__())
+
 
     def view_edit(self):  # , widget=None):
         """
@@ -422,18 +428,23 @@ class Graph(Thing):
         * When board size is even, rightmost column willaccept neither a  point
         nor the cursor, but you can go past and back.
         """
+        Terminal.hide_cursor()
+        point = None  # self.pt_at_cursor()  # ???
         while True:
             try:
                 if self.sh_obj.interface == 'term':
-                    point = Terminal.make_page(
+                    try:  # this is probably cheating
+                        point = Terminal.make_page(
                         'EDIT', self, self.pt_at_cursor)
+                    except IndexError:
+                        pass
                 elif self.sh_obj.interface == 'Tk':
                     self.sh_obj.msgtxt.set(self.__str__())
                     point = self.pt_at_cursor()
 
                 if isinstance(point, Point):
                     string = ''.join(
-                        ('\t', point.__str__(), '\n\t[',point.distance_str,
+                        ('\t', point.__str__(), '\n\t[', point.distance_str,
                         ']\n'))
 
                     if self.sh_obj.interface == 'term':
@@ -447,17 +458,17 @@ class Graph(Thing):
                         #label2.pack()
 
                 info_list = [
-                    'Use h, j, k, l to move the cursor',
+                    'Use h, j, k, l or the arrow keys to move the cursor',
                     'b=black, w=white, x=erase, *=star',
                     'Ctl-c to exit editor']
-                if self.max_domain >= self.cursor[0] >= -self.max_domain and\
-                    self.max_domain >= self.cursor[1] >= -self.max_domain:
-                    pass
-                else:
-                    rescue_key = 'j or k' if self.max_domain < self.cursor[1] <\
-                                 -self.max_domain else 'l or h'
-                    info_list[0] = 'Press {} to reveal cursor'.format(
-                        rescue_key)
+                #if self.cursor[0] < self.domain[0] or\
+                #   self.cursor[0] > self.domain[1] or\
+                #    self.cursor[1] < self.domain[0] or\
+                #    self.cursor[1] > self.domain[1]:
+                #    rescue_key = 'j or k' if self.cursor[1] < self.domain[0] or\
+                #                 self.cursor[1] > self.domain[1] else 'l or h'
+                #    info_list[0] = 'Press {} to reveal cursor'.format(
+                #        rescue_key)
 
                 info = ItemList(info_list)
                 if self.sh_obj.interface == 'term':
@@ -465,23 +476,41 @@ class Graph(Thing):
                 elif self.sh_obj.interface == 'Tk':
                     tk.Label(self.sh_obj.main_window, text=str(info)).pack()
 
-                char = Terminal.get_keypress()
-                if char == 'h':
-                    self.cursor[0] += -1 if self.cursor[0] > -self.max_domain\
-                                      else self.size
-                elif char == 'l':
-                    if self.size % 2 == 0:
-                        self.max_domain += 1
-                    self.cursor[0] += 1 if self.cursor[0] < self.max_domain\
-                                      else -self.size
-                    if self.size % 2 == 0:
-                        self.max_domain += 1
-                elif char == 'j':
-                    self.cursor[1] += -1 if self.cursor[1] > -self.max_domain\
-                                      else self.size
-                elif char == 'k':
-                    self.cursor[1] += 1 if self.cursor[1] < self.max_domain\
-                                      else -self.size
+                char = Terminal.get_arrow_key() 
+                #if char is None:
+                #    char = Terminal.get_keypress()  # make a method that can
+                if char in ('h', 'left'):                 #    get chars or arrows
+                    if self.cursor[0] > self.domain[0]:
+                        self.cursor[0] -= 1
+                    else:
+                        self.cursor[0] = self.domain[1]
+                    #self.cursor[0] += -1 if self.cursor[0] > self.domain[0]\
+                    #                  else self.size
+                elif char in ('l', 'right'):
+                    if self.cursor[0] < self.domain[1]:
+                        self.cursor[0] += 1
+                    else:
+                        self.cursor[0] = self.domain[0]                  
+                    ##if self.size % 2 == 0:
+                    ##    self.domain[1] += 1
+                    #self.cursor[0] += 1 if self.cursor[0] < self.domain[1]\
+                    #                  else -self.size
+                    ##if self.size % 2 == 0:
+                    ##    self.max_domain += 1
+                elif char in ('j', 'down'):
+                    #self.cursor[1] += -1 if self.cursor[1] > self.domain[0]\
+                    #                  else self.size
+                    if self.cursor[1] > self.domain[0]:
+                        self.cursor[1] -= 1
+                    else:
+                        self.cursor[1] = self.domain[1]                                      
+                elif char in ('k', 'up'):
+                    #self.cursor[1] += 1 if self.cursor[1] < self.domain[1]\
+                    #                  else -self.size
+                    if self.cursor[1] < self.domain[1]:
+                        self.cursor[1] += 1
+                    else:
+                        self.cursor[1] = self.domain[0]                                      
                 elif char == 'b':
                     self.plot_point(self.cursor[0], self.cursor[1], 'black')
                 elif char == 'w':
@@ -492,6 +521,7 @@ class Graph(Thing):
                     self.plot_point(self.cursor[0], self.cursor[1], 'star')
 
             except KeyboardInterrupt:
+                Terminal.unhide_cursor()
                 Terminal.output('')
                 break
 
@@ -543,13 +573,13 @@ class Graph(Thing):
         """
         if color == 'empty':
             self.erase_point(x_val, y_val)
-        elif x_val >= (-self.max_domain) and x_val <= self.max_domain and\
-             y_val >= (-self.max_domain) and y_val <= self.max_domain:
+        elif x_val >= self.domain[0] and x_val <= self.domain[1] and\
+             y_val >= self.domain[0] and y_val <= self.domain[1]:
 
             #WHAT'S THE ERROR?
             if color in ('black', 'white', 'star'):
-                self.plane[int(round(x_val) + self.max_domain)][int(
-                    self.max_domain - round(y_val))].marker = color
+                self.plane[int(round(x_val) - self.domain[0])][int(
+                    self.domain[1] - round(y_val))].marker = color
 
     def erase_point(self, x_val, y_val):
         """
@@ -561,17 +591,15 @@ class Graph(Thing):
         #    self.plane[x_val + self.max_domain][-y_val +\
         #        self.max_domain].marker = 'hoshi'
         #el
-        if (x_val != 0) and (-y_val != 0):
-            self.plane[x_val + self.max_domain]\
-                [-y_val + self.max_domain].marker = 'empty'
-        elif (x_val == 0) and (-y_val != 0):
-            self.plane[x_val + self.max_domain]\
-                [-y_val + self.max_domain].marker = 'y_axis'
-        elif (-y_val == 0) and (x_val != 0):
-            self.plane[x_val + self.max_domain]\
-                [-y_val + self.max_domain].marker = 'x_axis'
-        else: self.plane[x_val + self.max_domain]\
-            [-y_val + self.max_domain].marker = 'origin'
+        indices = self.point_to_indices(Point(x_val, y_val))
+        if (x_val != 0) and (y_val != 0):
+            self.plane[indices[0]][indices[1]].marker = 'empty'
+        elif (x_val == 0) and (y_val != 0):
+            self.plane[indices[0]][indices[1]].marker = 'y_axis'
+        elif (y_val == 0) and (x_val != 0):
+            self.plane[indices[0]][indices[1]].marker = 'x_axis'
+        else:
+            self.plane[indices[0]][indices[1]].marker = 'origin'
 
     def print_points(self):
         """
@@ -595,24 +623,27 @@ class Graph(Thing):
         """
         returns Point object where cursor is located
         """
-        if self.cursor[0] <= self.max_domain and\
-           self.cursor[0] >= -self.max_domain and\
-           self.cursor[1] <= self.max_domain and\
-           self.cursor[1] >= -self.max_domain:
+        if self.cursor[0] <= self.domain[1] and\
+           self.cursor[0] >= self.domain[0] and\
+           self.cursor[1] <= self.domain[1] and\
+           self.cursor[1] >= self.domain[0]:
 
             # not sure what this error is about.
             # this is an overly-lazy fix.
-            return self.plane[int(self.cursor[0] + self.max_domain)]\
-                [int(self.max_domain - self.cursor[1])]
+            indices = self.point_to_indices(Point(*self.cursor))
+            return self.plane[indices[0]][indices[1]]
 
     def indices_to_point(self, index1, index2):
         """Maybe the reverse would be more useful.
         Also, give it the ability to take either
         a tuple or pair of args.
         """
-        return Point(index1 - self.max_domain, self.max_domain - index2)
+        return Point(index1 + self.domain[0], self.domain[1] - index2)
 
+    def point_to_indices(self, point):
+        return int(point.x - self.domain[0]), int(self.domain[1] - point.y)
 
+    
      #################
      #  POLYNOMIALS  #
      #################
@@ -658,7 +689,7 @@ class Graph(Thing):
         native python functions, Polynom objects, or whatever....
         """
         self.funct_cnt += 1
-        for var in range(-self.max_domain, self.max_domain + 1):
+        for var in range(self.domain[0], self.domain[1] + 1):
             try:
                 self.plot_point(var, int(round(funct_a(var))), color)
             except (TypeError, ValueError):

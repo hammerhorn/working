@@ -99,12 +99,12 @@ class TkTemplate(WindowedApp):
         """
         Write text to the default message area
         """
-        if 'heading' in kwargs: 
+        if 'heading' in kwargs:
             msg = Terminal.ul(kwargs['heading'], symbol='-', width=20) + msg
         if 'width' in kwargs and 'height' in kwargs:
             cls.center_window(width_=kwargs['width'], height_=kwargs['height'])
         elif 'height' in kwargs:
-            cls.center_window(height_=kwargs['height'])            
+            cls.center_window(height_=kwargs['height'])
         cls.msgtxt.set(msg)
 
     @classmethod
@@ -174,7 +174,7 @@ class TkTemplate(WindowedApp):
     @classmethod
     def clear(cls):
         cls.output('')
-    
+
     @classmethod
     def message(cls, msg, heading=''):#, width=40, height=10):
         """
@@ -256,7 +256,7 @@ class TkDialog(TkPopup):
         button.pack(padx=5, side='top')
         button.focus_set()
         button.grab_set()
-        
+
     def okay(self):
         """
         when button is clicked, parent is destroyed
@@ -266,7 +266,7 @@ class TkDialog(TkPopup):
 
 class TkInput(TkPopup):
     """
-    An input dialog. 
+    An input dialog.
     """
     def __init__(self, parent, msg='Input', heading='Input Widget', width=200, height=110):
         super(TkInput, self).__init__(parent, msg, heading, width, height)
@@ -277,8 +277,8 @@ class TkInput(TkPopup):
         #dialog is on a higher layer
         self.top.lift()
         self.top.attributes('-topmost', True)
-        
-        
+
+
         TkTemplate.center_window(
             win=self.top, width_=width, height_=height, x_offset=0, y_offset=-30)
 
@@ -287,7 +287,7 @@ class TkInput(TkPopup):
         button = tkinter.Button(self.top, text='OK', command=self.okay)
         button.pack(pady=5)
         self.top.focus_set()
-        
+
     def okay(self):
         """
         when button is clicked, val is set to text contained in Entry

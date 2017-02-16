@@ -8,18 +8,13 @@ import copy
 import decimal
 import json
 
+from cjh.misc import read_json_file
 from versatiledialogs.dialog_gui import DialogGui
 from versatiledialogs.terminal import Terminal
 from things import Thing
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
-
-
-def read_json_file(filename):
-    file_ptr = open(filename, 'rb')
-    buffer_ = file_ptr.read().decode('utf-8')
-    return json.loads(buffer_)
 
 
 class Unit(Thing):
@@ -46,8 +41,6 @@ class Unit(Thing):
                 self.label = self.__class__.unit_dict[short_name]
                 not_done = False
             except KeyError:
-                #print("'{}' not found in list: {}".format(
-                #    short_name, Unit.unit_dict.keys()))
                 Terminal.output('--Unknown unit--')
                 try:
                     long_name = Terminal().input(
@@ -64,8 +57,6 @@ class Unit(Thing):
                     short_name = Terminal.input(
                         '\n\nCORRECTION--unit abbrev.: ')
         self.abbrev = short_name
-        # for _ in range(10):
-        #     print self.abbrev
 
     def __repr__(self):
         if (len(self.abbrev) == 0) or ((self.label) == (self.abbrev)):
@@ -141,7 +132,6 @@ class Scalar(Thing, Minusable):
             self.units = unit_abbrev
 
     def __repr__(self):
-#        return '{} {}'.format(round(self.mag, 9), self.units.abbrev)
         return '{:,.5g} {}'.format(round(self.mag, 4), self.units.abbrev)
 
     def __abs__(self):

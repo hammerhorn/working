@@ -26,10 +26,6 @@ class Vector(Scalar):
         """
         Break vector down into X and Y components.
         """
-#        print 'resolving {}'.format(self.theta)
-#        print 'which is {} in radians'.format(self.theta.radians)
-        #print "self.theta is type {}".format(type(self.theta))
-        #print type(self.theta)
         x_mag = decimal.Decimal(self.mag) * decimal.Decimal(math.cos(
             self.theta.radians))
         y_mag = decimal.Decimal(self.mag) * decimal.Decimal(math.sin(
@@ -38,8 +34,6 @@ class Vector(Scalar):
 
     def __init__(self, mag, th=Angle()):
         super(Vector, self).__init__(mag)
-        #if th == None: self.theta = Angle()
-        #else:
         self.theta = th
         self.x_mag, self.y_mag = self._resolve()
         self.label = next(self.__class__.letter_seq)
@@ -124,10 +118,6 @@ class Disp(Vector):
 
         return Disp(self.mag * mul_end, self.theta, self.units.abbrev)
 
-
-#    def __mul__(self, mul_end):
-#        return Vector(self.mag * mul_end, self.theta)
-
     def __rmul__(self, mul_end):
         """This will need to be improved"""
         return Disp(self.mag * mul_end, self.units.abbrev, self.theta)
@@ -137,9 +127,7 @@ class Disp(Vector):
         returns Disp object in meters
         """
         if self.units.label == 'feet':
-
             d = Disp(.3048 * float(self.mag), self.theta, 'm')
-            #print d
             return d
         elif self.units.label == 'meters':
             return self
@@ -215,4 +203,3 @@ class Velocity(Vector):
             return Velocity(float(self.mag) / 2.2369363, 'm/s', self.theta)
         else: sys.exit("Sorry, I don't know how to convert from {}.".format(
                 self.units.label))
-

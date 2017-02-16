@@ -54,9 +54,7 @@ def get_input():
     fstring = string.Template("You said '$input'.")
     if SHELL.interface in ('dialog', 'zenity'):
         fstring = string.replace("'", "\'")
-    SHELL.output(fstring.substitute(input_dict))
-    if SHELL.interface == 'term':
-        SHELL.wait()
+    SHELL.message(fstring.substitute(input_dict))
 
 def make_list():
     if SHELL.interface == 'term':

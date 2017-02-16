@@ -3,6 +3,7 @@
 """
 detect pressing the arrowkeys
 """
+import sys
 from cjh.misc import catch_help_flag, notebook
 import easycat
 from versatiledialogs.config import Config
@@ -27,10 +28,10 @@ def main():
         while True:
             try:
                 whichway = Terminal.get_arrow_key()
-               # easycat.write('\b')
                 Terminal.clear(0)
-                easycat.write(whichway)
-                #
+                if whichway in ('up', 'down', 'left', 'right'):  # build
+                    easycat.write(whichway)               # this part in
+
             # Fails when get_arrow_key() returns None
             except TypeError:
                 pass

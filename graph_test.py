@@ -5,6 +5,7 @@ Test & debug <class 'cjh.geometry.Graph'>.
 """
 # Std Lib
 import atexit
+import sys
 
 # Add-ons
 from termcolor import colored
@@ -15,6 +16,7 @@ from cjh.misc import notebook
 from versatiledialogs.config   import Config
 from versatiledialogs.terminal import Terminal
 from ranges import iter_zip
+
 REMARKS = """
     - (0, 1) is not displaying correctly
     - improve the animation by not redrawing the whole screen each time
@@ -23,7 +25,9 @@ SHELL = Config().start_user_profile()
 atexit.register(Terminal.unhide_cursor)
 
 def main():
-    plane = Graph(size=21, sh_obj=SHELL, skinfile='test.json')
+    sz = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else 21
+        
+    plane = Graph(size=sz, sh_obj=SHELL, skinfile='test.json')
 
     if SHELL.interface == 'Tk':
         SHELL.center_window(width_=600, height_=600)

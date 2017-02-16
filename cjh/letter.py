@@ -76,7 +76,7 @@ class Letter(object):
         'W':'Whiskey',
         'X':'Xray',
         'Y':'Yankee',
-        'Z':'Zulu', ' ':None, '.':None}
+        'Z':'Zulu', ' ': '', '.': 'stop'}
 
 
     braille_dict = {
@@ -112,7 +112,7 @@ class Letter(object):
         self.radio_name = self.__class__.radio_dict[char.upper()]
         self.braille = self.__class__.braille_dict[char.upper()]
         self.morse = self.__class__.morse_dict[char.upper()]
-        self.mora = 0.125
+        self.mora = 0.048
         self.wpm = 1.2 / self.mora
         self.hz = 1000
         
@@ -138,5 +138,5 @@ class Letter(object):
             'P': 'Pawpaw',
             'Q': 'Kebec'
             }
-        speak(spoken_forms.get(self.majuscle, self.radio_name))
+        speak(spoken_forms.get(self.majuscule, self.radio_name))
 

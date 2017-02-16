@@ -91,12 +91,16 @@ class Terminal(Shellib):
             'D': 'left'
         }
         direction = None
-        pressed = cls.get_keypress(hide=True)
+        pressed = cls.get_keypress(fast=True)
         if pressed == chr(27):
-            pressed = cls.get_keypress(hide=True)
+            pressed = cls.get_keypress(fast=True)
             if pressed == '[':
-                pressed = cls.get_keypress(hide=True)
+                pressed = cls.get_keypress(fast=True)
                 direction = code_dict.get(pressed, None)
+            else:
+                return None  # -1
+        else:
+            return pressed  # -1
         return direction
 
     @classmethod
@@ -208,13 +212,13 @@ class Terminal(Shellib):
             return out_str
 
     @classmethod
-    def get_keypress(cls, prompt='', hide=False):
+    def get_keypress(cls, prompt='', fast=False):
         """
         Accepts one char of input.  If bash is available, it is not necessary to
         hit <ENTER>.
         """
         key = None
-        if cls.bash_available is True:
+        if cls.bash_available is True and fast is False:
             easycat.write(prompt)
 
         if cls.platform == 'Windows':
@@ -224,17 +228,17 @@ class Terminal(Shellib):
             except IndexError:
                 key = ' '
         elif cls.os_name == 'posix':
-            if hide is True:
-                key = subprocess.check_output("bash -c 'read -sn 1 x;\
-                    echo -en \"$x\"'", shell=True)
-            else:
-                key = subprocess.check_output("bash -c 'read -n 1 x;\
+            key = subprocess.check_output("bash -c 'read -s -n 1 x;\
                 echo -en \"$x\"'", shell=True)
-
         if len(key) > 1:
-            key = key.strip()
-        if cls.platform == 'Linux':
-            easycat.write('\b \b')
+            key = key.rstrip('\n')
+        if len(key) == 0:
+            key = b' '
+        #key = key[0]
+        if cls.platform == 'Linux' and fast is False:  # hide is True:
+            easycat.write('\b \b ')  #  \b')
+        #if hide is False:
+        #    easycat.write(key)
         #cls.cursor_v(-2)
         return key.decode('utf-8')
 

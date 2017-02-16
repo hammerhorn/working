@@ -11,6 +11,7 @@ contains: bye(),
 """
 import argparse
 import datetime
+import json
 import os
 import subprocess
 import sys
@@ -101,6 +102,12 @@ def notebook(remarks):
         Terminal.wait()
         Terminal.output('')
         sys.exit(0)
+
+def read_json_file(filename):
+    file_ptr = open(filename, 'rb')  # binary?  really?
+    buffer_ = file_ptr.read().decode('utf-8')
+    return json.loads(buffer_)
+            
 
 def speak(phrase):
     """use a speech synthesizer to read text"""

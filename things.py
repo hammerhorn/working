@@ -26,31 +26,15 @@ class Thing(object):
         increments instance counter "count" and sets a default label.
         """
         self.__class__.count += 1
-        self.label = self.__default_label
+        self.label = '{} #{}'.format(
+            self.__class__.__name__.lower(), self.__class__.count)
+            # self.__default_label
 
     def __repr__(self):
         """
         returns a str 'self.label'
         """
         return self.label
-
-    def __eq__(self, other):
-        """How should this work?  What should it do?"""
-        try:
-            return self.label == other.label
-        except AttributeError:
-            return self.label == other
-
-    def __ne__(self, other):
-        return not self == other  # pylint: disable=C0113
-
-    @property
-    def __default_label(self):
-        """
-        Generates a generic label
-        """
-        return '{} #{}'.format(
-            self.__class__.__name__.lower(), self.__class__.count)
 
     @staticmethod
     def _save(basename, ext, save_func):

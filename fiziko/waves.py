@@ -23,13 +23,12 @@ class Wave(Thing):
     """
     Generic Wave object
     """
+    # use properties and setters
     def __init__(self, spd, freq):
         super(Wave, self).__init__()
         self.freq = Scalar(freq, Unit('Hz'))
         self.speed = Velocity(spd)
-        f_wlength = self.speed.mag / self.freq.mag
-        self.wlength = Disp(f_wlength)
-        #self.wave_tuple = freq, speed, wlength
+        self.wlength = Disp(self.speed.mag / self.freq.mag)
 
     def __str__(self):
         """
