@@ -25,16 +25,17 @@ def main():
     """
     try:
         Terminal.hide_cursor()
+
         while True:
             try:
-                whichway = Terminal.get_arrow_key()
+                whichway = Terminal.get_arrow_key(arrows_only=True)
                 Terminal.clear(0)
-                if whichway in ('up', 'down', 'left', 'right'):  # build
-                    easycat.write(whichway)               # this part in
+                easycat.write(whichway)
 
             # Fails when get_arrow_key() returns None
             except TypeError:
                 pass
+
     except KeyboardInterrupt:
         pass
     finally:

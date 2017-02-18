@@ -35,7 +35,8 @@ def prelims():
     if '-h', print help and exit
     """
     notebook("""    - there should be a cow: object? interface? shell method?
-    - maybe a dropdown list would be better?""")
+    - maybe a dropdown list would be better?
+    - look into advanced cowsay features""")
     catch_help_flag(__doc__, SHELL)
     SHELL.welcome(description=__doc__)
 
@@ -87,7 +88,6 @@ def main():
     """
     Feed fortunes to the selected ASCII character.
     """
-
     prelims()
 
     cow = ''

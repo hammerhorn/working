@@ -21,7 +21,7 @@ class Money(object):
     Handles formatting of dollars; also calculates interest and sales tax
     """
     def __init__(self, amount, unit='USD'):
-        self.amount = float(amount)
+        self.amount = np.float32(amount)
         self.unit = unit
 
     def __float__(self):

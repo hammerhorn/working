@@ -6,6 +6,7 @@ Stores data about the system and common methods for user interaction.
 """
 
 import abc
+import collections
 import os
 try:
     import cPickle as pickle
@@ -43,6 +44,7 @@ class Shellib(object):
         self.__class__.os_name = os.name
         self.__class__.platform = platform.system()
         self.__class__.py_version = sys.version_info.major
+
         (self.__class__.kernel,
             self.__class__.hostname,
             self.__class__.release,
@@ -98,33 +100,33 @@ class Shellib(object):
         minor_release = 'Python {}.{}'.format(
             cls.py_version, sys.version_info.minor)
         wxh = '{} x {}'.format(cls.width(), cls.height())
-        dict_ = {'OS': cls.os_name,
-             'platform': cls.platform,
-             'version': minor_release,
-#             'term/screen size': wxh,
-             'kernel': cls.kernel,
-             'hostname': cls.hostname,
-             'release': cls.release,
-             'machine': cls.machine,
-             'processor': cls.processor}
+
+        dict_ = collections.OrderedDict()
+        dict_['version'] = minor_release
+        dict_['hostname'] = cls.hostname
+        dict_['processor'] = cls.processor
+        dict_['platform'] = cls.platform
+
         if cls.interface == 'Tk':
-            dict_.update({'screen size':wxh})
-        elif cls.interface in ['term', 'dialog']:
-            dict_.update({'term size':wxh})
-        keys_ = dict_.keys()
-        keys_ = sorted(keys_)
-        length = max([len(i) for i in keys_])
-        fmt_str = '{:>' + str(length) + '}: {}'
-        string = '\n'
-        for value in keys_:
-            string += (fmt_str.format(value, dict_[value]) + '\n')
-        string = string.rstrip()
-        if get_str == True:
+            dict_.update({'screen size': wxh})
+        elif cls.interface in ('term', 'dialog'):
+            dict_.update({'term size': wxh})
+
+        length = max([len(i) for i in dict_])
+
+        fmt_str = '\t{:>%s}: {}' % length  # should be a template? maybe....
+
+        str_list = ['\n\n']
+
+        for key in dict_:
+            str_list.extend([fmt_str.format(key, dict_[key]), '\n'])            
+        string = ''.join(str_list).rstrip()
+        if get_str is True:
             return string
         else:
             cls.output(
-                string + '\n', heading='Shell Info', width=500, height=250,
-                x=0, y=0)
+                string + '\n', width=500, height=250, heading='System Info',
+                x=0, y=0)            
 
     @abc.abstractmethod
     def welcome(self):
@@ -247,7 +249,7 @@ class Shellib(object):
         if get_str is True:
             return colored(message, 'green')
         else:
-            if cls.interface not in ['zenity', 'dialog', 'Tk']:
+            if cls.interface not in ('zenity', 'dialog', 'Tk'):
                 message = colored(cls.notify(message, get_str=True), 'green')
                 cls.output(message)
             else:
@@ -256,7 +258,7 @@ class Shellib(object):
         #    cls.output(colored(cls.notify(message, get_str=True), 'green'))
         
 
-        if cls.interface not in ['SL4A', 'zenity', 'dialog'] and fast is False:
+        if cls.interface not in ('SL4A', 'zenity', 'dialog') and fast is False:
             cls.wait()
         #else:
         #    cls.message(message)

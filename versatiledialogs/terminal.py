@@ -64,9 +64,7 @@ class Terminal(Shellib):
         """
         # Get OS and system info.
         super(Terminal, self).__init__()
-        self.msgtxt = None
-        self.msg = None
-        self.main_window = None
+        self.msg, self.msgtxt, self.main_window = None, None, None
 
         # Fixes unicode for Python 2
         if self.py_version == 2:
@@ -80,7 +78,7 @@ class Terminal(Shellib):
         colorama.init()
 
     @classmethod
-    def get_arrow_key(cls):
+    def get_arrow_key(cls, arrows_only=False):
         """
         distinguish between arrow keys being pressed
         """
@@ -99,8 +97,8 @@ class Terminal(Shellib):
                 direction = code_dict.get(pressed, None)
             else:
                 return None  # -1
-        else:
-            return pressed  # -1
+        elif arrows_only is False:
+                return pressed  # -1
         return direction
 
     @classmethod
@@ -341,13 +339,17 @@ class Terminal(Shellib):
             return_str = input() if cls.py_version == 3 else raw_input()
 
         except KeyboardInterrupt:
-            easycat.write(Style.RESET_ALL)
-            sys.exit()
+            cls.cursor_v(2)
+            easycat.write('\r\n')
+            cls.exit()
+        else:
+            cls.cursor_v(-2)
+            return return_str
         finally:
             easycat.write(Style.RESET_ALL)
-        cls.cursor_v(-2)
 
-        return return_str
+
+        
 
     @staticmethod
     def list_menu(list_obj):
@@ -394,7 +396,7 @@ class Terminal(Shellib):
         """
         Print text to stdout with an optional heading.
         """
-        if heading:
+        if heading is not None:
             print(heading)  # pylint: disable=C0325
         print(msg)  # pylint: disable=C0325
 
@@ -558,18 +560,18 @@ class Terminal(Shellib):
         elif cls.os_name == 'posix':
             easycat.write('\033[?25h')
 
-    @classmethod
-    def view_info(cls, get_str=False):
-        lines = super(Terminal, cls).view_info(get_str=True).split('\n')
-        lines = lines[2:]
-        text = ''
-        for line in lines: # convert to list
-            text = ''.join((text, line, '\n'))
-        text = ''.join(('\n', cls.fx('u', 'Shell Info'), text))
-        if get_str is True:
-            return text
-        else:
-            cls.output(text)
+#    @classmethod
+#    def view_info(cls, get_str=False):
+#        lines = super(Terminal, cls).view_info(get_str=True).split('\n')
+#        lines = lines[2:]
+#        text = ''
+#        for line in lines: # convert to list
+#            text = ''.join((text, line, '\n'))
+#        text = ''.join(('\n', cls.fx('u', 'Shell Info'), text))
+#        if get_str is True:
+#            return text
+#        else:
+#            cls.output(text)
 
     @classmethod
     def wait(cls, text=None):

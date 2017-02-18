@@ -24,7 +24,8 @@ def main():
     dimensions = {}
 
     if SHELL.interface == 'term':
-        SHELL.tty(string + '\n')
+        #SHELL.tty(string + '\n')
+        SHELL.output(string + '\n\n')
     else:
         if SHELL.interface == 'Tk':
             dimensions.update({'width': 525, 'height': 200})

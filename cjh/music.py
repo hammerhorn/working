@@ -356,7 +356,7 @@ class Pitch(SoundWave):
 #        string += self.halfsteps_info()
 #        return string
 
-    def play(self, voice='tri'):
+    def play(self, voice='squ'):
         """
         Currently uses a system call to sox
         """

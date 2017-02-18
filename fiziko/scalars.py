@@ -70,6 +70,12 @@ class Unit(Thing):
     def __call__(self, val):
         return Scalar(val, self)
 
+    def __eq__(self, other):
+        return self.abbrev == other.abbrev
+
+    def __ne__(self, other):
+        return not self == other
+
     @property
     def name(self):
         """set unit name"""
@@ -208,12 +214,13 @@ class Scalar(Thing, Minusable):
 
     def check_units(self, other):
         """This needs fixed."""
-        if not self.units == other.units:
+        if self.units != other.units:
             title = 'UnitsError'
             message = 'class Scalar can only compare Scalars with like units'
             if Terminal.interface == 'SL4A':
                 DialogGui.message(message, heading=title)
             else:
                 Terminal.output('\n{}: {}'.format(title, message))
+                Terminal.output("'{}' != '{}'".format(self.units, other.units))
         else:
             return True

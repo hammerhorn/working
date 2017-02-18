@@ -9,6 +9,7 @@ import atexit
 import threading
 
 # Add-ons
+import matplotlib.pyplot as plt
 import numpy as np  # only needed for plotting
 
 # Local
@@ -32,6 +33,10 @@ REMARKS = """
       have to stop for PyPlot
     * add LaTeX"""
 
+
+#Terminal()
+#import matplotlib.pyplot as plt
+#Terminal.clear()
 
 def _parse_args():
     """
@@ -67,44 +72,45 @@ time_dict = {
     'm': 12.0}
 
 notebook(REMARKS)
-ARGS = _parse_args() if __name__ == '__main__' else None
 CONFIG = Config()
 
-# Get PyPlot if you need it and hide lots of scrolling messages
-if ARGS is not None and ARGS.plot is True:
-    import matplotlib.pyplot as plt
-    Terminal.clear()
+if __name__ == '__main__':
+    ARGS = _parse_args()  # if __name__ == '__main__' else None
 
-# Start the appropriate versatiledialogs mode
-# This construction should be in config
-if ARGS is not None and ARGS.nox is True:
-    SHELL = Terminal()
-elif ARGS is not None and ARGS.shell is not None:
-    SHELL = CONFIG.launch_selected_shell(ARGS.shell)
+    # Start the appropriate versatiledialogs mode
+    # This construction should be in config
+
+    if ARGS.nox is True:
+        SHELL = Terminal()
+    elif ARGS.shell is not None:
+        SHELL = CONFIG.launch_selected_shell(ARGS.shell)
+    else:
+        SHELL = CONFIG.start_user_profile()
+
+    # Mode-specific operations
+    if SHELL.interface in ('wx', 'Tk'):
+        SHELL.center_window()
+
+    atexit.register(SHELL.start_app)
+
+    # Read args in from command line
+    PRINCIPAL = Money(ARGS.PRINCIPAL)
+    RATE = ARGS.RATE
+    TIME = ARGS.TIME
+    ppy = time_dict[ARGS.PERIOD] if ARGS.PERIOD is not None else None
 else:
-    SHELL = CONFIG.start_user_profile()
-
-# Mode-specific operations
-if SHELL.interface in ('wx', 'Tk'):
-    SHELL.center_window()
-
-def exit_funct():
-    SHELL.start_app()
-	
-atexit.register(SHELL.start_app)
-
-# Read args in from command line
-PRINCIPAL = Money(ARGS.PRINCIPAL)
-RATE = ARGS.RATE
-TIME = ARGS.TIME
-ppy = time_dict[ARGS.PERIOD] if ARGS.PERIOD is not None else None
-
-
+    ARGS = None
+    PRINCIPAL, RATE, TIME = Money(1000.0), 0.001, 15
+    SHELL = CONFIG.start_user_profile()    
+    ppy = None
+    
 def plot():
     """
     If GUI is available, plot the increase with respect to time, using
     PyPlot
     """
+#    import matplotlib.pyplot as plt
+#    Terminal.clear()    
     if SHELL.interface == 'Tk':
         SHELL.exit()
         Terminal.notify(
@@ -115,6 +121,7 @@ def plot():
     plt.figure(1)
     plt.plot(domain, PRINCIPAL.interest(RATE, domain, ppy).amount, 'r')
     plt.show()
+    #SHELL.notify('exiting')
 
 
 def main():
@@ -146,7 +153,6 @@ if __name__ == '__main__':
     try:
         if ARGS.plot is True:
             if SHELL.interface == 'term':
-
                 t2 = threading.Thread(target=main)
                 t2.start()
                 plot()
