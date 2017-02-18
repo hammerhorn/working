@@ -192,7 +192,7 @@ def main():
     Main function
     """
     _today, _month = get_date_and_month()
-    if SHELL.interface == 'term' and SHELL.os_name == 'posix':
+    if (SHELL.interface, SHELL.os_name) == ('term', 'posix'):
         main_loop_bash(_month)
     elif SHELL.interface == 'dialog':
         main_loop_dialog()

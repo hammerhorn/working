@@ -608,7 +608,12 @@ class Terminal(Shellib):
             return
         script_name = sys.argv[0].split('/')[-1].split('.')[0].title()
         formatted = textwrap.dedent(description).strip()
+        #if cls.width() >= 40:
+        #    width_ = 40
+        #else:
+        #    width_ = cls.width() - 5
         width_ = 40 if cls.width() >= 40 else cls.width() - 5
+
         formatted = textwrap.fill(formatted, initial_indent=' ' * 5,
                                   subsequent_indent=' ' * 5, width=width_)
         formatted = ''.join(

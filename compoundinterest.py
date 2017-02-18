@@ -134,9 +134,9 @@ def main():
     # Move this to Money class
     if SHELL.interface in ('term', 'dialog', 'zenity') and\
        SHELL.platform != 'Windows':
-        result_str = '\\' + result_str
+        result_str = '\\%s' % result_str
 
-    if SHELL.interface == 'term' and SHELL.platform == 'Linux':
+    if (SHELL.interface, SHELL.platform) == ('term', 'Linux'):
         SHELL.output(
             '\n\n{}\n'.format(Figlet('future').output(
                 result_str, get_str=True)))

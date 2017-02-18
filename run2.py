@@ -25,8 +25,7 @@ __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 
 REMARKS = """
     fix errors
-    - does not work with zenity
-    """
+    - does not work with zenity"""
 
 def _parse_args():
     """
@@ -53,7 +52,7 @@ def run_script(scriptname_, shellname_):
     original_shell = CONFIG.read_config_file()
     CONFIG.write_to_config_file(shell=shellname_)
     os.system('chmod +x {}'.format(scriptname_))
-    if SHELL.interface == 'Tk' and checked.get() == 1:
+    if checked is not None and (SHELL.interface, checked.get()) == ('Tk', 1):
         cmd = [
             #word.encode('utf-8') for word
             word.encode('utf-8') for word
@@ -177,11 +176,8 @@ def select_shell(shell_list_):
 
 ARGS = _parse_args()
 CONFIG = Config()
-
-if ARGS is not None and ARGS.shell is not None:
-    SHELL = CONFIG.launch_selected_shell(ARGS.shell)
-else:
-    SHELL = CONFIG.start_user_profile()
+SHELL = CONFIG.launch_selected_shell(ARGS.shell) if ARGS is not None and\
+        ARGS.shell is not None else CONFIG.start_user_profile()
 
 notebook(REMARKS)
 
@@ -190,17 +186,17 @@ SCRIPT_LIST = [
     if (s.endswith('py') and not (s.startswith('.') or s.startswith('_')))
 ]
 SCRIPT_LIST.sort(key=str.lower)
-SHELL_LIST = ['term', 'dialog', 'zenity', 'Tk', 'wx', '-None-']
+SHELL_LIST = ('term', 'dialog', 'zenity', 'Tk', 'wx', '-None-')
 
 if SHELL.interface != 'Tk':
     MENU_OPTS = PlainList([
         '-script-', '-shell-', '-args-', '[RUN]', '[EDIT]', '[EXIT]'
     ])
 
-
 if SHELL.interface == 'Tk':
     setup_tk_window()
-
+else:
+    checked = None
 
 def main():
     """Launch an interface, i.e., main loop."""
