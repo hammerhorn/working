@@ -23,16 +23,15 @@ REMARKS = """
     * There should be a random note feature"""
 
 
-
-
 if __name__ == '__main__':
     notebook(REMARKS)
     catch_help_flag(__doc__)
     if len(sys.argv[1:]) >= 1:
-        TONE = Pitch(freq=sys.argv[1]) if sys.argv[1].replace(
-            '.', '', 1).isdigit() else Pitch(*sys.argv[1:])
+        TONE = Pitch(freq=sys.argv[1]) if sys.argv[1].replace('.', '', 1).isdigit()\
+               else Pitch(*sys.argv[1:])
     else:
         TONE = Pitch()
-    print('{:.7} {}={}'.format(
-        TONE.freq.mag, TONE.freq.units.abbrev, TONE.label))
+    print('{:.7} {}={}'.format(TONE.freq.mag,
+                               TONE.freq.units.abbrev,
+                               TONE.label))
     TONE.play()

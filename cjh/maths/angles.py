@@ -27,36 +27,31 @@ class Angle(Scalar):
         if units_ == '(pi) rad':
             self.units.abbrev = 'π rad'
         self.label = u'∠ {}'.format(next(self.__class__.letter_seq))
-        if Terminal.platform == 'Windows' and Terminal.interface == 'term':
+        if (Terminal.platform, Terminal.interface) == ('Windows', 'term'):
             self.label = self.label.replace('∠', 'angle')
 
     def __add__(self, other):
-        if self.units.label == 'degrees':
-            degrees_flag = True
-        else: degrees_flag = False
+        degrees_flag = (self.units.label == 'degrees')
         my_sum = Angle(self.radians + other.radians, 'rad')
-        if degrees_flag == True:
+        if degrees_flag is True:
             self.deg()
             my_sum.deg()
         return my_sum
 
     def __mul__(self, multiplier):
-        if self.units.label == 'degrees':
-            degrees_flag = True
-        else: degrees_flag = False
+        degrees_flag = (self.units.label == 'degrees')
         prod = Angle(
             decimal.Decimal(self.radians) * decimal.Decimal(multiplier), 'rad')
-        if degrees_flag == True:
+        if degrees_flag is True:
             self.deg()
             prod.deg()
         return prod
 
     def __div__(self, divisor):
-        if self.units.label == 'degrees':
-            degrees_flag = True
-        else: degrees_flag = False
-        quot = Angle(decimal.Decimal(self.radians) / decimal.Decimal(divisor), 'rad')
-        if degrees_flag == True:
+        degrees_flag = (self.units.label == 'degrees')
+        quot = Angle(
+            decimal.Decimal(self.radians) / decimal.Decimal(divisor), 'rad')
+        if degrees_flag is True:
             self.deg()
             quot.deg()
         return quot
@@ -67,35 +62,26 @@ class Angle(Scalar):
         return quot
 
     def __eq__(self, other):
-        if self.radians == other.radians:
-            return True
-        else: return False
+        return self.radians == other.radians
 
     def __gt__(self, other):
-        if self.radians > other.radians:
-            return True
-        else: return False
+        return self.radians > other.radians
 
     def __ge__(self, other):
-        if self.radians >= other.radians:
-            return True
-        else: return False
+        return self.radians >= other.radians
 
     def __lt__(self, other):
-        if self.radians < other.radians:
-            return True
-        else: return False
+        return self.radians < other.radians
 
     def __le__(self, other):
-        if self.radians <= other.radians:
-            return True
-        else: return False
+        return self.radians <= other.radians
 
     def __str__(self):
         #if self.units.abbrev == 'deg':
         #    return '{:.4g}°'.format(self.mag)
         #else: return '{:.4g} {}'.format(self.mag, self.units.abbrev)
-        if self.units.abbrev == 'deg' and not (Terminal.platform == 'Windows' and Terminal.interface == 'term'):
+        if self.units.abbrev == 'deg' and\
+           (Terminal.platform, Terminal.interface) != ('Windows', 'term'):
             return '{}°'.format(round(self.mag, 4))
         else:
             return '{} {}'.format(round(self.mag, 4), self.units.abbrev)
@@ -232,9 +218,7 @@ class Angle(Scalar):
         Returns self.__str__() or the string 'no slope'.
         """
         slope_m = self.slope()
-        if slope_m is None:
-            return 'no slope'
-        else: return '%g' % slope_m
+        return 'no slope' if slope_m is None else '%g' % slope_m
 
     def compliment(self):
         """
@@ -253,6 +237,7 @@ class Angle(Scalar):
         """
         Print out a brief summary
         """
+        # more control than with string.Template?
         string = u"""m = {}
 [{}]
 
@@ -267,19 +252,24 @@ supp: {:.5g}° = {:6.4g} (i.e., {:5.3g}π) radian(s)
         self.compliment().pi_radians().mag,\
         self.supplement().mag, self.supplement().radians,
         self.supplement().pi_radians().mag)
+
         lines = [
             line.rstrip().center(Terminal.width()) + '\n'\
             for line in string.split('\n')
-        ]
-        string = ''
+        ]  # list of lines of centered text
+        str_list = []
         for line in lines:
-            string += line
+            str_list.append(line)
         #self.shell_obj.output(string)
-        out_str = string
+        #out_str = str_list
         #self.shell_obj.output('sin = {}'.format(math.sin(self.radians)))
-        out_str += 'sin = {}\n'.format(math.sin(self.radians))
-        out_str += 'cos = {}\n'.format(math.cos(self.radians))
-        out_str += 'tan = {}'.format(math.tan(self.radians))
+        str_list.extend([
+            'sin = {}\n'.format(math.sin(self.radians)),
+            'cos = {}\n'.format(math.cos(self.radians)),
+            'tan = {}'.format(math.tan(self.radians))
+
+        ])
+        out_str = ''.join(str_list)
         if get_str is True:
             return out_str
         else:

@@ -39,7 +39,14 @@ class Tonerow(Thing):
 
             index = length - 1
             #itrbl = range(length) if Terminal.py_version == 3 else xrange(length)
-            for count in gen_range(length):  # itrbl:
+
+            
+            ##############
+            # try numpy? #
+            ##############
+            for count in gen_range(length):
+                # for each number in the list, swap with contents of
+                # random index
                 max_index = index - count
                 random_index = random.randint(0, max_index)
                 self.seq[max_index], self.seq[random_index] =\
@@ -201,24 +208,26 @@ class Tonerow(Thing):
         abc_list = []
         for tone in self:
             if len(tone.note_name) == 1:
-                abc_list += ['=' + tone.note_name + ' ']
+                abc_list.append('=%s ' % tone.note_name)
             else:
-                abc_list += ['^' + tone.note_name[0] + ' ']
-        out_str = """X: 1
+                abc_list.append('^%s ' % tone.note_name[0])
+        out_str_list = ["""X: 1
 T: {}
 C:
 M: {}/4
 L: 1/4
 K: C
-""".format(self.label, len(self))
-        count = 0
-        for i in abc_list:
-            out_str += i
-            count += 1
+""".format(self.label, len(self))]
+        #count = 0
+        count = len(abc_list)
+        out_str_list.extend(abc_list)
+        #for i in abc_list:
+        #    out_str += i
+        #    count += 1
 #            if count < len(self) and count % 4 == 0:
 #                out_str += '| '
-        out_str += '|]\n'
-        return out_str
+        out_str_list.append('|]\n')
+        return ''.join(out_str_list)
 
 #    def write_abc(self):
 #        """

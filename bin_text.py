@@ -7,7 +7,7 @@ stdout.
 import argparse
 import sys
 import textwrap
-
+from cjh.misc import catch_help_flag
 import easycat
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
@@ -15,27 +15,33 @@ from versatiledialogs.terminal import Terminal
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
+DEFAULT = '__data__/binary.txt'
+
 def _parse_args():
     """
     ./bin_text.py -d filename
     """
-    helpflag = True if {'-h', '--help'} & set(sys.argv[1:]) else False
-    if helpflag is True:
-        Terminal.output('')
+    helpflag = bool({'-h', '--help'} & set(sys.argv[1:]))
+
     try:
         parser = argparse.ArgumentParser(description=__doc__)
-        parser.add_argument('-d', type=str, help='name of file to be decoded')
+        parser.add_argument('-f', type=str, help='decode from user-specified file')
+        parser.add_argument('-d', action='store_true', help="decode from '{}'".format(DEFAULT))
+        if helpflag is True:
+            catch_help_flag(__doc__.lstrip(), argprsr=parser)  # work toward this
+            Terminal.output('')
         args = parser.parse_args() if __name__ == '__main__' else None
     finally:
         if helpflag is True:
             Terminal.output('')
     return args
 
+
 def main():
     """
     Encode or decode
     """
-    if ARGS.d is None:
+    if ARGS.__dict__ == {'f': None, 'd': False}:
         buf = easycat.cat(return_str=True, quiet=True) if\
               SHELL.platform != 'android' and SHELL.interface == 'term' else\
               SHELL.input(hide_form=True)
@@ -47,19 +53,20 @@ def main():
         lines = len(out_str) // 45
         if SHELL.interface == 'Tk':
             kwarg_dict.update({
-                'width': 400,
+                'width' : 400,
                 'height': (lines + 1) * 18})
         out_str = textwrap.fill(out_str, width=45)
         SHELL.output(''.join(('\n', out_str, '\n')), **kwarg_dict)
 
         if Terminal.platform != 'android':
-            with open('__data__/binary.txt', 'w') as fhandler:
+            with open(DEFAULT, 'w') as fhandler:
                 fhandler.write(out_str)
-            SHELL.report_filesave('__data__/binary.txt', fast=True)
+            SHELL.report_filesave(DEFAULT, fast=True)
             Terminal.output('')
 
     else:
-        with open(ARGS.d, 'r') as fhandler:
+        filename = ARGS.f if ARGS.f is not None else DEFAULT
+        with open(filename, 'r') as fhandler:
             in_str = fhandler.read()
         in_str = in_str.replace('\n', ' ')
         bin_list = in_str.split(' ')

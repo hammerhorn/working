@@ -91,8 +91,7 @@ def set_diameter(abbrev):
             except decimal.InvalidOperation:
                 Terminal.clear(1)
                 continue
-    diameter = Disp(diameter_dec, u=abbrev)
-    return diameter
+    return Disp(diameter_dec, u=abbrev)
 
 
 def make_circle(diameter):
@@ -100,8 +99,7 @@ def make_circle(diameter):
     Takes <cjh.kinematics.Disp> diameter as argument, returns
     <cjh.geometry.Circle> circle
     """
-    radius = diameter.mag / decimal.Decimal(2.0)
-    return Circle(radius)
+    return Circle(diameter.mag / decimal.Decimal(2.0))
 
 def _set_area_units(pizza):
     """
@@ -115,7 +113,7 @@ def set_price():
     """
     Gets price from command line or stdin
     """
-    if ARGS is not None and ARGS.price is not None:
+    if None not in (ARGS, ARGS.price):
         price = decimal.Decimal(ARGS.price)
     else:
         while True:
@@ -134,21 +132,20 @@ def output_results(pizza, price):
     """
     results1 = '    Area of the pizza is {}'.format(pizza.area)
     results2 = '    The unit price of the pizza is {}/{}'.format(
-        Money(price / pizza.area.mag), pizza.area.units.abbrev)
-    if SHELL.interface == 'zenity' or ARGS.shell == 'zenity':
+        Money(decimal.Decimal(price.amount.item()) / pizza.area.mag), pizza.area.units.abbrev)
+    if 'zenity' in (SHELL.interface, ARGS.shell):
         results1 = results1.replace('$', r'\\$')
         results2 = results2.replace('$', r'\\$')
-    if ARGS.diameter is None and ARGS.price is None or SHELL.interface == 'Tk':
+    if (ARGS.diameter, ARGS.price) == (None, None) or SHELL.interface == 'Tk':
         SHELL.output('')
         SHELL.notify(results1)
         SHELL.message(results2)
-
-        Terminal.clear(1)
         Terminal.output('')
     else:
         SHELL.output('\n{}\n{}'.format(results1, results2))
 
-    pizza.area.draw()
+    # Redesign this
+    # pizza.area.draw()
     Terminal.output('')
 
 #################
@@ -157,10 +154,10 @@ def output_results(pizza, price):
 if __name__ == '__main__':
     ARGS = _parse_args()
     CONFIG = Config()
-
-    if ARGS is not None and ARGS.nox is True:
+    
+    if ARGS.nox is True:
         SHELL = Terminal()
-    elif ARGS is not None and ARGS.shell is not None:
+    elif ARGS.shell is not None:
         SHELL = CONFIG.launch_selected_shell(ARGS.shell)
     else:
         SHELL = CONFIG.start_user_profile()
@@ -182,15 +179,14 @@ def main():
 
     while True:
         pizza_count = Circle.count + 1
-        Terminal.output(Terminal.fx('un', 'Pizza {}'.format(pizza_count)))
+        Terminal.output('\n' + Terminal.fx('un', 'Pizza {}'.format(pizza_count)))
         diameter = set_diameter(ABBREV)
         pizza = make_circle(diameter)
         pizza = _set_area_units(pizza)
         price = set_price()
         output_results(pizza, price)
-        if ARGS.diameter is not None or ARGS.price is not None:
+        if (ARGS.diameter, ARGS.price) != (None, None):
             SHELL.exit()
-
 
 if __name__ == '__main__':
     main()

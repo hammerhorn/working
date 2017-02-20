@@ -16,7 +16,7 @@ import easycat
 from versatiledialogs.terminal import Terminal
 
 REMARKS = """
-    """
+    - combine with bold.py, txfx.py; i.e., adapt for pipeline use"""
 
 def _parse_args():
     """

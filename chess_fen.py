@@ -23,7 +23,7 @@ SHELL = Config().start_user_profile()
 if SHELL.platform != 'android':
     SCRIPT_NAME = sys.argv[0].replace('./', '')
     catch_help_flag(
-        '\nusage: {} [FEN_NOTATION_STR]\n'.format(SCRIPT_NAME)+__doc__,
+        __doc__.lstrip() + '\nusage: {} [FEN_NOTATION_STR]'.format(SCRIPT_NAME),
         SHELL)
 
 def rank_list(fen_str='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'):

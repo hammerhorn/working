@@ -7,6 +7,7 @@ import argparse
 
 import Tkinter as tk
 
+from cjh.misc import notebook
 from versatiledialogs.config import Config
 from versatiledialogs.tk_template import TkTemplate
 
@@ -33,6 +34,10 @@ def save_prefs(var1, var2, var3):
 ##########
 #  DATA  #
 ##########
+REMARKS = """
+    - add a 'Refresh' button"""
+notebook(REMARKS)
+
 ARGS = _parse_args()
 SHELL = TkTemplate()
 CONFIG = Config()

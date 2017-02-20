@@ -43,6 +43,7 @@ def main():
     elif SHELL.interface in ('dialog', 'zenity') and ARGS.q is False:
         SHELL.output(row, height=10)
     Terminal.output(row)
+    #print(row)
 
 if __name__ == '__main__':
     main()

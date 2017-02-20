@@ -35,15 +35,12 @@ def _parse_args():
     """
     Parse arguments
     """
+    notebook(REMARKS)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         '-C', action='store_true', help="read developer's comments")
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else:
-        args = None
-    notebook(REMARKS)
-    return args
+    return parser.parse_args() if __name__ == '__main__' else None
+
 
 def two_points():
     """
@@ -54,7 +51,7 @@ def two_points():
     points = []
     graph = Graph()
     for count in range(2):
-        points += [Point(0, 0)]
+        points.append(Point(0, 0))
         points[count].input(
             prompt=Terminal.fx('un', 'Point {}'.format(count + 1)))
 
@@ -69,7 +66,7 @@ def two_points():
         Terminal.wait()
 
 
-    points += [Point(0, 0)]
+    points.append(Point(0, 0))
     points[2].input(prompt=Terminal.fx('un', 'Point 3'))
     easycat.write(points[2].__repr__())
     Terminal.output(points[2])
@@ -92,8 +89,8 @@ def angle_to_slope():
     """
     degrees = float(Terminal.input('angle in degrees: '))
     theta = Angle(degrees, 'deg')
-    Terminal.output('\n\t' + theta.pi_radians().__str__())
-    Terminal.output('\tslope = {}\n'.format(theta.slope()))
+    Terminal.output(''.join(('\n\t', theta.pi_radians().__str__(),
+                             '\n\tslope = {}\n'.format(theta.slope()))))
     Terminal.wait()
     Terminal.clear(16)
 
@@ -109,21 +106,26 @@ def main():
     """
     Main function
     """
-    option_list = ['two points', 'angle to slope', 'plot an ellipse']
-    menu = ListPrompt(option_list)
+    option_tuple = ('two points', 'angle to slope', 'plot an ellipse')
+
+    # Maybe an OrderedDict would work here
+    # option_dict = {'two points': two_points, 'angle to slope': angle_to_slope,
+    #     'plot an ellipse': lambda: 0}
+    menu = ListPrompt(option_tuple)
 
     while True:
         Terminal.output('')
         option = menu.input() - 1
         Terminal.output('')
-
-        if option_list[option] == 'two points':
+        #option_dict
+        
+        if option_tuple[option] == 'two points':
             two_points()
 
-        elif option_list[option] == 'angle to slope':
+        elif option_tuple[option] == 'angle to slope':
             angle_to_slope()
 
-        elif option_list[option] == 'plot an ellipse':
+        elif option_tuple[option] == 'plot an ellipse':
             pass
 
 

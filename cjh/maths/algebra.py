@@ -28,7 +28,6 @@ class Term(Thing, Minusable):
 
     def __repr__(self):
         str_list = []
-        string = ''
         if self.coef != 1.0 or self.exp == 0.0:
             if self.coef == -1.0:
                 str_list.append('-')
@@ -89,36 +88,24 @@ class Term(Thing, Minusable):
 
     def __eq__(self, other):
         try:                   # if other is a Term
-            value = True if self.coef == other.coef and self.exp == other.exp\
-                    else False
+            value = (self.coef, self.exp) == (other.coef, other.exp)
         except AttributeError: # if other is a float
-            value = True if self.coef == other and self.exp == 1 else False
+            value = (self.coef, self.exp) == (other, 1)
         return value
 
     def __gt__(self, other):
-        if self.exp > other.exp or\
-            self.exp == other.exp and self.coef > other.coef:
-            return True
-        else:
-            return False
+        return self.exp > other.exp or\
+            self.exp == other.exp and self.coef > other.coef
 
     def __ge__(self, other):
-        if self > other or self == other:
-            return True
-        else:
-            return False
+        return self > other or self == other
 
     def __lt__(self, other):
-        if self.exp < other.exp or\
-            self.exp == other.exp and self.coef < other.coef:
-            return True
-        else: return False
+        return self.exp < other.exp or\
+            self.exp == other.exp and self.coef < other.coef
 
     def __le__(self, other):
-        if self < other or self == other:
-            return True
-        else:
-            return False
+        return self < other or self == other
 
     def __call__(self, x_val):
         """
@@ -130,10 +117,8 @@ class Term(Thing, Minusable):
         """
         self.eval(x) == self.__call__(x)
         """
-        if self.exp == 0:
-            return self.coef
-        else:
-            return self.coef * decimal.Decimal(x_val) ** self.exp
+        return self.coef if self.exp == 0 else\
+            self.coef * decimal.Decimal(x_val) ** self.exp
 
 
     def dx(self, *args):
@@ -206,17 +191,17 @@ class Polynom(Thing, Minusable):
         self.letter = next(self.__class__.letter_maker)
 
     def __repr__(self):
-        string = '{}(x) = '.format(self.letter)
-        if len(self) == 0  or (len(self) == 1 and self.list_[0].coef == 0.0):
-            string += '0'
+        str_list = ['{}(x) = '.format(self.letter)]
+        if len(self) == 0  or ((len(self), self.list_[0].coef) == (1, 0.0)):
+            str_list.append('0')
         else:
-            string += self.list_[0].__str__()
+            str_list.append(self.list_[0].__str__())
             for item in range(1, len(self)):
                 if self.list_[item].coef > 0:
-                    string += ' + {}'.format(self.list_[item])
+                    str_list.append(' + {}'.format(self.list_[item]))
                 else:
-                    string += ' - {}'.format(abs(self.list_[item]))
-        return string
+                    str_list.append(' - {}'.format(abs(self.list_[item])))
+        return ''.join(str_list)
 
     def __add__(self, other):
         sum_ = Polynom(self.list_)
@@ -227,29 +212,33 @@ class Polynom(Thing, Minusable):
             for term in other.list_:
                 if term.exp in sum_.dict.keys():
                     sum_.dict[term.exp] += term.coef
-                else: sum_.dict[term.exp] = other.coef #?
+                else:
+                    sum_.dict[term.exp] = other.coef #?
         except AttributeError:
 
             # if addend is Term
             try:
                 if other.exp in sum_.dict.keys():
                     sum_.dict[other.exp] += other.coef
-                else: sum_.dict[other.exp] = other.coef
+                else:
+                    sum_.dict[other.exp] = other.coef
             except AttributeError:
 
                 # otherwise, addend is int or float
                 if 0 in sum_.dict.keys():
                     sum_.dict[0] += decimal.Decimal(other)
                     sum_.dict[0] = round(sum_.dict[0], 4)
-                else: sum_.dict[0] = other
+                else:
+                    sum_.dict[0] = other
 
         # Convert dict of numbers to list of Terms
         sum_.list_ = []
         for exp in range(int(max(sum_.dict.keys())), -1, -1):
-            try:
+            try:     # reversed?
                 if sum_.dict[exp] == 0.0:
                     del sum_.dict[exp]
-                else: sum_.list_.append(Term(sum_.dict[exp], exp))
+                else:
+                    sum_.list_.append(Term(sum_.dict[exp], exp))
             except KeyError:
                 pass
         return sum_
@@ -269,6 +258,7 @@ class Polynom(Thing, Minusable):
         # Convert dict of numbers to list of Terms
         poly.list_ = []
         for exp in range(int(max(poly.dict.keys())), -1, -1):
+        # reversed?
             try:
                 if poly.dict[exp] == 0.0:
                     del poly.dict[exp]

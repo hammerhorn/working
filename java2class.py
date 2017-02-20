@@ -92,7 +92,7 @@ def logview_loop():
             easycat.less(file_='{}.errors'.format(log_files[option - 1]))
 
 
-def main_loop():
+def menu_loop():
     """
     Runs the main menu and carries out selected actions
     """
@@ -113,7 +113,8 @@ def main_loop():
                    classname + '.errors' in file_list:
                     process_file(classname)
                     print
-            Terminal.input('Pass complete.\nPress <ENTER>.')
+            Terminal.output('Pass complete.')
+            Terminal.wait()
         elif selection == 3:
             logview_loop()
         else:
@@ -125,24 +126,26 @@ def main_loop():
 #################
 FILE_LIST = []
 CLASS_LIST = []
-Terminal()
-
-if len(sys.argv[1:]) > 0:
-    CLASS_LIST = sys.argv[1:]
-    for class_name in CLASS_LIST:
-        FILE_LIST = get_file_list()
-        if (class_name + '.java') not in FILE_LIST:
-            sys.exit("Class '{}' not found.".format(class_name))
-        Terminal.output('')
-        proc4 = subprocess.Popen('rm -f {}.class'.format(class_name), shell=True)
-        proc4.wait()
-        #os.system('rm -f ' + classname + '.errors')
-        process_file(class_name)
-    Terminal.input('\nPass complete.\nPress <ENTER>.')
 
 OPTIONS = PlainList([
     '-End Program-', 'Compile all Java classes in the current directory',
     'View error logs'])
 MAIN_MENU = ListPrompt(OPTIONS)
 
-main_loop()
+Terminal()
+
+if __name__ == '__main__':
+    if len(sys.argv[1:]) > 0:
+        CLASS_LIST = sys.argv[1:]
+        for class_name in CLASS_LIST:
+            FILE_LIST = get_file_list()
+            if (class_name + '.java') not in FILE_LIST:
+                sys.exit("Class '{}' not found.".format(class_name))
+            Terminal.output('')
+            proc4 = subprocess.Popen('rm -f {}.class'.format(class_name), shell=True)
+            proc4.wait()
+            # os.system('rm -f ' + classname + '.errors')
+            process_file(class_name)
+        Terminal.input('\nPass complete.\nPress <ENTER>.')
+
+    menu_loop()
