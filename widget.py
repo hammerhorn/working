@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-various dialogs, which can use various shells/toolkits.
+    Various dialogs, which can use various shells/toolkits.
 
 dialogs: welcome, output, outputf, input, wait, message, list
  shells: term, dialog, zenity, Tk, wx, html
@@ -10,8 +10,9 @@ usage: widget.py (--SHELL shell) [--WIDGET widget] [TEXT]
 import argparse
 import copy
 import string
+import sys
 
-from cjh.misc import bye
+from cjh.misc import bye, catch_help_flag
 from versatiledialogs.config import Config
 from versatiledialogs.lists import PlainList
 
@@ -27,7 +28,7 @@ def _parse_args():
     Parse command-line arguments; --help for details
     """
     parser = argparse.ArgumentParser(
-        description='Test various dialogs from the command line.')
+        description="Try various components of 'versatiledialogs'.")
     parser.add_argument('--shell', '-s', type=str)
     parser.add_argument('--welcome', type=str, help='Welcome Dialog')
     parser.add_argument('--output', type=str, help='Output Dialog')
@@ -38,16 +39,29 @@ def _parse_args():
         '--notify', type=str, help='Notification Widget')
     parser.add_argument('--message', type=str, help='Message Dialog')
     parser.add_argument('--list', type=str, help='List Dialog')
+
+    for arg in sys.argv[1:]:
+        if arg.startswith('--'):
+            args_present = True
+            break
+    else:
+        args_present = False
+    
+    catch_help_flag(help_str=__doc__, sh_obj=SHELL, condition=not args_present,
+                    argprsr=parser)
     return parser.parse_args() if __name__ == '__main__' else None
 
 
 ##########
 #  DATA  #
 ##########
-ARGS = _parse_args()
 CONFIG = Config()
-SHELL = CONFIG.launch_selected_shell(ARGS.shell) if ARGS is not None and\
-        ARGS.shell is not None else CONFIG.start_user_profile()
+SHELL = CONFIG.start_user_profile()
+ARGS = _parse_args()
+
+if ARGS is not None and ARGS.shell is not None:
+    SHELL = CONFIG.launch_selected_shell(ARGS.shell) 
+        
 
 def get_input():
     input_dict = {'input': SHELL.input(ARGS.input)}
@@ -81,8 +95,9 @@ def main():
     """
     args_dict = copy.copy(ARGS.__dict__)
     del args_dict['shell']
+#    if list(args_dict.values()) == [None] * len(args_dict):
+#        catch_help_flag(__doc__)
 
-    # comprehension?
     widget_dict = {
         'input'  : get_input,
         'list'   : make_list,
@@ -94,11 +109,10 @@ def main():
         'welcome': lambda: SHELL.welcome(description=ARGS.welcome)
     }
 
+    
     for key in args_dict:
         if args_dict[key] is not None:
             widget_dict.get(key, lambda: 0)()
-
-    bye()
 
 if __name__ == '__main__':
     main()

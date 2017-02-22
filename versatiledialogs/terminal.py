@@ -234,7 +234,7 @@ class Terminal(Shellib):
         if len(key) == 0:
             key = b' '
         #key = key[0]
-        time.sleep(0.1)
+        #time.sleep(0.05) # keys it stablish?
         if (cls.platform, fast, hide) == ('Linux', False, True):  # hide is True:
             easycat.write('\b \b ')  #  \b')
         if hide is False:
