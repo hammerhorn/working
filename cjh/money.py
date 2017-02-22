@@ -35,7 +35,8 @@ class Money(object):
         return Money(self.amount - other.amount) if self.unit == other.unit\
             else None
 
-    def __div__(self, other):
+    def __truediv__(self, other):
+        #if not isinstance(other, float):
         result = self.amount / float(other)
         if not isinstance(other, Money):
             #print other, 'is not Money'

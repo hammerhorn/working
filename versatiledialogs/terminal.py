@@ -11,6 +11,7 @@ import os
 import subprocess
 import sys
 import textwrap
+import threading
 import time
 
 # Add-ons
@@ -210,7 +211,7 @@ class Terminal(Shellib):
             return out_str
 
     @classmethod
-    def get_keypress(cls, prompt='', fast=False):
+    def get_keypress(cls, prompt='', fast=False, hide=True):
         """
         Accepts one char of input.  If bash is available, it is not necessary to
         hit <ENTER>.
@@ -233,10 +234,11 @@ class Terminal(Shellib):
         if len(key) == 0:
             key = b' '
         #key = key[0]
-        if cls.platform == 'Linux' and fast is False:  # hide is True:
+        time.sleep(0.1)
+        if (cls.platform, fast, hide) == ('Linux', False, True):  # hide is True:
             easycat.write('\b \b ')  #  \b')
-        #if hide is False:
-        #    easycat.write(key)
+        if hide is False:
+            easycat.write(key)
         #cls.cursor_v(-2)
         return key.decode('utf-8')
 
@@ -581,23 +583,30 @@ class Terminal(Shellib):
         try:
             cls.hide_cursor()
             if text is None:
-                what2press = 'enter' if cls.bash_available is False else 'a key'
+                what2press = 'a key' if cls.bash_available is True else 'enter'
                 text = 'Press {}'.format(what2press)
             text = ''.join(
                 ('\n', ' ' * 5, Fore.BLUE, Back.WHITE, '[', Ansi.UNDERLINE,
                  text[0], '\033[24m', text[1:], ']', Style.RESET_ALL))
             cls.get_keypress(text)
             cls.clear(1)
-            if cls.platform == 'Windows':
+            def blink():
+                if cls.platform == 'Windows':
+                    cls.clear(1)
+                time.sleep(.1)  # .15
+                easycat.write(text)
+                time.sleep(.1)  # .3
                 cls.clear(1)
-            time.sleep(.15)
-            easycat.write(text)
-            time.sleep(.3)
-            cls.clear(1)
+            #new_thread = threading.Thread(target=blink)
+            #new_thread.start()
+            blink()
         finally:
+
             cls.unhide_cursor()
             if cls.platform == 'Linux':
                 easycat.write(Ansi.RESET)
+
+
 
     @classmethod
     def welcome(cls, description='', get_str=False):

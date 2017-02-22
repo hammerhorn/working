@@ -25,7 +25,7 @@ def main():
     """
     try:
         Terminal.hide_cursor()
-
+        Terminal.output(' *** Press an arrow key ***')
         while True:
             try:
                 whichway = Terminal.get_arrow_key(arrows_only=True)

@@ -23,7 +23,9 @@ PY_FILES = [this_file for this_file in ALL_FILES if this_file.endswith('.py')]
 NUMBER_OF_PYFILES = len(PY_FILES)
 
 def main():
-    """DOCSTR"""
+    """
+    Choose a random python file, and print out the name
+    """
     out_funct = SHELL.message if SHELL.interface in ('wx', 'Tk') else\
                 SHELL.output
     out_funct(PY_FILES[randint(0, NUMBER_OF_PYFILES - 1)])

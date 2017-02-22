@@ -30,7 +30,6 @@ from colorful       import color
 from colorful.color import color_dec_to_hex
 from fiziko.waves   import kelvin_to_rgb
 from versatiledialogs.config      import Config
-#if sys.version_info.major == 2:
 from versatiledialogs.html_sh     import HtmlShell
 from versatiledialogs.terminal    import Terminal
 from versatiledialogs.tk_template import TkTemplate
@@ -47,6 +46,7 @@ REMARKS = """
     * should contain colored text for w3m
     * readline?"""
 
+notebook(REMARKS)
 
 def _parse_args():
     """
@@ -60,21 +60,14 @@ def _parse_args():
     parser.add_argument(
         '-F', action='store_true', help='accept input in Fahr')
     parser.add_argument('-T', action='store_true', help='Truecolor')
-    args = parser.parse_args() if __name__ == '__main__' else None
-    return args
+    return parser.parse_args() if __name__ == '__main__' else None
 
 ARGS = _parse_args()
-#if __name__ == '__main__':
-notebook(REMARKS)
-
 FILENAME = 'results.html'
 CONFIG = Config()
-
-if ARGS is not None and ARGS.shell is not None:
-    SHELL = CONFIG.launch_selected_shell(ARGS.shell)
-else:
-    SHELL = CONFIG.start_user_profile()
-
+SHELL = CONFIG.launch_selected_shell(ARGS.shell) if\
+        None not in (ARGS, ARGS.shell) else\
+        CONFIG.start_user_profile()
 BROWSER = CONFIG.config_dict.get('browser')
 
 
@@ -85,18 +78,11 @@ def main():
     if ARGS.html is True:
         html_obj = HtmlShell(
             title='Kelvin -> Hue',
-            location=FILENAME)  #,
-            # heading='Welcome!')  # ,
-            # content=
+            location=FILENAME)
         html_obj.output(
             'Welcome!  Enter a temperature into your terminal to begin.')
 
-        # html_obj.open_file_in_browser(BROWSER)
-
     if SHELL.interface == 'term':
-#       Terminal.output('\nWelcome.')
-#       Terminal.notify('This script requires a Truecolor-compatible terminal
-# (xterm, gnome-terminal, konsole, etc....) for the full effect.')
 
         while True:
             try:
@@ -107,8 +93,7 @@ def main():
                 else:
                     kelvins = float(Terminal.input('temperature? (K) '))
 
-                color_tuple = kelvin_to_rgb(kelvins)
-                red, green, blue = color_tuple
+                red, green, blue = kelvin_to_rgb(kelvins)
                 bgcolor = color_dec_to_hex(red, green, blue)
                 title = '{}, {}, {} ({}K)'.format(red, green, blue, kelvins)
                 color_str = "#000000"
@@ -116,19 +101,10 @@ def main():
                 if ARGS.html is True:
                     html_obj = HtmlShell(
                         title, FILENAME, bgcolor, color_str, dont_open=True)
-                        # , heading, bgcolor)
                     html_obj.output(color_str)
-                #Terminal.output('\x1b[48;5;0;38;2;{};{};{}m{}\x1b[0m'.format(
-                #    red, green, blue, Terminal.fx('bn', bgcolor)))
-                if ARGS.T is True:
-                    Terminal.output(Terminal.fx('bn', color.write(
-                        '#000000', 'hex', bgcolor, 'hex', bgcolor + ' ' * 33,
-                        truecolor=True, get_str=True)), heading=_heading)
-                else:
-                    Terminal.output(Terminal.fx('bn', color.write(
-                        '#000000', 'hex', bgcolor, 'hex', bgcolor + ' ' * 33,
-                        truecolor=False, get_str=True)), heading=_heading)
-                #Terminal.output('')
+                Terminal.output(Terminal.fx('bn', color.write(
+                    '#000000', 'hex', bgcolor, 'hex', bgcolor + ' ' * 33,
+                    truecolor=ARGS.T, get_str=True)), heading=_heading)
             except KeyboardInterrupt:
                 Terminal.clear(0)
                 if ARGS.html is True:
@@ -136,14 +112,14 @@ def main():
                     Terminal.output("\r\nYou may now close '{}/{}'.\n".format(
                         os.getcwd(), FILENAME))
                 break
+
     elif SHELL.interface == 'Tk':
         def change_color(kelvins):
             """
             Takes color name or hex color as an argument,
             and turns the Tk window that color.
             """
-            color_tuple = kelvin_to_rgb(kelvins)
-            red, green, blue = color_tuple
+            red, green, blue = kelvin_to_rgb(kelvins)
             bgcolor = color_dec_to_hex(red, green, blue)
             title = '{}, {}, {} ({}K)'.format(red, green, blue, kelvins)
             color_str = "#000000"
@@ -164,14 +140,6 @@ def main():
 
         pane = tk.Frame(SHELL.main_window)
         entry = tk.Entry(pane, width=15, font=('sans', 12))
-
-#        def get_color():
-#            kelvins = float(ENTRY.get())
-#            #print '"' + ENTRY.get() + '"'
-#            #sys.exit()
-#            red, green, blue = kelvin_to_rgb(kelvins)
-#            return color_dec_to_hex(red, green, blue)
-
         button = tk.Button(
             pane, text='Color temp. (K)', command=lambda: change_color(
                 float(entry.get())))

@@ -7,8 +7,8 @@ import os
 import sys
 
 from cjh.doc_format import Paragraph, Section
-from cjh.terminal import Terminal
-from cjh.things import Thing
+from things import Thing
+from versatiledialogs.terminal import Terminal
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'

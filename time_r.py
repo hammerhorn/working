@@ -20,11 +20,18 @@ import sys
 import time
 import traceback
 
+from cjh.misc import current_time, notebook, speak
 import easycat
 from versatiledialogs.terminal import Terminal
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com'
 __license__ = 'GPL'
+
+REMARKS = """
+    - incorporate mmss.py
+    - misc.current_time
+    - misc.speak"""
+notebook(REMARKS)
 
 ################
 #  PROCEDURES  #
@@ -43,7 +50,7 @@ def _parse_args():
     #supposedly there is an equivalent generator expression which would be
     #better
     if len([i for i in sys.argv[1:] if not i.startswith('-')]) > 0 or\
-        (set(['-h', '--help']) & set(sys.argv)):
+        ({'-h', '--help'} & set(sys.argv)):
         parser.add_argument('time_str', type=str)
         return parser.parse_args()
 

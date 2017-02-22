@@ -65,9 +65,11 @@ def edit_config_file():
     """
     Write the changes to the actual file 'config.json'.
     """
+    if ARGS.language is not None:
+        ARGS.language = ARGS.language.upper()
     for key_name in KEYNAME_LIST:
-        if ARGS.__dict__[key_name] is not None and\  # redundent, but safer
-           ARGS.shell not in ('?', CONFIG.config_dict.get(key_name, None)):
+        if ARGS.__dict__[key_name] is not None and\
+           ARGS.shell not in ('?', CONFIG.config_dict.get(key_name, None)):  # redundent, but safer
             CONFIG.config_dict[key_name] = ARGS.__dict__[key_name]
     CONFIG.write_to_config_file(**CONFIG.config_dict)
 
@@ -82,7 +84,7 @@ def main():
         generate the output to be written to stdout at the appropriate level
         of verbosity
         """
-        value = lookup(key_name)
+        value = CONFIG.config_dict.get(key_name, None)
         return "\n{:>25s} = '{}'".format(key_label, value)
 
     if ARGS is not None:
@@ -114,7 +116,7 @@ def main():
 
         nochangeneeded = noeditcommand
         for key in args_dict.keys():
-            if lookup(key) == args_dict[key]:
+            if CONFIG.config_dict.get(key, None) == args_dict[key]:
                 nochangeneeded = True
 
     if nochangeneeded is False:

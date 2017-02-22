@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 #coding=utf8
 """
@@ -22,7 +23,7 @@ from versatiledialogs.terminal import Terminal
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
-VOL = .05
+VOL = .01
 
 class Pitch(SoundWave):
     """
@@ -361,7 +362,7 @@ class Pitch(SoundWave):
         Currently uses a system call to sox
         """
         NOTE_LENGTH = .15 #.1
-        VOL = 1
+        #VOL = 1
         #print("{:>13} ".format(self.label))
         #os.system('play -n synth .15 sin {} vol .25 > /dev/null 2>&1'.fo
         #rmat(self.freq.mag))
@@ -398,7 +399,7 @@ class Note(Pitch):
         """
         Currently uses a system call to sox
         """
-        VOL = 1
+        #VOL = 1
         os.system('play -n synth {} {} {} vol {} > /dev/null 2>&1'.format(
             self.duration, voice, self.freq.mag, VOL))
 
@@ -463,7 +464,7 @@ class PitchSet(Thing):
         Currently uses a system call to sox
         """
         NOTE_LENGTH = 1 #.1
-        VOL = 1
+        #VOL = 1
         #print("{:>13} ".format(self.label))
         #os.system('play -n synth .15 sin {} vol .25 > /dev/null 2>&1'.fo
         #rmat(self.freq.mag))

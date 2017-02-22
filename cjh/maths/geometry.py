@@ -727,7 +727,7 @@ class Graph(Thing):
         if semiaxis_b is None:  # make sure this works
             semiaxis_b = semiaxis_a
         self.funct_cnt += 1
-        for x_val in range(-1 * self.max_domain, self.max_domain + 1):
+        for x_val in range(-self.domain[1], self.domain[1] + 1):
             try:
                 self.plot_point(x_val, int(center[1] + round(math.sqrt(
                     semiaxis_b ** 2 - semiaxis_b ** 2 * (x_val - center[0]) **
@@ -785,7 +785,7 @@ class Graph(Thing):
         #header = {'GM':1, 'SZ':self.BOARD_SIZE, 'KM':6.5}
 
         #Generate string
-        sequence_lst = []
+        sequence_list = []
         for cols in range(self.size):
             for rows in range(self.size):
                 # this could be improved
@@ -795,6 +795,7 @@ class Graph(Thing):
                     sequence_list.append(' AB[%s%s]' % (chr(rows+97), chr(cols+97)))
 
         #Write to file
+        sequence = ''.join(sequence_list)
         if sys.version_info.major == 3:
             self._save(
                 basename,

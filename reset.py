@@ -23,9 +23,11 @@ PATTERN_TUPLE = (
     '__data__/*.tmp'
 )
 
+# Build up a list of all files matching one of the patterns
 for pattern in PATTERN_TUPLE:
     FILE_LIST.extend(glob(pattern))
 
+# Deletes each file in the list
 for filename in FILE_LIST:
     try:
         os.remove(filename)

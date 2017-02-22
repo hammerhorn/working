@@ -20,7 +20,7 @@ try:
 except ImportError:
     from tkinter import TclError  # pylint: disable=E0401
 
-from cjh import misc
+from cjh.misc import notebook
 from colorful.color import color_dec_to_hex, nm_to_rgb, write
 from fiziko.scalars import Unit
 from fiziko.waves import EMWave
@@ -48,16 +48,14 @@ def _parse_args():
         '-s', '--shell', type=str, help='bash, dialog, sh, Tk, wx, zenity')
     parser.add_argument(
         '-C', action='store_true', help="view developer's comments")
-    args = parser.parse_args() if __name__ == '__main__' else None
-    return args
+    return parser.parse_args() if __name__ == '__main__' else None
 
 ARGS = _parse_args()
 CONFIG = Config()
-SHELL = CONFIG.launch_selected_shell(ARGS.shell) if ARGS is not None and\
-        ARGS.shell is not None else CONFIG.start_user_profile()
+SHELL = CONFIG.launch_selected_shell(ARGS.shell)\
+        if None not in (ARGS, ARGS.shell) else CONFIG.start_user_profile()
 
-if ARGS is not None and ARGS.C:
-    misc.notebook(REMARKS)
+notebook(REMARKS)
 
 def main():
     """
@@ -68,7 +66,7 @@ def main():
 
     if SHELL.interface == 'Tk':
         SHELL.msg.config(
-            bg='black', fg='white', width=200, font=('times', 15))#, 'bold'))
+            bg='black', fg='white', width=200, font=('times', 15))
         SHELL.main_window.config(bg='black')
         SHELL.center_window(height_=200, width_=300)
         SHELL.main_window.title('EM Radiation (Hz)')

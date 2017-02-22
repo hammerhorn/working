@@ -21,20 +21,11 @@ def _parse_args():
     """
     ./bin_text.py -d filename
     """
-    helpflag = bool({'-h', '--help'} & set(sys.argv[1:]))
-
-    try:
-        parser = argparse.ArgumentParser(description=__doc__)
-        parser.add_argument('-f', type=str, help='decode from user-specified file')
-        parser.add_argument('-d', action='store_true', help="decode from '{}'".format(DEFAULT))
-        if helpflag is True:
-            catch_help_flag(__doc__.lstrip(), argprsr=parser)  # work toward this
-            Terminal.output('')
-        args = parser.parse_args() if __name__ == '__main__' else None
-    finally:
-        if helpflag is True:
-            Terminal.output('')
-    return args
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('-f', type=str, help='decode from user-specified file')
+    parser.add_argument('-d', action='store_true', help="decode from '{}'".format(DEFAULT))
+    catch_help_flag(__doc__.lstrip(), cleanup=lambda: Terminal.output(''), argprsr=parser)
+    return parser.parse_args() if __name__ == '__main__' else None
 
 
 def main():
@@ -42,9 +33,10 @@ def main():
     Encode or decode
     """
     if ARGS.__dict__ == {'f': None, 'd': False}:
-        buf = easycat.cat(return_str=True, quiet=True) if\
-              SHELL.platform != 'android' and SHELL.interface == 'term' else\
-              SHELL.input(hide_form=True)
+        if SHELL.platform != 'android' and SHELL.interface == 'term':
+            buf = easycat.cat(return_str=True, quiet=True)
+        else:
+            buf = SHELL.input(hide_form=True)
         out_str_lst = []
         for char in buf:
             out_str_lst.extend(['{0:b}'.format(ord(char)).zfill(8), ' '])
@@ -56,7 +48,7 @@ def main():
                 'width' : 400,
                 'height': (lines + 1) * 18})
         out_str = textwrap.fill(out_str, width=45)
-        SHELL.output(''.join(('\n', out_str, '\n')), **kwarg_dict)
+        SHELL.output('\n%s\n' % out_str, **kwarg_dict)
 
         if Terminal.platform != 'android':
             with open(DEFAULT, 'w') as fhandler:

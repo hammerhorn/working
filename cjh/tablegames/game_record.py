@@ -64,18 +64,20 @@ class GoGame(Thing):
         if len(sgf_str) > 0:
 
             # Split it up into units
-            self.units = sgf_str.split(';')
+            self.units_list = sgf_str.split(';')
 
             # Get the header string
-            self.units = self.units[1:]
-            self.header_str = self.units[0]
+            #self.units_list = self.units_list[1:]  # Game, size 
+            self.header_str = self.units_list[0]  # board position
 
             # Get the list of moves and
-            self.moves = self.units[1:]
+            self.moves_list = self.units_list[1:]
 
             # Strip off any whitespace
-            self.moves = [move.strip() for move in self.moves]
-
+            self.moves_list = [move.strip(') \n') for move in self.moves_list]
+            #print(self.moves)
+            #import sys
+            #sys.exit()
             # Convert the header information to a dictionary
             self.head_list = self.header_str.split(']')[:-1]
             for unit in self.head_list:
@@ -84,14 +86,15 @@ class GoGame(Thing):
                 self.header_dict.update({unit_list[0]:unit_list[1]})
 
             #there is a better way i think
-            self.size = eval(self.header_dict['SZ'])
+            self.size = int(self.header_dict['SZ'])
 
             # Convert the sgf representations to Turn objects
             #for i, v in enumerate(self.moves):
-            for i in enumerate(self.moves):
-                if self.moves[i[0]][0] == 'B':
+            for move in self.moves:
+                #if self.moves[i[0]][0] == 'B':
+                if move[0] == 'B':
                     colour = 'black'
-                elif self.moves[i[0]][0] == 'W':
+                elif move[0] == 'W':
                     colour = 'white'
                 address = (
                     self.moves[i[0]][2].upper(),

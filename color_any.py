@@ -31,11 +31,7 @@ def _parse_args():
         '-t', action='store_true',
         help='for more accurate colors (except ANSI-type), if your terminal' +\
         ' supports truecolor escape sequences.')
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else:
-        args = None
-    return args
+    return parser.parse_args() if __name__ == '__main__' else None
 
 
 ########################
@@ -43,11 +39,13 @@ def _parse_args():
 ########################
 notebook('    - by freq and wavelength')
 
-if len(sys.argv[1:]) == 0:
+t = '-t' in sys.argv[1:]
+if len(sys.argv[1:]) == 0 or\
+   (len(sys.argv[1:]) == 1 and '-t' in sys.argv[1:]):
     Terminal.hide_cursor()
     try:
         Terminal.output('')
-        cycle_thru_ansiboxes(delta_t=0.1)
+        cycle_thru_ansiboxes(delta_t=0.1, tc=t)
     finally:
         Terminal.output('')
         Terminal.unhide_cursor()
@@ -56,11 +54,9 @@ if len(sys.argv[1:]) == 0:
 
 ARGS = _parse_args()
 CONFIG = Config()
-if ARGS is not None and ARGS.shell is not None:
-    SHELL = CONFIG.launch_selected_shell(ARGS.shell)
-else:
-    SHELL = CONFIG.start_user_profile()
-
+SHELL = CONFIG.launch_selected_shell(ARGS.shell) if\
+        None not in (ARGS, ARGS.shell) else\
+        CONFIG.start_user_profile()
 
 ##########
 #  MAIN  #

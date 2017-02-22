@@ -9,6 +9,7 @@ import sys
 
 import colorama
 from termcolor import colored
+
 try:
     from pygments import highlight
     from pygments.lexers import get_lexer_for_filename
@@ -107,9 +108,10 @@ def less(*args, **kwargs):
         with open(filename, 'r') as file_handler:
             text = file_handler.read()            
     elif len(args) > 0:
-        text = ''
+        text_list = []
         for arg in args:
-            text += (' ' + str(arg))
+            text_list.extend([' ', str(arg)])
+        text = ''.join(text_list)
         # text = text.lstrip('\n')
 
     if os.path.exists('/usr/bin/less'):
@@ -123,9 +125,10 @@ def view_source(src=sys.argv[0]):
     """
     Display source
     """
-    write(colored(src, attrs=['underline']))
-    write(':\n')
-    write(get_src_str(src) + '\n')
+    write(''.join((colored(src, attrs=['underline']),
+                   ':\n',
+                   get_src_str(src),
+                   '\n')))
 
 
 def write(text):

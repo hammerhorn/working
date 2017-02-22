@@ -31,7 +31,7 @@ def bye():
 
 def catch_help_flag(help_str='', sh_obj=Terminal(), condition=None,
                     cleanup=None, # a function to end with
-                    module=sys.argv[0].replace('./', '').split('.')[0],
+                    title=sys.argv[0].replace('./', '').split('.')[0],
                     argprsr=None): # an argparse.parser
     """
     Help dialogs for bash and Tk.
@@ -42,11 +42,11 @@ def catch_help_flag(help_str='', sh_obj=Terminal(), condition=None,
         #module = heading
         if sh_obj.interface == 'Tk':
         #sh_obj.main_window.title(module)
-            sh_obj.message(msg=help_str, heading=module)
+            sh_obj.message(msg=help_str, heading=title)
         else:
-            module = module.replace('_', ' ').title()
+            title = title.replace('_', ' ').title()
             #Terminal.output(Terminal.ul(module, position=1))
-            Terminal.output('\n' + Terminal.fx('bnu', module))
+            Terminal.output('\n' + Terminal.fx('bnu', title))
             sh_obj.output(help_str)
             sys.argv.append('-h')
             #parser = argparse.ArgumentParser()
@@ -118,7 +118,7 @@ def read_json_file(filename):
 
 def speak(phrase):
     """use a speech synthesizer to read text"""
-    command = 'espeak -s 150 -v en-us -p 30 "{}" > /dev/null 2>&1'
+    command = 'espeak -a 10 -s 150 -v en-us -p 30 "{}" > /dev/null 2>&1'
 #   try:
     proc = subprocess.Popen(command.format(phrase), shell=True)
     proc.wait()

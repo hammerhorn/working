@@ -66,11 +66,15 @@ class Shellib(object):
 
     @classmethod
     def emphasis(cls, in_str):
-        if cls.interface == 'term' and cls.os_name == 'posix':
+        if (cls.interface, cls.os_name) == ('term', 'posix'):
             out_str = cls.fx('bn', in_str)
-        else: out_str = in_str.upper()
+        else:
+            out_str = in_str.upper()
         return out_str
                        
+
+    def __eq__(self, other):
+        return self.interface == str(other)
 
     @classmethod
     def is_first_run(cls):
@@ -272,3 +276,4 @@ class Shellib(object):
                 pass
         except:
             cls.output('unable to write to file system')            
+

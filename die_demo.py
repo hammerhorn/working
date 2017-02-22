@@ -60,7 +60,7 @@ def roll_and_output():
     """
     global _TOGGLE
     
-    if SHELL.interface == 'Tk':
+    if SHELL == 'Tk':
         SHELL.msg.config(font=('mono', 10, 'bold'))
     DIE.roll()
     if ARGS.quiet is not None and ARGS.quiet > 2:
@@ -69,7 +69,7 @@ def roll_and_output():
         SHELL.output(DIE.value)
     elif ARGS.quiet == 1:
         SHELL.output(DIE.__str__())
-    elif SHELL.interface == 'Tk':
+    elif SHELL == 'Tk':
         _TOGGLE = not _TOGGLE  # make this into a generator
         if _TOGGLE is True:
             SHELL.msg.config(fg='#FF00FF')  # , bg='black')
@@ -128,7 +128,7 @@ def change_lang(lang_code):
     SHELL.main_window.title({'EN':'dice', 'EO':'ĵetkuboj'}[LANG])
 
 # Set up Tk window
-if SHELL.interface == 'Tk':
+if SHELL == 'Tk':
     if LANG == 'EO':
         SHELL.main_window.title('ĵetkuboj')
     SHELL.main_window.config(bg='black')
@@ -176,16 +176,18 @@ def main_callback(event):
     # print "clicked at", event.x, event.y
 # frame = Frame(root, width=100, height=100)
 # frame.bind("<Key>", key)
-if SHELL.interface == 'Tk':
+if SHELL == 'Tk':
     SHELL.main_window.bind('<Button-3>', main_callback)
 #frame.pack()
 
-if SHELL_NAME in ('wx', 'Tk'):
+if SHELL_NAME in ('wx', 'Tk'):  # change to just SHELL?
     SHELL.center_window(width_=200, height_=200, x_offset=100)
 
 if ARGS is not None and ARGS.sides is not None and ARGS.sides > 0:
     DIE = Die(ARGS.sides)
-else: DIE = Die()
+else:
+    DIE = Die()
+
 _TOGGLE = False
 
 def main():

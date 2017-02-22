@@ -41,26 +41,21 @@ class Die(Thing):
         return self.value
 
     def __str__(self):
-        return self.label + ' ' + str(self.value)
+        return ' '.join((self.label, str(self.value)))
 
     def __len__(self):
         return self.sides
 
     def __eq__(self, other):
         if type(other) == type(self):
-            if self.value == other.value:
-                return True
-            else: return False
+            return self.value == other.value
         elif type(other) == int:
-            if self.value == other:
-                return True
-            else: return False
-        else: return None
+            return self.value == other
+        else:
+            return None
 
     def __gt__(self, other):
-        if self.value > other.value:
-            return True
-        else: return False
+        return self.value > other.value
 
 #   def __add__(self, ):
 #       sum_die = Die()
@@ -105,20 +100,17 @@ class Die(Thing):
 
     def draw_face(self, get_str=False, verbose=False, shellib=Terminal):
         self.generate_face()
-        if verbose:
-            string = str(self) + '\n'
-        else: string = ""
+        
+        str_list = [str(self), '\n'] if verbose is True else []
         for index in range(5):
-            string += self.face[index] + '\n'
-        if get_str:
+            str_list.extend([self.face[index], '\n'])
+        string = ''.join(str_list)
+        if get_str is True:
             return string
         else:
-            if verbose:
-                heading = ' '
-            else: heading = self.label
+            heading = ' ' if verbose is True else self.label
         if shellib.interface == 'Tk':
             shellib.msg.config(font=('mono', 9, 'normal'))
-
         shellib.outputf(msg=string, head=heading)
 
     def animate(self):
@@ -128,11 +120,11 @@ class Die(Thing):
             Terminal.print_header()
 
             self.roll()
+            
             Terminal.output('')
             self.draw_face()
 
             time.sleep(tdelta)
-
             Terminal.print_header()
             time.sleep(tdelta)
 

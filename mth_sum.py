@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 #coding=utf8
 """
-DATA SET SUM & STATS -
-
 Sum of a list.  Gets input from the command line or from stdin.
 """
 import argparse
@@ -10,7 +8,7 @@ import decimal
 import math
 import sys
 
-from cjh.misc import notebook
+from cjh.misc import catch_help_flag, notebook
 from cjh.statset import DataSet
 
 from versatiledialogs.config import Config
@@ -43,13 +41,12 @@ def _parse_args():
     """
     Parse arguments
     """
-    parser = argparse.ArgumentParser(
-        description={
-            'EN':__doc__,
-            'EO':"""DATA SET SUM/STATS
-            
-            Sumo de nombraro.  Ricevas datumon de aŭ la komandlinio aŭ el
-            'stdin'."""}[LANG.upper()])
+    doc_str = {
+        'EN':__doc__,
+        'EO': "Sumo de nombraro.  Ricevas datumon de aŭ la komandlinio aŭ el 'stdin'."
+    }
+
+    parser = argparse.ArgumentParser()  # description=doc_str[LANG.upper()])
     parser.add_argument(
         '-n', '--nox', action='store_true', help='print to stdout')
     parser.add_argument(
@@ -62,6 +59,8 @@ def _parse_args():
     parser.add_argument(
         '-C', action='store_true', help="see developer's comments")
     parser.add_argument("ADDENDS", help="numbers to be summed", nargs="*")
+    catch_help_flag(help_str=doc_str[LANG.upper()].lstrip(),
+                    title='Data Set Demo', argprsr=parser)
     return parser.parse_args() if __name__ == '__main__' else None
 
 
@@ -71,8 +70,8 @@ def getdata_stdin():
     """
     eof_key = '^D' if Terminal.os_name == 'posix' else '^Z[enter]'
     s_dict = {
-        'EN':"Enter addends, followed by '{}'".format(eof_key),
-        'EO':"Provizu adiciatojn, finigita de '{}'".format(eof_key)}
+        'EN': "Enter addends, followed by '{}'".format(eof_key),
+        'EO': "Provizu adiciatojn, finigita de '{}'".format(eof_key)}
     Terminal.output(s_dict[LANG.upper()])
     input_str = sys.stdin.read().strip()
     return input_str.split()

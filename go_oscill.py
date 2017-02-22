@@ -57,8 +57,8 @@ def main():
 #    count = 0
     while True:
         for i in gen_range(
-                -(goban.max_domain),
-                goban.max_domain + 1,
+                goban.domain[0],  # -(goban.domain[1]),
+                goban.domain[1] + 1,
                 int(round(D_INTERVAL))
             ):
             #count = 0
@@ -68,15 +68,15 @@ def main():
 
             current_frame_no += 1
             Terminal.print_header('+f{}'.format(current_frame_no))
-            Terminal.output((str(goban).rstrip()))
+            Terminal.output(str(goban).rstrip())
             time.sleep(T_INTERVAL)
             goban.plot_point(i, 0, 'empty')
 
             #count += 1
 
         for i in gen_range(
-                -(goban.max_domain - 1),
-                (goban.max_domain),
+                goban.domain[0] + 1,  # -(goban.domain[1] - 1),
+                goban.domain[1],
                 int(round(D_INTERVAL))
             ):
             goban.plot_point(-i, 0, 'black')
