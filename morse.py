@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """
 Read from command line args or stdin, converting to Morse code.
@@ -21,7 +22,6 @@ REMARKS = """
     + build it into the letter object"""
 
 Terminal()
-atexit.register(Terminal.unhide_cursor)
 notebook(REMARKS)
 
 def play_and_print(char):
@@ -33,7 +33,7 @@ def play_and_print(char):
         easycat.write(Terminal.fx('bn', letter.morse + ' '))
         letter.play_morse()
     except KeyError:
-        #make it flash
+        #make it flash?
         time.sleep(.1)
         easycat.write(char)
 
@@ -41,13 +41,23 @@ def main():
     """
     main
     """
+    during_input = False
+    def siggie():
+        Terminal.cursor_v(-1)
+        Terminal.clear(0)
+        if during_input is True or len(sys.argv[1:]) > 0:
+            Terminal.output('\n' * 2 +
+                ' '.join(('#',) * 4).center(Terminal.width()))
+            Terminal.hrule()
+            Terminal.output('')
+
+    atexit.register(siggie)
+    atexit.register(Terminal.unhide_cursor)
+
     Terminal.hide_cursor()
     sample = Letter(' ')
-    Terminal.output('')
     Terminal.print_header('{} Hz, {} words per minute'.format(
         sample.hz, sample.wpm))
-    Terminal.output('')
-    Terminal.cursor_v(1)
 
     if len(sys.argv[1:]) > 0:
         easycat.write('    ')
@@ -56,32 +66,26 @@ def main():
             play_and_print(char)
     else:
         line_no = 1
-        while True:
-            try:
-                try:  # Terminal.get_keypress()
-                    line = getpass.getpass(prompt='%2d: ' % line_no)
-                except KeyboardInterrupt:
-                    Terminal.clear(1)
-                    Terminal.cursor_v(1)
-                    break
 
-                easycat.write('\t')
+        try:
+            while True:
+                during_input = True
+                line = Terminal.input(
+                    prompt='%2d: ' % line_no, hide_form=True)
                 Terminal.cursor_v(1)
-                for char in line:
-                    #if char == ' ':
-                    #    easycat.write('/ ')
-                    #else:
-                    play_and_print(char)
-                Terminal.output('\n')
-                line_no += 1
-                #easycat.write('    ')
-            except KeyboardInterrupt:
-                break
+                during_input = False
+                if line == 'END':
+                    break
+                easycat.write('\t')
 
-    Terminal.output('\n\n\n' +
-        '#  #  #'.center(Terminal.width()))
-    Terminal.hrule()
-    Terminal.output('')
+                for char in line:
+                    play_and_print(char)
+                Terminal.output('')
+                line_no += 1
+
+        except KeyboardInterrupt:
+            Terminal.output('')
+
 
 if __name__ == '__main__':
     main()
