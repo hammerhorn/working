@@ -93,8 +93,10 @@ def notebook(remarks):
         if Terminal.os_name == 'posix' and 'DISPLAY' in os.environ:
             remarks = remarks.replace('    *', '    •')
             if Terminal.platform == 'Linux':
+                remarks = remarks.replace('      -', '      ◦')
                 remarks = remarks.replace('    -', '    ☐')
                 remarks = remarks.replace('    +', '    ☒')
+                
         else:
             remarks = remarks.replace('    -', '    [ ]')
             remarks = remarks.replace('    +', '    [x]')

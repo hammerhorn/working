@@ -12,7 +12,11 @@ from versatiledialogs.terminal import Terminal
 
 REMARKS = """
     - create get_keypress method for Tk
-    + Move the function to versatiledialogs.terminal.Terminal"""
+    + Move the function to versatiledialogs.terminal.Terminal
+
+    * Alternatives to termcolor:
+      - 'cjh.colorful' package
+      - raw-coding the colors"""
 
 
 notebook(REMARKS)
@@ -26,14 +30,12 @@ def main():
     """
     try:
         Terminal.hide_cursor()
-#        Terminal.output(' *** Press an arrow key ***')
         Terminal.output('\n   |    (arrow keys)\n --+--\n   |')
         Terminal.cursor_v(1)
-        #Terminal.cursor_h(10)
             
         while True:
             try:
-                whichway = Terminal.get_arrow_key()  #arrows_only=True)
+                whichway = Terminal.get_arrow_key()
                 if whichway == chr(12):
                     Terminal.clear()
                     Terminal.output('\n')
@@ -60,7 +62,7 @@ def main():
                     easycat.write(colored('--', 'yellow', 'on_blue'))
                 else:
                     easycat.write('--')
-                easycat.write('+')  # cursor_h(1)
+                easycat.write('+')
                 if whichway == 'right':
                     cprint('--', 'yellow', 'on_blue')
                 else:
