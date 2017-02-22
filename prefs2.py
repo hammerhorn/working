@@ -4,9 +4,10 @@
 New program
 """
 import argparse
-
-import Tkinter as tk
-
+try:
+    import tkinter as tk
+except ImportError:
+    import Tkinter as tk    
 from cjh.misc import notebook
 from versatiledialogs.config import Config
 from versatiledialogs.tk_template import TkTemplate

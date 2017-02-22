@@ -57,7 +57,7 @@ def get_input():
     SHELL.message(fstring.substitute(input_dict))
 
 def make_list():
-    if SHELL.interface == 'term':
+    if SHELL == 'term':
         SHELL.clear()
 
     list_ = PlainList(ARGS.list.split())
@@ -69,7 +69,7 @@ def make_list():
     SHELL.output(fstring.substitute(select_dict))
 
 def output():
-    if SHELL.interface == 'Tk':
+    if SHELL == 'Tk':
         SHELL.center_window(height_=100, width_=200)
         SHELL.msg.config(width=200)
     SHELL.output(ARGS.output)

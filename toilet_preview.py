@@ -87,7 +87,7 @@ def main():
     Terminal.hide_cursor()
     while True:
 #        try:
-            if SHELL.interface == 'dialog' and not _first_pass:
+            if SHELL == 'dialog' and not _first_pass:
                 Terminal.wait()
             else:
                 _first_pass = False

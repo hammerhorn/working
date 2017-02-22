@@ -30,13 +30,13 @@ def main():
     """
     Main function
     """
-    if SHELL.interface == 'Tk':
+    if SHELL == 'Tk':
         SHELL.msg.config(bg='dark green', fg='white', font=('helvetica', 33), width=700)
         SHELL.main_window.config(bg='dark green')
 
     row = Tonerow(LENGTH)
 
-    if SHELL.interface == 'Tk':
+    if SHELL == 'Tk':
         if ARGS.q is False:
             SHELL.output('[{}]'.format(row.__str__().replace(' ', ', ')), width=700, height=90)
         else: SHELL.exit()

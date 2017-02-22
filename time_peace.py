@@ -49,7 +49,7 @@ MONTH_DICT = {
 
 
 ## SHORT CIRCUITS ##
-catch_help_flag(__doc__, SHELL, SHELL.interface == 'zenity')
+catch_help_flag(__doc__, SHELL, SHELL == 'zenity')
 notebook("""
     - add '-s' option
     - merge some functions
@@ -57,7 +57,7 @@ notebook("""
 
 
 ## SET UP Tk ##
-if SHELL.interface == 'Tk':
+if SHELL == 'Tk':
     SHELL.msg.config(
         border=2, relief='raised', font=('helvetica', 18, 'bold'),
         bg='#fff', width=200)
@@ -194,9 +194,9 @@ def main():
     _today, _month = get_date_and_month()
     if (SHELL.interface, SHELL.os_name) == ('term', 'posix'):
         main_loop_bash(_month)
-    elif SHELL.interface == 'dialog':
+    elif SHELL == 'dialog':
         main_loop_dialog()
-    elif SHELL.interface == 'Tk':
+    elif SHELL == 'Tk':
         main_loop_tk(_today, _month)
     else:
         SHELL.message('Sorry.')
