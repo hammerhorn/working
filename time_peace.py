@@ -83,18 +83,18 @@ def main_loop_bash(month):
                 now = now[:-1] + 'tm'
 
             try:
-                string = fig_writer.output(now, get_str=True)
+                string_list = [fig_writer.output(now, get_str=True)]
             except OSError:
                 Terminal.output(
                     "unix shell not available or 'toilet' not available")
 
-            string += '\n'
+            string_list.append('\n')
             if LANG.upper() == 'EN':
-                string += "{}'s for Stevie!!!\n\n".format(month.capitalize())
+                string_list.append("{}'s for Stevie!!!\n\n".format(month.capitalize()))
             elif LANG.upper() == 'EO':
-                string += '{} estas por Stevie!!!\n\n'.format(
-                    month.capitalize())
-
+                string_list.append('{} estas por Stevie!!!\n\n'.format(
+                    month.capitalize()))
+            string = ''.join(string_list)
             SHELL.output('\n    ' + string.rstrip().replace('\n', '\n    '))
             time.sleep(1)
             Terminal.cursor_v(11)
@@ -192,7 +192,7 @@ def main():
     Main function
     """
     _today, _month = get_date_and_month()
-    if (SHELL.interface, SHELL.os_name) == ('term', 'posix'):
+    if (SHELL, SHELL.os_name) == ('term', 'posix'):
         main_loop_bash(_month)
     elif SHELL == 'dialog':
         main_loop_dialog()

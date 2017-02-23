@@ -82,6 +82,12 @@ class DataSet(object):
         total = sum(self.items)
         return 'sum(): {}'.format(total) if show_label is True else  total
 
+    def operator_sum(self, show_label=False):
+        total = 0
+        for item in self.items:
+            total += item
+        return '+=(): {}'.format(total) if show_label is True else  total
+
     def sum_str(self):
         out_str_list = []
 
@@ -95,6 +101,9 @@ class DataSet(object):
         out_str_list.append('{}\n({:.2g} s)\n\n'.format(
             self.native_sum(True),
             timeit.timeit(lambda: self.native_sum(True), number=1000)))
+        out_str_list.append('{}\n({:.2g} s)\n\n'.format(
+            self.operator_sum(True),
+            timeit.timeit(lambda: self.operator_sum(True), number=1000)))        
         return ''.join(out_str_list)
 
     def range_str(self, lang='EN'):

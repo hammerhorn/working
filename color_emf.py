@@ -64,7 +64,7 @@ def main():
     SHELL.welcome(description='EMWaves - demonstration of my EMWave class')
     hertz = None
 
-    if SHELL.interface == 'Tk':
+    if SHELL == 'Tk':
         SHELL.msg.config(
             bg='black', fg='white', width=200, font=('times', 15))
         SHELL.main_window.config(bg='black')
@@ -79,13 +79,13 @@ def main():
             except ValueError:
                 continue
             except (AttributeError, KeyboardInterrupt):
-                if SHELL.interface == 'term':
+                if SHELL == 'term':
                     SHELL.clear(0)
                 sys.exit()
 
             emw = EMWave(hertz, Unit('Hz'))
 
-            if SHELL.interface == 'term':
+            if SHELL == 'term':
                 red, green, blue = nm_to_rgb(emw.wlength.nanometers)
                 if red + green + blue == 0.0:
                     write(7, 'ansi', 0, 'ansi', emw.__str__() + '\n')
@@ -98,7 +98,7 @@ def main():
         except KeyboardInterrupt:
             SHELL.clear(0)
 
-        if SHELL.interface == 'Tk':
+        if SHELL == 'Tk':
             bgcolor = str(emw).split()[0]
             SHELL.main_window.title(emw.label)
             fgcolor = 'black'

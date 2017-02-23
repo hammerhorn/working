@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
 Converts text from stdin into 1's and 0's and writes them to a file.
-With -d followed by the filename, the message is decoded and written to
+With -d, or -f followed by a filename, the message is decoded and written to
 stdout.
 """
 import argparse
-import sys
 import textwrap
+
+from termcolor import cprint
+
 from cjh.misc import catch_help_flag
 import easycat
 from versatiledialogs.config import Config
@@ -32,18 +34,21 @@ def main():
     """
     Encode or decode
     """
+    EOF = '[ENTER] ^D' if SHELL.os_name == 'posix' else '^Z [ENTER]'
     if ARGS.__dict__ == {'f': None, 'd': False}:
-        if SHELL.platform != 'android' and SHELL.interface == 'term':
+        if SHELL.platform != 'android' and SHELL == 'term':
+            cprint('(%s to end)' % EOF, attrs=['reverse'])
+            easycat.write('Message: ')
             buf = easycat.cat(return_str=True, quiet=True)
         else:
-            buf = SHELL.input(hide_form=True)
+            buf = SHELL.input(prompt='Message: ', hide_form=True)
         out_str_lst = []
         for char in buf:
             out_str_lst.extend(['{0:b}'.format(ord(char)).zfill(8), ' '])
         out_str = ''.join(out_str_lst)
         kwarg_dict = {}
         lines = len(out_str) // 45
-        if SHELL.interface == 'Tk':
+        if SHELL == 'Tk':
             kwarg_dict.update({
                 'width' : 400,
                 'height': (lines + 1) * 18})

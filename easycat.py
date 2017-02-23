@@ -131,9 +131,13 @@ def view_source(src=sys.argv[0]):
                    '\n')))
 
 
-def write(text):
+def write(text, stream=1):
     """
     Writes something to stdout, suppressing final endline.
     """
-    sys.stdout.write(text)
-    sys.stdout.flush()
+    if stream == 1:
+        stream = sys.stdout
+    elif stream == 2:
+        stream = sys.stderr
+    stream.write(text)
+    stream.flush()

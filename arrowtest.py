@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 #coding=utf8
 """
-detect pressing the arrowkeys
+detect pressing of the arrow keys
 """
-import sys
 from termcolor import colored, cprint
+
 from cjh.misc import catch_help_flag, notebook
 import easycat
 from versatiledialogs.config import Config
@@ -21,8 +21,8 @@ REMARKS = """
 
 notebook(REMARKS)
 
-SHELL = Config().start_user_profile()
-catch_help_flag(__doc__)
+#SHELL = Config().start_user_profile()
+catch_help_flag(__doc__.strip())
 
 def main():
     """
@@ -32,13 +32,22 @@ def main():
         Terminal.hide_cursor()
         Terminal.output('\n   |    (arrow keys)\n --+--\n   |')
         Terminal.cursor_v(1)
-            
+
         while True:
             try:
                 whichway = Terminal.get_arrow_key()
                 if whichway == chr(12):
                     Terminal.clear()
                     Terminal.output('\n')
+                elif whichway in 'Hh':
+                    whichway = 'left'
+                elif whichway in 'Jj':
+                    whichway = 'down'
+                elif whichway in 'Kk':
+                    whichway = 'up'
+                elif whichway in 'Ll':
+                    whichway = 'right'                    
+                
                 elif len(whichway) == 1:
                     whichway = None
                 Terminal.clear(0)
@@ -87,4 +96,4 @@ def main():
 Terminal()
 if __name__ == '__main__':
     main()
-    SHELL.start_app()
+    Terminal.start_app()

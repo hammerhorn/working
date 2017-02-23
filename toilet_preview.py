@@ -42,12 +42,7 @@ def _parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--nox', action='store_true')
     parser.add_argument('-C', action='store_true')
-
-    if __name__ == '__main__':
-        args = parser.parse_args()
-    else:
-        args = None
-    return args
+    return parser.parse_args() if __name__ == '__main__' else None
 
 
  #################
@@ -87,18 +82,18 @@ def main():
     Terminal.hide_cursor()
     while True:
 #        try:
-            if SHELL == 'dialog' and not _first_pass:
-                Terminal.wait()
-            else:
-                _first_pass = False
+        if SHELL == 'dialog' and not _first_pass:
+            Terminal.wait()
+        else:
+            _first_pass = False
 
-            selection = Terminal.make_page(
-                obj='\n'+art, func=lambda: SHELL.list_menu(LIST_OBJ))
-            if selection == -1:
-                break
-            figlet_font = FONT_OPTIONS[selection - 1]
-            fig_writer = Figlet(figlet_font, 'gay')
-            art = fig_writer.output(PHRASE, get_str=True)
+        selection = Terminal.make_page(
+            obj='\n'+art, func=lambda: SHELL.list_menu(LIST_OBJ))
+        if selection == -1:
+            break
+        figlet_font = FONT_OPTIONS[selection - 1]
+        fig_writer = Figlet(figlet_font, 'gay')
+        art = fig_writer.output(PHRASE, get_str=True)
 
 #        except (AttributeError, KeyboardInterrupt, TypeError):
 #            sys.exit('\nBye.')

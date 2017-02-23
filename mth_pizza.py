@@ -136,7 +136,7 @@ def output_results(pizza, price):
     if 'zenity' in (SHELL.interface, ARGS.shell):
         results1 = results1.replace('$', r'\\$')
         results2 = results2.replace('$', r'\\$')
-    if (ARGS.diameter, ARGS.price) == (None, None) or SHELL.interface == 'Tk':
+    if (ARGS.diameter, ARGS.price) == (None, None) or SHELL == 'Tk':
         SHELL.output('')
         SHELL.notify(results1)
         SHELL.message(results2)

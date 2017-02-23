@@ -5,6 +5,8 @@ Simple C/C++/FORTRAN90 Interpreter/Interactive Code Runner
 
 User can test lines of code, by inputting them and hitting EOF (^D or ^Z) to
 compile and run bits of code on the fly.
+
+This can be helpful for trying out and testing small bits of code.
 """
 import argparse
 import atexit

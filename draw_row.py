@@ -58,7 +58,7 @@ if __name__ == '__main__':
     notebook(REMARKS)
 
     ## Set up Tk window ##
-    if SHELL.interface == 'Tk':
+    if SHELL == 'Tk':
         #SHELL.msg.config(font=('mono', 9, 'bold'))
         SHELL.center_window(width_=400, height_=300)
 
@@ -81,7 +81,7 @@ def main():
         'Draw Tonerow', 'draw a diagram of an n-tone row.  Default is 12.')
     in_str = Terminal.input(prompt='', hide_form=True) if ARGS.p is True else\
              SHELL.input()
-    Terminal.clear(0)
+    Terminal.clear(2)
     str_list = in_str.split()
     ints = [int(s) for s in str_list]
     row = Tonerow(int_list=ints, sh_obj=SHELL)

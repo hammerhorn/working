@@ -82,7 +82,7 @@ def main():
         html_obj.output(
             'Welcome!  Enter a temperature into your terminal to begin.')
 
-    if SHELL.interface == 'term':
+    if SHELL == 'term':
 
         while True:
             try:
@@ -113,7 +113,7 @@ def main():
                         os.getcwd(), FILENAME))
                 break
 
-    elif SHELL.interface == 'Tk':
+    elif SHELL == 'Tk':
         def change_color(kelvins):
             """
             Takes color name or hex color as an argument,

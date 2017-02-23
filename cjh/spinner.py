@@ -3,6 +3,7 @@
 """
 DOCSTRING
 """
+import threading
 import time
 
 import easycat
@@ -17,20 +18,22 @@ def spin():
     """
     spinning character on the screen
     """
-    Terminal()
-    Terminal.hide_cursor()
-    try:
-        while True:
-            easycat.write('/')
-            time.sleep(DELTA_T)
-            easycat.write('\b|')
-            time.sleep(DELTA_T)
-            easycat.write('\b\\')
-            time.sleep(DELTA_T)
-            easycat.write('\b-')
-            time.sleep(DELTA_T)
-            easycat.write('\b')
-    except KeyboardInterrupt:
-        return
-    finally:
-        Terminal.unhide_cursor()
+    #easycat.write('\033[?25l', stream=2)
+#    Terminal.hide_cursor()
+#    try:
+#        easycat.write('\b/', stream=2)
+#        time.sleep(DELTA_T)
+#        easycat.write('\b|', stream=2)
+#        time.sleep(DELTA_T)
+#        easycat.write('\b\\', stream=2)
+#        time.sleep(DELTA_T)
+#        easycat.write('\b-', stream=2)
+#        time.sleep(DELTA_T)
+
+#    except KeyboardInterrupt:
+#        return
+#    Terminal.cursor_h(1)
+    for char in ('/', '|', '\\', '-'):
+        easycat.write(char, stream=2)
+        time.sleep(DELTA_T)
+        easycat.write('\b', stream=2)

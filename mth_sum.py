@@ -89,14 +89,14 @@ def main():
     """
     Get a list of numbers from the user, and sum them up three ways.
     """
-    if ARGS.w is True and SHELL.interface == 'term':
+    if ARGS.w is True and SHELL == 'term':
         reset_frame()
 
     str_list = getdata_stdin() if len(ARGS.ADDENDS) == 0 else ARGS.ADDENDS
     num_list = [decimal.Decimal(i) for i in str_list]
     stats = DataSet(num_list)
 
-    if SHELL.interface == 'term':
+    if SHELL == 'term':
         Terminal.output('')
         if ARGS.w is True:
             Terminal.output('')
@@ -105,7 +105,7 @@ def main():
     if ARGS.verbose:
         out_str1 = out_str1[:-1]
         out_str1 = ''.join((out_str1, Terminal.hrule(string=True), '\n'))
-        if ARGS.w is True and SHELL.interface == 'term':
+        if ARGS.w is True and SHELL == 'term':
             reset_frame()
         Terminal.output(out_str1)
         Terminal.wait()
@@ -115,7 +115,7 @@ def main():
                           '{}'.format(stats.averages_str(LANG)),
                           '{} = {}'.format(s_dict[LANG.upper()], stats.std_dev)))
 
-    if SHELL.interface == 'term':
+    if SHELL == 'term':
         SHELL.output(out_str2 + '\n')
         if ARGS.w is True:
             stats.histogram()

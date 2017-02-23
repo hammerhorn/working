@@ -29,10 +29,10 @@ def main():
         
     plane = Graph(size=sz, sh_obj=SHELL, skinfile='test.json')
 
-    if SHELL.interface == 'Tk':
+    if SHELL == 'Tk':
         SHELL.center_window(width_=600, height_=600)
         SHELL.msg.config(font=('courier'))
-    elif SHELL.interface == 'term':
+    elif SHELL == 'term':
         Terminal.hide_cursor()
 
     def action(func, lines):
@@ -44,7 +44,7 @@ def main():
     neg_txt = (' ', 'ill ', 'dit  ', 'lot ')
     prompt_list = []
     for p, n in iter_zip(pos_txt, neg_txt):
-        prompt_list.extend([p, colored(n, attrs=['reverse'])])
+        prompt_list.extend((p, colored(n, attrs=['reverse'])))
     prompt = ''.join(prompt_list)
 
     while True:

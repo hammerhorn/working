@@ -59,7 +59,7 @@ SHELL = CONFIG.launch_selected_shell('term')
 
 if __name__ == '__main__':
     SHELL = CONFIG.start_user_profile()
-    if SHELL.interface == 'Tk':
+    if SHELL == 'Tk':
         SHELL.msg.config(font=('mono', 10, 'bold'))
         SHELL.center_window(width_=400, height_=300)
 
@@ -110,12 +110,12 @@ def visualization_menu(row_, obj_str_):
         obj_str_ = MICROTONE_WARNING
 
     while True:
-        if SHELL.interface == 'term':
+        if SHELL == 'term':
             pressed = TERM.make_page(
                 'VISUALIZE', obj_str_, lambda: SHELL.list_menu(
                     view_menu))
 
-        elif SHELL.interface == 'Tk':
+        elif SHELL == 'Tk':
             SHELL.main_window.title('VISUALIZE')
             SHELL.output(obj_str_)
             pressed = SHELL.list_menu(view_menu)
@@ -168,11 +168,11 @@ def midi_menu(row_, obj_str_):
     play_menu = ListPrompt(menu_entries)
 
     while True:
-        if SHELL.interface == 'term':
+        if SHELL == 'term':
             pressed = TERM.make_page(
                 'PLAY AS MIDI', obj_str_,
                 lambda: SHELL.list_menu(play_menu))
-        elif SHELL.interface == 'Tk':
+        elif SHELL == 'Tk':
             SHELL.main_window.title('PLAY AS MIDI')
             SHELL.output(obj_str_)
             pressed = SHELL.list_menu(play_menu)
@@ -192,11 +192,11 @@ def transform_menu(row_, obj_str_):
     # while True:    uncomment this line and the following break statement    #
                    #     if you want this menu to hang open      #
 
-    if SHELL.interface == 'term':
+    if SHELL == 'term':
         pressed = TERM.make_page(
             'TRANSFORM', obj_str_,
             lambda: SHELL.list_menu(trans_menu))
-    elif SHELL.interface == 'Tk':
+    elif SHELL == 'Tk':
         SHELL.main_window.title('TRANSFORM')
         SHELL.output(obj_str_)
         pressed = SHELL.list_menu(trans_menu)
@@ -229,9 +229,9 @@ def main():
 
     # Main Menu
     while True:
-        if SHELL.interface == 'term':
+        if SHELL == 'term':
             pressed = TERM.make_page(HEADER, obj_str, main_func)
-        elif SHELL.interface == 'Tk':
+        elif SHELL == 'Tk':
             SHELL.main_window.title(HEADER)
             SHELL.output(obj_str)
             pressed = main_func()

@@ -120,25 +120,25 @@ class Terminal(Shellib):
         # if no args, clear the screen
         if len(args) == 0:
             if cls.os_name == 'posix':
-                easycat.write('\033[2J\033[H')  # clear screen and leave cursor
+                easycat.write('\033[2J\033[H', stream=2)  # clear screen and leave cursor
             elif cls.os_name == 'nt':           # at the top
                 proc = subprocess.Popen('cls', shell=True)
                 proc.wait()
 
         # if arg == 0, clear the current line
         elif args[0] == 0:
-            easycat.write('\r\033[K\r')
+            easycat.write('\r\033[K\r', stream=2)
 
         # if arg > 0, erase that many lines back (.i.e., up)
         elif args[0] > 0:
-            easycat.write('\r\033[K')
+            easycat.write('\r\033[K', stream=2)
             for _ in gen_range(args[0]):
                 cls.cursor_v(1)
-                easycat.write('\r\033[K')
+                easycat.write('\r\033[K', stream=2)
 
         # if arg < 0, add that many newlines
         elif args[0] < 0:
-            easycat.write('\n' * abs(args[0]))
+            easycat.write('\n' * abs(args[0]), stream=2)
 
 
     @staticmethod
@@ -147,11 +147,11 @@ class Terminal(Shellib):
         Move cursor in the x direction
         """
         if x_disp < 0:
-            easycat.write('\033[{}D'.format(abs(x_disp)))
+            easycat.write('\033[{}D'.format(abs(x_disp)), stream=2)
         elif x_disp > 0:
-            easycat.write('\033[{}C'.format(x_disp))
+            easycat.write('\033[{}C'.format(x_disp), stream=2)
         if len(args) >= 1:
-            easycat.write(args[0])
+            easycat.write(args[0], stream=2)
 
     @staticmethod
     def cursor_v(y_disp, *args):
@@ -159,11 +159,11 @@ class Terminal(Shellib):
         Move cursor in the y direction
         """
         if y_disp > 0:
-            easycat.write('\033[{}A'.format(y_disp))
+            easycat.write('\033[{}A'.format(y_disp),stream=2)
         elif y_disp < 0:
-            easycat.write('\033[{}B'.format(abs(y_disp)))
+            easycat.write('\033[{}B'.format(abs(y_disp)), stream=2)
         if len(args) >= 1:
-            easycat.write(args[0])
+            easycat.write(args[0], stream=2)
 
     @classmethod
     def default_splash(cls,
@@ -285,7 +285,7 @@ class Terminal(Shellib):
                 handle, ctypes.byref(ci))
 
         elif cls.os_name == 'posix':
-            easycat.write('\033[?25l')
+            easycat.write('\033[?25l', stream=2)
 
     @classmethod
     def hrule(cls, width=None, symbols='_', centered=False, string=False):
@@ -560,7 +560,7 @@ class Terminal(Shellib):
                 handle, ctypes.byref(ci))
 
         elif cls.os_name == 'posix':
-            easycat.write('\033[?25h')
+            easycat.write('\033[?25h', stream=2)
 
 #    @classmethod
 #    def view_info(cls, get_str=False):

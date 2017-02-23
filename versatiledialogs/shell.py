@@ -104,12 +104,13 @@ class Shellib(object):
         minor_release = 'Python {}.{}'.format(
             cls.py_version, sys.version_info.minor)
         wxh = '{} x {}'.format(cls.width(), cls.height())
-
+        
         dict_ = collections.OrderedDict()
         dict_['version'] = minor_release
         dict_['hostname'] = cls.hostname
         dict_['processor'] = cls.processor
         dict_['platform'] = cls.platform
+        #dict_['release'] = cls.release
 
         if cls.interface == 'Tk':
             dict_.update({'screen size': wxh})

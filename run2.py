@@ -144,7 +144,7 @@ def choose_file(script_list_):
     """
     Choose file to run.
     """
-    if SHELL.interface == 'Tk':
+    if SHELL == 'Tk':
         val = menu1.curselection()
         scriptname_ = script_list_[val[0]]
 
@@ -165,7 +165,7 @@ def select_shell(shell_list_):
         shell_menu = lambda: SHELL.list_menu(listobj)
         number = Terminal.make_page(func=shell_menu)
         shell_name_ = shell_list_[number - 1]
-    elif SHELL.interface == 'Tk':
+    elif SHELL == 'Tk':
         shell_name_ = shellvar.get().strip()
     return shell_name_
 
@@ -188,12 +188,12 @@ SCRIPT_LIST = [
 SCRIPT_LIST.sort(key=str.lower)
 SHELL_LIST = ('term', 'dialog', 'zenity', 'Tk', 'wx', '-None-')
 
-if SHELL.interface != 'Tk':
+if SHELL != 'Tk':
     MENU_OPTS = PlainList([
         '-script-', '-shell-', '-args-', '[RUN]', '[EDIT]', '[EXIT]'
     ])
 
-if SHELL.interface == 'Tk':
+if SHELL == 'Tk':
     setup_tk_window()
 else:
     checked = None

@@ -111,7 +111,7 @@ def plot():
     """
 #    import matplotlib.pyplot as plt
 #    Terminal.clear()    
-    if SHELL.interface == 'Tk':
+    if SHELL == 'Tk':
         SHELL.exit()
         Terminal.notify(
             Terminal.fx('bn', 'Close PyPlot window to continue...'))
@@ -143,7 +143,7 @@ def main():
     else: 
         SHELL.message(result_str)
 
-    if SHELL.interface == 'Tk' and ARGS.plot is True:
+    if SHELL == 'Tk' and ARGS.plot is True:
         plot()
         Terminal.clear(2)
 
@@ -152,7 +152,7 @@ if __name__ == '__main__':
     # So ugly calling main more than once
     try:
         if ARGS.plot is True:
-            if SHELL.interface == 'term':
+            if SHELL == 'term':
                 t2 = threading.Thread(target=main)
                 t2.start()
                 plot()

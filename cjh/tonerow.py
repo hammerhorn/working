@@ -8,6 +8,7 @@ Ought to be merged with <cjh.music> module
 import random
 import subprocess
 
+#import numpy as np
 from termcolor import colored
 
 from cjh.music import Pitch, PitchSequence, PitchSet
@@ -17,12 +18,11 @@ from versatiledialogs.terminal import Terminal
 
 class Tonerow(Thing):
     """
-    A shuffled, equal-tempered sequence in which each tone is used exactly once;
-    It really ought to inherit from pitchsequence, but fuck it
+    A shuffled, equal-tempered sequence in which each tone is used
+    exactly once; it really ought to inherit from pitchsequence, but
+    fuck it
     """
     def __init__(self, length=12, int_list=None, sh_obj=Terminal()):
-        #self.gen_range = range(length) if Terminal.py_version == 3 else xrange(length)
-        #self.lst_range = list(range(length)) if Terminal.py_version == 3 else range(length)
         super(Tonerow, self).__init__()
         # sh_obj should belong to Thing
         self.sh_obj = sh_obj
@@ -30,27 +30,22 @@ class Tonerow(Thing):
             self.seq = int_list
         else:
             self.seq = lst_range(length)
-            # list(range(length)) if Terminal.py_version == 3 else\
-            #            Terminal()
-
-            # Time some of these constructions
-
-            #range(length)
-
-            index = length - 1
-            #itrbl = range(length) if Terminal.py_version == 3 else xrange(length)
-
+            #self.seq = np.arange(length)
+            last_index = length - 1
             
-            ##############
-            # try numpy? #
-            ##############
+            ###################
+            # numpy is slower #
+            ###################
+            #print(self.seq)
             for count in gen_range(length):
                 # for each number in the list, swap with contents of
                 # random index
-                max_index = index - count
+                # max_index = last_index - count
+                max_index = count
                 random_index = random.randint(0, max_index)
                 self.seq[max_index], self.seq[random_index] =\
                     self.seq[random_index], self.seq[max_index]
+                # print(self.seq)
 
         self.pseq = PitchSequence(PitchSet(len(self)), [i + 1 for i in self.seq])
         self.basename = self.generate_basename()
