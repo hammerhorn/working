@@ -5,7 +5,10 @@ usage: netchk.py [-s]
 Ping google to determine if the Internet connection is working.
 
 optional arguments:
-  -s          sound (audible signal when Internet is working)"""
+  -s          sound (audible signal when Internet is working)
+
+Dependencies: espeak; cjh.misc, easycat, versatiledialogs
+"""
 
 import atexit
 import subprocess
@@ -21,18 +24,18 @@ __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
 #This script should be optimized for speed
-VT = Terminal()
-atexit.register(VT.unhide_cursor)
-catch_help_flag(__doc__, VT)
+TERM = Terminal()
+atexit.register(TERM.unhide_cursor)
+catch_help_flag(__doc__, TERM)
 
 
 def main():
     """ Ping google"""
-    VT.hide_cursor()
-    VT.output(
+    TERM.hide_cursor()
+    TERM.output(
         '\nChecking for Internet @ {}....(^C will terminate)'.format(
             current_time()))
-    VT.hrule()
+    TERM.hrule()
 
     try:
         while True:
@@ -41,8 +44,8 @@ def main():
                     'ping -c 2 google.com > /dev/null 2>&1', shell=True)
                 connected = True
                 easycat.write('\n[+]')
-                easycat.write(VT.fx('bn', 'Connected'))
-                easycat.write(VT.fx('n', '--Internet available @ '))
+                easycat.write(TERM.fx('bn', 'Connected'))
+                easycat.write(TERM.fx('n', '--Internet available @ '))
             except subprocess.CalledProcessError:
                 connected = False
                 easycat.write('\n[!] No Internet     @    ')
@@ -69,8 +72,8 @@ def main():
                         time.sleep(5)
 
     except KeyboardInterrupt:
-        VT.output('\n')
+        TERM.output('\n')
 
 if __name__ == '__main__':
     main()
-    VT.start_app()
+    TERM.start_app()

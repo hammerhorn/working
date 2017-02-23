@@ -66,7 +66,7 @@ ARGS = _parse_args()
 FILENAME = 'results.html'
 CONFIG = Config()
 SHELL = CONFIG.launch_selected_shell(ARGS.shell) if\
-        None not in (ARGS, ARGS.shell) else\
+        ARGS is not None and ARGS.shell is not None else\
         CONFIG.start_user_profile()
 BROWSER = CONFIG.config_dict.get('browser')
 

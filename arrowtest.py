@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #coding=utf8
 """
-detect pressing of the arrow keys
+Detect pressing of the arrow keys (or h, j, k, l).
 """
 from termcolor import colored, cprint
 
@@ -20,13 +20,11 @@ REMARKS = """
 
 
 notebook(REMARKS)
-
-#SHELL = Config().start_user_profile()
 catch_help_flag(__doc__.strip())
 
 def main():
     """
-    Get a keypress and echo back the name of any arrowkeys pressed.
+    Get a keypress and echo back the name of any arrow keys pressed.
     """
     try:
         Terminal.hide_cursor()

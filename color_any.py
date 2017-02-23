@@ -55,7 +55,7 @@ if len(sys.argv[1:]) == 0 or\
 ARGS = _parse_args()
 CONFIG = Config()
 SHELL = CONFIG.launch_selected_shell(ARGS.shell) if\
-        None not in (ARGS, ARGS.shell) else\
+        ARGS is not None and ARGS.shell is not None else\
         CONFIG.start_user_profile()
 
 ##########

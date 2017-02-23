@@ -43,7 +43,7 @@ ARGS = _parse_args() if __name__ == '__main__' else None
 # If ARGS.width is an int, it means: width in columns.                       #
 #            If it's < 1,  it means: a percent of the width of the terminal. #
 
-if None not in (ARGS, ARGS.width) and (ARGS.width == int(ARGS.width)):
+if ARGS is not None and ARGS.width is not None and (ARGS.width == int(ARGS.width)):
     ARGS.width = int(ARGS.width)
 
 # possible to this automatically?

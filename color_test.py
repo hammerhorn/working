@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 #coding=utf8
 """
-Comparison of Truecolor terminal color and Colortrans conversion script
-Run this script to see if your terminal is Truecolor compatible.
+Comparison of:
+
+    * Truecolor RGB escape sequences for the terminal and
+    * Micah Elliot's 'colortrans' module for color conversion.
+
+Run this script to see if your terminal supports Truecolor sequences.
 """
 import atexit
 # import sys
@@ -47,16 +51,16 @@ def side_by_side(red, green, blue):
     position_and_color(OUT_STR2, False)
     time.sleep(DELTA_T)
 
-def wait_and_hide():
-    """wait for user acknowlegement and hide cursor"""
+#def wait_and_hide():
+#    """wait for user acknowlegement and hide cursor"""
     #Terminal.wait()
     #Terminal.hide_cursor()
-    return
+#    return
 
 def main():
     """
-    The words 'TRUECOLOR' and 'COLORTRANS' both appear as shifting spectra on a
-    terminal that supports Truecolor escapes.
+    On a terminal that supports Truecolor escapes, the words 'TRUECOLOR'
+    and 'COLORTRANS' both appear as shifting spectra.
     """
     Terminal.hide_cursor()
     #Terminal.output(''.join((

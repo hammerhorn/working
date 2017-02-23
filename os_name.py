@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Displays sytem info.  Works with bash or Tk.
+Displays sytem info.  Works with bash, Tk, dialog, or zenity.
 """
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 
@@ -18,7 +18,7 @@ if SHELL == 'Tk':
 
 def main():
     """
-    Output system info; if using bash, use animated text.
+    Output system info
     """
     string = SHELL.view_info(get_str=True)
     dimensions = {}

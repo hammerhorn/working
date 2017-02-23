@@ -8,8 +8,8 @@ import decimal
 import locale
 from datetime import timedelta, datetime, date
 
-from cjh import terminal
-from cjh.things import Thing
+from versatiledialogs import terminal
+from things import Thing
 from cjh.money import Money
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'

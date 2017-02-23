@@ -57,7 +57,7 @@ def _parse_args():
 ##########
 CONFIG = Config()
 SHELL = CONFIG.start_user_profile()
-ARGS = _parse_args()
+ARGS = _parse_args() if __name__ == '__main__' else None
 
 if ARGS is not None and ARGS.shell is not None:
     SHELL = CONFIG.launch_selected_shell(ARGS.shell) 

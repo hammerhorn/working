@@ -24,12 +24,14 @@ REMARKS = """
     - allow real-time modification of the speed, wavelength"""
 DELTA_T = 0.018
 notebook(REMARKS)
-a_number = float(sys.argv[1]) if len(sys.argv[1:]) >= 1 else 4.0
+
+a_number = float(sys.argv[1]) if __name__ == '__main__' and len(sys.argv[1:]) >= 1 else 4.0
 Terminal()
-print_welcome()
+
 
 
 def main():
+    print_welcome()
     toggle, iter_count = 0, 0
     try:
         Terminal.hide_cursor()

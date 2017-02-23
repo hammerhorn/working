@@ -3,6 +3,13 @@
 Converts text from stdin into 1's and 0's and writes them to a file.
 With -d, or -f followed by a filename, the message is decoded and written to
 stdout.
+
+Ex.:
+> Hello, World!
+
+01001000 01100101 01101100 01101100 01101111
+00101100 00100000 01010111 01101111 01110010
+01101100 01100100 00100001 00001010
 """
 import argparse
 import textwrap

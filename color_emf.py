@@ -53,7 +53,7 @@ def _parse_args():
 ARGS = _parse_args()
 CONFIG = Config()
 SHELL = CONFIG.launch_selected_shell(ARGS.shell)\
-        if None not in (ARGS, ARGS.shell) else CONFIG.start_user_profile()
+        if ARGS is not None and ARGS.shell is not None else CONFIG.start_user_profile()
 
 notebook(REMARKS)
 
