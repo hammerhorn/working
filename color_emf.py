@@ -70,11 +70,14 @@ def main():
         SHELL.main_window.config(bg='black')
         SHELL.center_window(height_=200, width_=300)
         SHELL.main_window.title('EM Radiation (Hz)')
-
+    if SHELL == 'term':
+        SHELL.output('')
     while True:
         try:
             try:
                 freq_string = SHELL.input('Frequency in Hz: ')
+                if SHELL == 'term':
+                    SHELL.clear(4)
                 hertz = float(freq_string)
             except ValueError:
                 continue
@@ -88,7 +91,7 @@ def main():
             if SHELL == 'term':
                 red, green, blue = nm_to_rgb(emw.wlength.nanometers)
                 if red + green + blue == 0.0:
-                    write(7, 'ansi', 0, 'ansi', emw.__str__() + '\n')
+                    write(7, 'ansi', 0, 'ansi', emw.__str__())  # + '\n')
                 else:
                     write(
                         color_dec_to_hex(red, green, blue), 'hex', 16, 'ansi',

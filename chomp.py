@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #coding=utf8
 """
-chompall -
+chomp - 
 
 Replace each newline with a space.
 """

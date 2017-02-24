@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding=utf8
 """
-DOCSTRING
+Intendeded as a tool for designing chess variants.
 """
 from cjh.maths.geometry import Point
 from ranges import gen_range

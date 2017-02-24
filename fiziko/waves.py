@@ -63,7 +63,7 @@ class EMWave(Wave):
         A lot of str manip until i can get Scalar to work properly
         """
         return super(EMWave, self).__str__()[:-16] + '; E={:.5g} J }}'.format(
-            float(self.freq.mag) * PLANCK_H)
+            float(self.freq.mag) * PLANCK_H).strip()
 
     def emr_type(self):
         """
