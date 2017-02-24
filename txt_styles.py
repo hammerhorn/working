@@ -36,7 +36,11 @@ ARGS = _parse_args()
 Terminal()
 
 def main():
-    """Main function"""
+    """
+    1. Get text from file.
+    2. Translate command-line args into termcolor args.
+    3. Output formatted text.
+    """
     
     bgcolor = 'on_' + ARGS.b if ARGS.b is not None else None
     fstring = easycat.cat(files=[ARGS.FILENAME], return_str=True)

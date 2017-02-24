@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-    Various dialogs, which can use various shells/toolkits.
+    A demonstration of the 'versatiledialogs' package.
 
 dialogs: welcome, output, outputf, input, wait, message, list
  shells: term, dialog, zenity, Tk, wx, html
@@ -64,6 +64,9 @@ if ARGS is not None and ARGS.shell is not None:
         
 
 def get_input():
+    """
+    Input widget, then echo back the user input.
+    """
     input_dict = {'input': SHELL.input(ARGS.input)}
     fstring = string.Template("You said '$input'.")
     if SHELL.interface in ('dialog', 'zenity'):
@@ -71,6 +74,9 @@ def get_input():
     SHELL.message(fstring.substitute(input_dict))
 
 def make_list():
+    """
+    List widget, then echo back the selection.
+    """
     if SHELL == 'term':
         SHELL.clear()
 
@@ -83,6 +89,9 @@ def make_list():
     SHELL.output(fstring.substitute(select_dict))
 
 def output():
+    """
+    Setup Tk, then Output widget
+    """
     if SHELL == 'Tk':
         SHELL.center_window(height_=100, width_=200)
         SHELL.msg.config(width=200)
@@ -90,8 +99,8 @@ def output():
 
 def main():
     """
-    Display welcome message on first run, then display requested combination of
-    dialog box and shell.
+    Display welcome message on first run, then display requested
+    combination of dialog box and shell.
     """
     args_dict = copy.copy(ARGS.__dict__)
     del args_dict['shell']

@@ -2,11 +2,12 @@
 #coding=utf8
 """
 contains: bye(),
+          catch_help_flag(...),
           chomp(text),
-          color_dec_to_hex(r, g, b),
           current_time()
           fahr_to_kelvins(fahr),
-          help_dialog(),
+          notebook(remarks),
+          read_json_file(filename),
           speak()
 """
 import argparse
