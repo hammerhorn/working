@@ -105,7 +105,7 @@ class PayPeriod(Thing):
         """
         Estimate Net Pay based on estimated percentage withheld.
         """
-        return self.gross_pay() - Money(self.gross_pay() * self.percent / 100.0)
+        return self.gross_pay() - Money(self.gross_pay().amount * self.percent / 100.0)
 
 
 class WorkWeek(Thing):

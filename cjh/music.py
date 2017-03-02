@@ -38,14 +38,10 @@ class Pitch(SoundWave):
         self._finish_up()  # Finalize label & set wlength
 
     def __lt__(self, other):
-        if self.freq < other.freq:
-            return True
-        else: return False
+        return self.freq < other.freq
 
     def __le__(self, other):
-        if self.freq <= other.freq:
-            return True
-        else: return False
+        return self.freq <= other.freq
 
     def __add__(self, float_):
         return Pitch(self.note_name, self.octave, self.cents + (float_) * 100.0)
@@ -57,26 +53,17 @@ class Pitch(SoundWave):
         """
         diff = self.note_float - other.note_float
         cents_diff = self.cents - other.cents
-        if diff < .25 and diff > -.25 or\
-            (self.note_name == other.note_name and cents_diff < 25 and\
-            cents_diff > -25):
-            return True
-        else: return False
+        return -0.25 < diff < 0.25 or\
+            (self.note_name == other.note_name and -25 < cents_diff < 25)
 
     def __ne__(self, other):
-        if self.freq != other.freq:
-            return True
-        else: return False
+        return self.freq != other.freq
 
     def __ge__(self, other):
-        if self.freq >= other.freq:
-            return True
-        else: return False
+        return self.freq >= other.freq
 
     def __gt__(self, other):
-        if self.freq > other.freq:
-            return True
-        else: return False
+        return self.freq > other.freq
 
     # Use Property() built-in here
     def set_all_by_freq(self, freq):
@@ -115,7 +102,6 @@ class Pitch(SoundWave):
         simplest form.  This should be made to use recursion.
         """
         note_number = Pitch.letter2number(note_name)
-        #note_float = note_number + (cents / 100.0)
         note_name = Pitch.number2letter(note_number)
         octave, note_name, cents = Pitch.round((octave, note_number, cents))
         return (octave, note_name, cents)
@@ -128,7 +114,6 @@ class Pitch(SoundWave):
         """
         octave, note_number, cents = note_tuple
         note_float = note_number + (float(cents) / 100.0)
-
         cents, note_number = math.modf(note_float)
         cents *= 100.0
         octave = float(octave)
@@ -163,34 +148,29 @@ class Pitch(SoundWave):
         """
         Takes a notename in rough form and outputs the int note_number
         """
-        if nname == 'A#' or nname == 'a#' or nname == 'Bb' or nname == 'bb' or\
-            nname == 'A♯/B♭':
+        if nname in ('A#', 'a#', 'Bb', 'bb', 'A♯/B♭'):
             number = 1
-        elif nname == 'B' or nname == 'b':
+        elif nname in ('B', 'b'):
             number = 2
-        elif nname == 'C' or nname == 'c':
+        elif nname in ('C', 'c'):
             number = 3
-        elif nname == 'C#' or nname == 'c#' or nname == 'Db' or nname ==\
-            'db' or nname == 'C♯/D♭':
+        elif nname in ('C#', 'c#', 'Db', 'db', 'C♯/D♭'):
             number = 4
-        elif nname == 'D' or nname == 'd':
+        elif nname in ('D', 'd'):
             number = 5
-        elif nname == 'D#' or nname == 'd#' or nname == 'Eb' or nname ==\
-            'eb' or nname == 'D♯/E♭':
+        elif nname in ('D#', 'd#', 'Eb', 'eb', 'D♯/E♭'):
             number = 6
-        elif nname == 'E' or nname == 'e' or nname == 'Fb' or nname == 'fb':
+        elif nname in ('E', 'e', 'Fb', 'fb'):
             number = 7
-        elif nname == 'F' or nname == 'f' or nname == 'E#' or nname == 'e#':
+        elif nname in ('F', 'f', 'E#', 'e#'):
             number = 8
-        elif nname == 'F#' or nname == 'f#' or nname == 'Gb' or nname ==\
-            'gb' or nname == 'F♯/G♭':
+        elif nname in ('F#', 'f#', 'Gb', 'gb', 'F♯/G♭'):
             number = 9
-        elif nname == 'G' or nname == 'g':
+        elif nname in ('G', 'g'):
             number = 10
-        elif nname == 'G#' or nname == 'g#' or nname == 'Ab' or nname ==\
-            'ab' or nname == 'G♯/A♭':
+        elif nname in ('G#', 'g#', 'Ab', 'ab', 'G♯/A♭'):
             number = 11
-        elif nname == 'a' or nname == 'A':
+        elif nname in ('a', 'A'):
             number = 0
         else:
             Terminal.output('ERROR -- Invalid notename.')
@@ -204,22 +184,19 @@ class Pitch(SoundWave):
         """
         if number >= 12:
             number -= 12
-        pattern = [0, 2, 3, 5, 7, 8, 10]
+        pattern = (0, 2, 3, 5, 7, 8, 10)
         if number in pattern:
             letter = chr(pattern.index(number) + 65)
-        elif number == 1:
-            letter = 'A♯/B♭'
-        elif number == 4:
-            letter = 'C♯/D♭'
-        elif number == 6:
-            letter = 'D♯/E♭'
-        elif number == 9:
-            letter = 'F♯/G♭'
-        elif number == 11:
-            letter = 'G♯/A♭'
-        else:
-            letter = -1
-        return letter
+
+        note_dict = {
+            1: 'A♯/B♭',
+            4: 'C♯/D♭',
+            6: 'D♯/E♭',
+            9: 'F♯/G♭',
+            11: 'G♯/A♭'}
+
+        return note_dict.get(number, -1)
+
 
     @staticmethod
     def local2note_float(local):
@@ -260,9 +237,10 @@ class Pitch(SoundWave):
             note_float = float(note_float)
             halfsteps = note_float + (octave - 5) * 12.0
             num = int(note_float)
-            if num == 0 or num == 1 or num == 2:
+            if num in (0, 1, 2):
                 halfsteps += 12
-        else: sys.exit('error')#return None
+        else:
+            sys.exit('error')#return None
         return halfsteps
 
     @staticmethod
@@ -274,15 +252,16 @@ class Pitch(SoundWave):
             octave - 1.0)
         freq_scalar = Scalar(freq_float, Unit('Hz'))
         num = int(note_float)
-        if num == 0 or  num == 1 or num == 2:
+        if num in (0, 1, 2):
             freq_scalar.mag *= decimal.Decimal(2.0)
         return freq_scalar
 
     @staticmethod
     def set_oct(freq):
-        """Determines the octave of a frequency"""
-        oct_ = int(math.log((float(freq) / 15.886), 2))
-        return oct_
+        """
+        Determines the octave of a frequency
+        """
+        return int(math.log((float(freq) / 15.886), 2))
 
     def _finish_up(self):
         """
@@ -299,10 +278,9 @@ class Pitch(SoundWave):
             self.note_name, int(self.octave), cents_str)
 
         # 3)
- #(fix this)       self.wlength = Disp(self.speed.mag / self.freq.mag)
+        #(fix this)       self.wlength = Disp(self.speed.mag / self.freq.mag)
         self.wlength = Disp(self.speed.mag / self.freq.mag)
-        if self.note_name == 'A' or  self.note_name == 'A♯/B♭' or\
-            self.note_name == 'B':
+        if self.note_name in ('A', 'A♯/B♭', 'B'):
             self.wlength.mag /= 2
 
     def reset_number_name_oct(self, note_float, freq):
@@ -331,46 +309,32 @@ class Pitch(SoundWave):
 
 
     def halfsteps_info(self):
-        string = '{:.3} half-steps above A440\n'.format(self.halfsteps)
-             # + (self.cents / 100.0)) + '\n'
-        string += '{:.3} half-steps above the nearest A\n'.format(
-            self.local_semitones)
-             #+ (self.cents / 100.0)) + '\n'
-        return string
+        """should this be a template?"""
+        return '{:.3} half-steps above A440\n{:.3} half-steps above the nearest A\n'.format(
+            self.halfsteps, self.local_semitones)
+
 
     def __str__(self):
-        string = '{:>13}\t{}'.format(self.label, self.freq)
-        return string
+        return '{:>13}\t{}'.format(self.label, self.freq)
 
     def details(self):
-        #Cli.wait('label = ' + self.label)
         # ItemList currently does not support labels lol
         string = '\n  {}'.format(
-            Terminal.fx('un', '  ' + self.label + ' ' * 26))
+            Terminal.fx('un', ''.join(('  ', self.label, ' ' * 26))))
         string += ItemList(
             [self.freq] + self.halfsteps_info().split('\n')[:-1],
             self.label).__str__()
         return string
-#        string = '\n{}\n'.format(Cli.term_fx('un', self.label))
-#        string += '{}\n'.format(self.freq)
-#        string += self.halfsteps_info()
-#        return string
 
     def play(self, voice='squ'):
         """
         Currently uses a system call to sox
         """
         NOTE_LENGTH = .15 #.1
-        #VOL = 1
-        #print("{:>13} ".format(self.label))
-        #os.system('play -n synth .15 sin {} vol .25 > /dev/null 2>&1'.fo
-        #rmat(self.freq.mag))
         command = 'play -n synth {} {} {} vol {} > /dev/null 2>&1'.format(
             NOTE_LENGTH, voice, self.freq.mag, VOL)
-        #Cli.output(command)
         proc = subprocess.Popen(command, shell=True)
         proc.wait()
-        #os.system(command)
 
 
 class Note(Pitch):
@@ -398,9 +362,9 @@ class Note(Pitch):
         """
         Currently uses a system call to sox
         """
-        #VOL = 1
-        os.system('play -n synth {} {} {} vol {} > /dev/null 2>&1'.format(
-            self.duration, voice, self.freq.mag, VOL))
+        proc = subprocess.Popen('play -n synth {} {} {} vol {} > /dev/null 2>&1'.format(
+            self.duration, voice, self.freq.mag, VOL), shell=True)
+        proc.wait()
 
 
 class PitchSet(Thing):
@@ -414,7 +378,7 @@ class PitchSet(Thing):
         """
         super(PitchSet, self).__init__()
         self.label = 'PitchSet #{}'.format(PitchSet.count)
-        if pattern == None:
+        if pattern is None:
             pattern = lst_range(1, int(et+1))
         #else:
         #    pattern =
@@ -423,24 +387,21 @@ class PitchSet(Thing):
         if 1 in pattern:
             self.pitches = [start_pitch]
             del pattern[pattern.index(1)]
-        else: self.pitches = []
+        else:
+            self.pitches = []
         for x in gen_range(int(et) - 1):
             if x + 2 in pattern:
                 f = float(start_pitch.freq.mag) * 2 ** ((x + 1) / float(et))
-                next_pitch = Pitch(freq=f)
-                self.pitches += [next_pitch]
+                self.pitches.append(Pitch(freq=f))
 
-        #print self
-#        f = 440.0
-        #f_8va = f * 2.0
     def __str__(self):
-        out_str = '\n'
+        out_str_list = ['\n']
         for pitch in self.pitches:
             if len(pitch.label) > 9:
-                out_str += '{:>19}'.format(pitch.label) + '\n'
+                out_str_list.append('{:>19}\n'.format(pitch.label))
             else:
-                out_str += '{:>15}'.format(pitch.label) + '\n'
-        return out_str
+                out_str_list.append('{:>15}\n'.format(pitch.label))
+        return ''.join(out_str_list)
 
     def __getitem__(self, index):
         return self.pitches[index]
@@ -448,43 +409,39 @@ class PitchSet(Thing):
     def play(self, voice='sin'):
         Note(self.pitches[0], .05).play()
         time.sleep(.03)
-#        for x in range(int(((20 + len(self.pitches)) / len(self.pitches) - 1)):
         for x in gen_range(int((20 + len(self.pitches)) / len(self.pitches))):
             for pitch in self.pitches[1:]:
                 Note(pitch, .05).play(voice)
                 time.sleep(.03)
-            for pitch in self.pitches[:-1][::-1]:
+            #for pitch in self.pitches[:-1][::-1]:
+            for pitch in reversed(self.pitches[:-1]):
                 Note(pitch, .05).play(voice)
                 time.sleep(.03)
-
 
     def play_chord(self, wform='pl'):
         """
         Currently uses a system call to sox
         """
-        NOTE_LENGTH = 1 #.1
-        #VOL = 1
-        #print("{:>13} ".format(self.label))
-        #os.system('play -n synth .15 sin {} vol .25 > /dev/null 2>&1'.fo
-        #rmat(self.freq.mag))
-        command = 'play -n synth {} '.format(NOTE_LENGTH)  # -m
+        NOTE_LENGTH = 1
+        command_list = ['play -n synth {} '.format(NOTE_LENGTH)]
         for pitch in self.pitches:
-            command += '{} {:.4g}{}'.format(wform, pitch.freq.mag, ' ')#
-        command += 'vol {} > /dev/null 2>&1'.format(VOL)
-        # Terminal.output(command)
+            command_list.append('{} {:.4g}{}'.format(wform, pitch.freq.mag, ' '))
+        command_list.append('vol {} > /dev/null 2>&1'.format(VOL))
+        command = ''.join(command_list)
         proc = subprocess.Popen(command, shell=True)
         proc.wait()
-        #os.system(command)
+
 
 class PitchSequence(Thing):
+
     def __init__(self, pitch_set=PitchSet(pattern=[1, 3, 5, 6, 8, 10, 12]),
-                 seq=[1, 1, 5, 5, 6, 6, 5]):
+                 seq=(1, 1, 5, 5, 6, 6, 5)):
 
         super(PitchSequence, self).__init__()
 
         self.p_seq = []
         for x in seq:
-            self.p_seq += [pitch_set[x - 1]]
+            self.p_seq.append(pitch_set[x - 1])
 
     def play(self):
         for pitch in self.p_seq:
@@ -500,7 +457,7 @@ class PitchSequence(Thing):
         return len(self.p_seq)
 
     def pprint(self):
-        out_str = ''
+        out_str_list = []
         for x in self.p_seq:
-            out_str += '\n' + x.__str__()
-        Terminal.output(out_str + '\n')
+            out_str_list.append(x.__str__())
+        Terminal.output('\n%s\n' % '\n'.join(out_str_list))

@@ -1,17 +1,14 @@
-#!/usr/bin/env python
 #coding=utf8
 """
 Parent class for all shell template objects in this package.
 Stores data about the system and common methods for user interaction.
 """
 # Standard Library
-# import codecs
 import datetime
 import os
 import subprocess
 import sys
 import textwrap
-import threading
 import time
 
 # Add-ons
@@ -21,8 +18,8 @@ import colorama
 from colorama import Fore, Back, Style
 
 # Local modules
-import easycat
 from colorful.ansi import Ansi
+import easycat
 from ranges import gen_range
 from versatiledialogs.lists import Enumeration, PlainList
 from versatiledialogs.shell import Shellib
@@ -99,7 +96,7 @@ class Terminal(Shellib):
             else:
                 return None  # -1
         elif arrows_only is False:
-                return pressed  # -1
+            return pressed  # -1
         return direction
 
     @classmethod
@@ -120,7 +117,8 @@ class Terminal(Shellib):
         # if no args, clear the screen
         if len(args) == 0:
             if cls.os_name == 'posix':
-                easycat.write('\033[2J\033[H', stream=2)  # clear screen and leave cursor
+                # clear screen and leave cursor                
+                easycat.write('\033[2J\033[H', stream=2)  
             elif cls.os_name == 'nt':           # at the top
                 proc = subprocess.Popen('cls', shell=True)
                 proc.wait()
@@ -159,7 +157,7 @@ class Terminal(Shellib):
         Move cursor in the y direction
         """
         if y_disp > 0:
-            easycat.write('\033[{}A'.format(y_disp),stream=2)
+            easycat.write('\033[{}A'.format(y_disp), stream=2)
         elif y_disp < 0:
             easycat.write('\033[{}B'.format(abs(y_disp)), stream=2)
         if len(args) >= 1:
@@ -181,7 +179,7 @@ class Terminal(Shellib):
 
     @staticmethod
     def exit():
-        sys.exit() #  'Goodbye.')
+        sys.exit()
 
     @staticmethod
     def fx(cmds, text):
@@ -235,8 +233,8 @@ class Terminal(Shellib):
             key = b' '
         #key = key[0]
         #time.sleep(0.05) # keys it stablish?
-        if (cls.platform, fast, hide) == ('Linux', False, True):  # hide is True:
-            easycat.write('\b \b ')  #  \b')
+        if (cls.platform, fast, hide) == ('Linux', False, True):
+            easycat.write('\b \b ')
         if hide is False:
             easycat.write(key)
         #cls.cursor_v(-2)
@@ -351,7 +349,7 @@ class Terminal(Shellib):
             easycat.write(Style.RESET_ALL)
 
 
-        
+
 
     @staticmethod
     def list_menu(list_obj):
@@ -704,13 +702,8 @@ class CompactMenu(PlainList):
             if option[0] not in used_letters:
                 used_letters.append(option[0])
                 option = '[{}]{}'.format(option[0], option[1:])
-            #else:
             str_list.append(' {},'.format(option))
-        #string.rstrip()
-        #string.rstrip(',')
         return ''.join(str_list)[:-1]
-        # string = string[0:-1]
-        #return string
 
     def input(self):
         """Gets the users selection"""
@@ -749,8 +742,10 @@ class ListPrompt(Enumeration):
 
         if hidden is False:
             if len(self) > Terminal.height() - 4:
-                self.label = Terminal.fx('bn', "Press 'q'")  # make this work
-                self.label += ', then make a choice (1-{})'.format(len(self))
+                self.label = Terminal.fx(
+                    'bn',
+                    "Press 'q', then make a choice (1-{})".format(
+                        len(self)))
                 easycat.less(self.__str__())
             else:
                 Terminal.output(self)
