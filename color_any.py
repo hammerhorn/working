@@ -37,7 +37,7 @@ def _parse_args():
 ########################
 #  INITIALIZE DIALOGS  #
 ########################
-notebook('    - by freq and wavelength')
+notebook('    - by wavelength\n\n    + and frequency')
 
 TRUECOLOR = '-t' in sys.argv[1:]
 if len(sys.argv[1:]) == 0 or\
@@ -48,8 +48,8 @@ if len(sys.argv[1:]) == 0 or\
         cycle_thru_ansiboxes(delta_t=0.1, tc=TRUECOLOR)
     finally:
         Terminal.output('')
-        Terminal.unhide_cursor()
         Terminal.start_app()
+        Terminal.unhide_cursor()
         sys.exit()
 
 ARGS = _parse_args()
@@ -65,14 +65,11 @@ def main():
     """
     Main function
     """
-    #if not {'value', 'type'} & set(ARGS.__dict__.keys()):
-    #    cycle_thru_ansiboxes()
-    #    return
-
     if len(ARGS.value) == 1:
         ARGS.value = '0' + ARGS.value
     if ARGS.type != 'hex':
-        ARGS.value = int(ARGS.value) if ARGS.type != 'kelvin' else float(ARGS.value)
+        ARGS.value = int(ARGS.value) if ARGS.type == 'ansi' else\
+                     float(ARGS.value)
     new_color = Color(ARGS.value, ARGS.type)
     SHELL.output(new_color)
     Terminal.output('Truecolor is {}.\n'.format(ARGS.t))

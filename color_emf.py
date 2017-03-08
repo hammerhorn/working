@@ -21,7 +21,7 @@ except ImportError:
     from tkinter import TclError  # pylint: disable=E0401
 
 from cjh.misc import notebook
-from colorful.color import Color, nm_to_rgb, write
+from colorful.color import Color, nm_to_rgb, c_write
 from fiziko.scalars import Unit
 from fiziko.waves import EMWave
 from versatiledialogs.config import Config
@@ -91,9 +91,9 @@ def main():
             if SHELL == 'term':
                 red, green, blue = nm_to_rgb(emw.wlength.nanometers)
                 if red + green + blue == 0.0:
-                    write(7, 'ansi', 0, 'ansi', emw.__str__())  # + '\n')
+                    c_write(7, 'ansi', 0, 'ansi', emw.__str__())  # + '\n')
                 else:
-                    write(
+                    c_write(
                         Color.dec_to_hex(red, green, blue), 'hex', 16, 'ansi',
                         emw.__str__())
                 SHELL.output('\n')

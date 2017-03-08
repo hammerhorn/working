@@ -43,7 +43,7 @@ def side_by_side(red, green, blue):
     def position_and_color(txt_str, tc_bool):
         """indent & print colored text followed by a newline"""
         easycat.write('  ')
-        color.write(
+        color.c_write(
             16, 'ansi', hexcolor, 'hex', txt_str, truecolor=tc_bool)
         Terminal.output('')
 

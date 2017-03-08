@@ -13,7 +13,7 @@ from things import Thing
 __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
-SPEED_OF_LIGHT = 3e8
+SPEED_C = 3e8
 SPEED_OF_SOUND = 343.0  # Depends on factors like temperature, et al,
                         # if you want to complicate things.
 PLANCK_H = 6.626e-34
@@ -55,7 +55,7 @@ class EMWave(Wave):
 
     def __init__(self, magnitude, unit_obj):
         if unit_obj.abbrev == 'Hz':
-            super(EMWave, self).__init__(SPEED_OF_LIGHT, magnitude)
+            super(EMWave, self).__init__(SPEED_C, magnitude)
         self.label = self.emr_type()
 
     def __str__(self):
@@ -95,6 +95,57 @@ class EMWave(Wave):
         else:
             type_str = 'radio wave/microwave'
         return type_str
+
+    def nm_to_rgb(self):
+        """
+        This might should be in fiziko.waves
+        """
+        wavelength = self.wlength.nanometers
+        gamma = 0.80
+        intensity_max = 255
+        factor = 1.0
+        red, green, blue = 0, 0, 0
+        if 380 <= wavelength < 440:
+            red = -(wavelength - 440) / (440 - 380)
+            green = 0.0
+            blue = 1.0
+        elif 440 <= wavelength < 490:
+            red = 0.0
+            green = (wavelength - 440) / (490 - 440)
+            blue = 1.0
+        elif 490 <= wavelength < 510:
+            red = 0.0
+            green = 1.0
+            blue = -(wavelength - 510) / (510 -490)
+        elif 510 <= wavelength < 580:
+            red = (wavelength - 510) / (580 - 510)
+            green = 1.0
+            blue = 0.0
+        elif 580 <= wavelength < 645:
+            red = 1.0
+            green = -(wavelength - 645) / (645 - 580)
+            blue = 0.0
+        elif 645 <= wavelength < 781:
+            red = 1.0
+            green = 0.0
+            blue = 0.0
+
+        #  Let the intensity fall off near the vision limits
+        if 380 <= wavelength < 420:
+            factor = 0.3 + 0.7 * (wavelength - 380) / (420 - 380)
+
+        elif 420 <= wavelength < 701:
+            factor = 1.0
+        elif 701 <= wavelength < 781:
+            factor = 0.3 + 0.7 * (780 - wavelength) / (780 - 700)
+        else:
+            factor = 0.0
+
+        red = int(round(red * factor ** gamma * intensity_max))
+        blue = int(round(blue * factor ** gamma * intensity_max))
+        green = int(round(green * factor ** gamma * intensity_max))
+        return red, green, blue
+
 
 
 def kelvin_to_rgb(kelvins):
@@ -145,4 +196,5 @@ def kelvin_to_rgb(kelvins):
     green = int(round(green))
     blue = int(round(blue))
     return red, green, blue
+
 

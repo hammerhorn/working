@@ -112,7 +112,7 @@ def main():
                     html_obj = HtmlShell(
                         title, FILENAME, bgcolor, color_str, dont_open=True)
                     html_obj.output(color_str)
-                Terminal.output(Terminal.fx('bn', color.write(
+                Terminal.output(Terminal.fx('bn', color.c_write(
                     '#000000', 'hex', bgcolor, 'hex', bgcolor + ' ' * 33,
                     truecolor=ARGS.T, get_str=True)), heading=_heading)
             except KeyboardInterrupt:

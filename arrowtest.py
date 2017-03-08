@@ -12,7 +12,7 @@ from versatiledialogs.terminal import Terminal
 
 REMARKS = """
     - create get_keypress method for Tk
-    + Move the function to versatiledialogs.terminal.Terminal
+    + Move the visual feedback to versatiledialogs.terminal.Terminal
 
     * Alternatives to termcolor:
       - 'cjh.colorful' package

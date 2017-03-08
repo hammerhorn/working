@@ -9,7 +9,8 @@ import colortrans
 
 # Local
 import easycat
-from fiziko.waves import kelvin_to_rgb
+from fiziko.scalars import Unit
+from fiziko.waves import kelvin_to_rgb, EMWave  # SPEED_C
 from ranges import gen_range
 from versatiledialogs.terminal import Terminal
 
@@ -25,57 +26,57 @@ def cycle_thru_ansiboxes(start=0, end=255, delta_t=0.25, tc=False):
         Terminal.clear(0)
 
 
-def nm_to_rgb(wavelength):
-    """
-    This might should be in fiziko.waves
-    """
-    gamma = 0.80
-    intensity_max = 255
-    factor = 1.0
-    red, green, blue = 0, 0, 0
-    if 380 <= wavelength < 440:
-        red = -(wavelength - 440) / (440 - 380)
-        green = 0.0
-        blue = 1.0
-    elif 440 <= wavelength < 490:
-        red = 0.0
-        green = (wavelength - 440) / (490 - 440)
-        blue = 1.0
-    elif 490 <= wavelength < 510:
-        red = 0.0
-        green = 1.0
-        blue = -(wavelength - 510) / (510 -490)
-    elif 510 <= wavelength < 580:
-        red = (wavelength - 510) / (580 - 510)
-        green = 1.0
-        blue = 0.0
-    elif 580 <= wavelength < 645:
-        red = 1.0
-        green = -(wavelength - 645) / (645 - 580)
-        blue = 0.0
-    elif 645 <= wavelength < 781:
-        red = 1.0
-        green = 0.0
-        blue = 0.0
+#def nm_to_rgb(wavelength):
+#    """
+#    This might should be in fiziko.waves
+#    """
+#    gamma = 0.80
+#    intensity_max = 255
+#    factor = 1.0
+#    red, green, blue = 0, 0, 0
+#    if 380 <= wavelength < 440:
+#        red = -(wavelength - 440) / (440 - 380)
+#        green = 0.0
+#        blue = 1.0
+#    elif 440 <= wavelength < 490:
+#        red = 0.0
+#        green = (wavelength - 440) / (490 - 440)
+#        blue = 1.0
+#    elif 490 <= wavelength < 510:
+#        red = 0.0
+#        green = 1.0
+#        blue = -(wavelength - 510) / (510 -490)
+#    elif 510 <= wavelength < 580:
+#        red = (wavelength - 510) / (580 - 510)
+#        green = 1.0
+#        blue = 0.0
+#    elif 580 <= wavelength < 645:
+#        red = 1.0
+#        green = -(wavelength - 645) / (645 - 580)
+#        blue = 0.0
+#    elif 645 <= wavelength < 781:
+#        red = 1.0
+#        green = 0.0
+#        blue = 0.0
+#
+#    #  Let the intensity fall off near the vision limits
+#    if 380 <= wavelength < 420:
+#        factor = 0.3 + 0.7 * (wavelength - 380) / (420 - 380)
+#
+#    elif 420 <= wavelength < 701:
+#        factor = 1.0
+#    elif 701 <= wavelength < 781:
+#        factor = 0.3 + 0.7 * (780 - wavelength) / (780 - 700)
+#    else:
+#        factor = 0.0
+#
+#    red = int(round(red * factor ** gamma * intensity_max))
+#    blue = int(round(blue * factor ** gamma * intensity_max))
+#    green = int(round(green * factor ** gamma * intensity_max))
+#    return red, green, blue
 
-    #  Let the intensity fall off near the vision limits
-    if 380 <= wavelength < 420:
-        factor = 0.3 + 0.7 * (wavelength - 380) / (420 - 380)
 
-    elif 420 <= wavelength < 701:
-        factor = 1.0
-    elif 701 <= wavelength < 781:
-        factor = 0.3 + 0.7 * (780 - wavelength) / (780 - 700)
-    else:
-        factor = 0.0
-
-    red = int(round(red * factor ** gamma * intensity_max))
-    blue = int(round(blue * factor ** gamma * intensity_max))
-    green = int(round(green * factor ** gamma * intensity_max))
-    return red, green, blue
-
-
-def write(fgvalue, fgtype, bgvalue, bgtype, text, truecolor=False,
+def c_write(fgvalue, fgtype, bgvalue, bgtype, text, truecolor=False,
           get_str=False):
     out_str_list = ['\x1b[38;']
     if fgtype.lower() == 'hex':
@@ -120,12 +121,16 @@ class Color(object):
             self.kelvins = None
         elif color_type == 'kelvin':
             self.kelvins = value
-            dec_tuple = kelvin_to_rgb(value)
-            self.hexstring = self.dec_to_hex(*dec_tuple)
+            self.hexstring = self.dec_to_hex(*kelvin_to_rgb(value))
             self.ansi = self.hex_to_ansi(self.hexstring)
 
-        #elif color_type == 'freq':
-        #    pass
+        elif color_type == 'freq':
+            emw = EMWave(value, Unit('Hz'))
+            self.hexstring = Color.dec_to_hex(*emw.nm_to_rgb())
+            self.ansi = self.hex_to_ansi(self.hexstring)
+            self.kelvins = None
+            self.em_freq = value
+
         else:
             self.ansi, self.hexstring = None, None
         #self.hexstring = ''
@@ -155,20 +160,23 @@ class Color(object):
             caption = self.hexstring
             spacing = 8, 12
         elif label_type == 'kelvin':
-            caption = self.kelvins
+            caption = '%sK' % self.kelvins
             spacing = 8, 12
+        elif label_type == 'freq':
+            caption = '{:.1e} Hz'.format(self.em_freq)
+            spacing = 11, 9
         else:
             label_type = None
         
-        write(15, 'ansi', 0, 'ansi',
+        c_write(15, 'ansi', 0, 'ansi',
               ''.join(('{:>', str(spacing[0]), '}')).format(caption),
               truecolor=tc_on)
-        write(self.hexstring, 'hex', self.hexstring, 'hex', ' ' * spacing[1],
+        c_write(self.hexstring, 'hex', self.hexstring, 'hex', ' ' * spacing[1],
               truecolor=tc_on)
         Terminal.output('')
         for _ in gen_range(9):
             easycat.write('  ')
-            write(self.hexstring, 'hex', self.hexstring, 'hex',
+            c_write(self.hexstring, 'hex', self.hexstring, 'hex',
                   ' ' * 20, truecolor=tc_on)
             Terminal.output('')
 
@@ -197,3 +205,4 @@ class Color(object):
     @staticmethod
     def hex_to_ansi(hexstring):
         return int(colortrans.rgb2short(hexstring[1:])[0])
+
