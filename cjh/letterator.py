@@ -37,7 +37,7 @@ class Letter(object):
     def lower_gen(cls, start_letter='a'):
         """Generates sequences of lower-case letters."""
         start_ord = ord(start_letter)
-        if start_ord >= 97 and start_ord < 123:
+        if 97 <= start_ord < 123:
             letters = iter(range(start_ord, 123))
             while True:
                 try:

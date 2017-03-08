@@ -1,29 +1,17 @@
 #!/usr/bin/env python
 #coding=utf8
+
+# Std. Library
 import time
 
+# Add-ons
 import colortrans
 
-from fiziko.waves import kelvin_to_rgb
+# Local
 import easycat
+from fiziko.waves import kelvin_to_rgb
 from ranges import gen_range
 from versatiledialogs.terminal import Terminal
-
-
-# def ansi_colorbox(color, colortype='ansi', tc_on=False):
-#     """
-#     Print a box of a certain ANSI color to the screen (0-255).
-#     """
-#     Terminal.clear(0)
-#     easycat.write('  ')
-#     write(15, 'ansi', 0, 'ansi', '{:>4}'.format(color), truecolor=tc_on)
-#     write(color, colortype, color, colortype, ' ' * 16, truecolor=tc_on)
-#     Terminal.output('')
-#     for _ in range(9):
-#         easycat.write('  ')
-#         write(
-#             color, 'ansi', color, 'ansi', ' ' * 20, truecolor=tc_on)
-#         Terminal.output('')
 
 
 def cycle_thru_ansiboxes(start=0, end=255, delta_t=0.25, tc=False):
@@ -36,31 +24,6 @@ def cycle_thru_ansiboxes(start=0, end=255, delta_t=0.25, tc=False):
     except KeyboardInterrupt:
         Terminal.clear(0)
 
-
-def color_ansi_to_hex(ansi_code):
-    ansi_code = str(ansi_code)
-    if len(ansi_code) == 1:
-        ansi_code = ansi_code.zfill(2)
-    return '#' + colortrans.short2rgb(ansi_code).upper()
-
-
-def color_dec_to_hex(red, green, blue):
-    hex_color_str = ''.join(('#',
-                             hex(red).split('x')[1].zfill(2),
-                             hex(green).split('x')[1].zfill(2),
-                             hex(blue).split('x')[1].zfill(2)))
-    return hex_color_str.upper()
-
-
-def color_hex_to_dec(hexstring):
-    red = int(hexstring[1:3], 16)
-    green = int(hexstring[3:5], 16)
-    blue = int(hexstring[5:7], 16)
-    return red, green, blue
-
-
-def color_hex_to_ansi(hexstring):
-    return int(colortrans.rgb2short(hexstring[1:])[0])
 
 def nm_to_rgb(wavelength):
     """
@@ -114,29 +77,31 @@ def nm_to_rgb(wavelength):
 
 def write(fgvalue, fgtype, bgvalue, bgtype, text, truecolor=False,
           get_str=False):
-    out_str = '\x1b[38;'
+    out_str_list = ['\x1b[38;']
     if fgtype.lower() == 'hex':
         if truecolor is True:
-            out_str += '2;{};{};{}'.format(*color_hex_to_dec(fgvalue))
+            out_str_list.append('2;{};{};{}'.format(
+                *Color.hex_to_dec(fgvalue)))
         else:
-            fgvalue = color_hex_to_ansi(fgvalue)
-            out_str += '5;{}'.format(fgvalue)
+            fgvalue = Color.hex_to_ansi(fgvalue)
+            out_str_list.append('5;{}'.format(fgvalue))
     else:
-        out_str += '5;{}'.format(fgvalue)
+        out_str_list.append('5;{}'.format(fgvalue))
 
-    out_str += ';'
+    out_str_list.append(';')
 
     if bgtype.lower() == 'hex':
         if truecolor is True:
-            out_str += '48;2;{};{};{}'.format(*color_hex_to_dec(bgvalue))
-#            print out_str
+            out_str_list.append('48;2;{};{};{}'.format(
+                *Color.hex_to_dec(bgvalue)))
         else:
-            bgvalue = color_hex_to_ansi(bgvalue)
-            out_str += '48;5;{}'.format(bgvalue)
+            bgvalue = Color.hex_to_ansi(bgvalue)
+            out_str_list.append('48;5;{}'.format(bgvalue))
     else:
-        out_str += '48;5;{}'.format(bgvalue)
+        out_str_list.append('48;5;{}'.format(bgvalue))
 
-    out_str += 'm{}\x1b[0m'.format(text)
+    out_str_list.append('m{}\x1b[0m'.format(text))
+    out_str = ''.join(out_str_list)
     if get_str is True:
         return out_str
     else:
@@ -146,22 +111,18 @@ def write(fgvalue, fgtype, bgvalue, bgtype, text, truecolor=False,
 class Color(object):
     def __init__(self, value, color_type):
         if color_type == 'hex':
-      	    #print color_type
-            self.ansi = color_hex_to_ansi(value)
+            self.ansi = self.hex_to_ansi(value)
             self.hexstring = value
             self.kelvins = None
         elif color_type == 'ansi':
-            if value < 10:
-                self.ansi = str(value).zfill(2)
-            else:
-                self.ansi = value
-            self.hexstring = color_ansi_to_hex(value)
+            self.ansi = str(value).zfill(2) if value < 10 else value
+            self.hexstring = self.ansi_to_hex(value)
             self.kelvins = None
         elif color_type == 'kelvin':
             self.kelvins = value
             dec_tuple = kelvin_to_rgb(value)
-            self.hexstring = color_dec_to_hex(*dec_tuple)
-            self.ansi = color_hex_to_ansi(self.hexstring)
+            self.hexstring = self.dec_to_hex(*dec_tuple)
+            self.ansi = self.hex_to_ansi(self.hexstring)
 
         #elif color_type == 'freq':
         #    pass
@@ -173,8 +134,9 @@ class Color(object):
         return
 
     def __str__(self):
-        out_str = '\n{} {}'.format('ANSI escape:', self.ansi)
-        out_str += '\n{} {}'.format('RGB hexcode:', self.hexstring)
+        out_str = '\n{} {}\n{} {}'.format(
+            'ANSI escape:', self.ansi,
+            'RGB hexcode:', self.hexstring)
         if self.kelvins is not None:
             out_str += '\n{} {}K'.format(
                 'color temperature:', self.kelvins)
@@ -195,12 +157,43 @@ class Color(object):
         elif label_type == 'kelvin':
             caption = self.kelvins
             spacing = 8, 12
-        else: label_type = None
+        else:
+            label_type = None
         
-        write(15, 'ansi', 0, 'ansi', ('{:>' + str(spacing[0]) + '}').format(caption), truecolor=tc_on)
-        write(self.hexstring, 'hex', self.hexstring, 'hex', ' ' * spacing[1], truecolor=tc_on)
+        write(15, 'ansi', 0, 'ansi',
+              ''.join(('{:>', str(spacing[0]), '}')).format(caption),
+              truecolor=tc_on)
+        write(self.hexstring, 'hex', self.hexstring, 'hex', ' ' * spacing[1],
+              truecolor=tc_on)
         Terminal.output('')
         for _ in gen_range(9):
             easycat.write('  ')
-            write(self.hexstring, 'hex', self.hexstring, 'hex', ' ' * 20, truecolor=tc_on)
+            write(self.hexstring, 'hex', self.hexstring, 'hex',
+                  ' ' * 20, truecolor=tc_on)
             Terminal.output('')
+
+    @staticmethod
+    def ansi_to_hex(ansi_code):
+        ansi_code = str(ansi_code)
+        if len(ansi_code) == 1:
+            ansi_code = ansi_code.zfill(2)
+        return '#' + colortrans.short2rgb(ansi_code).upper()
+
+    @staticmethod
+    def dec_to_hex(red, green, blue):
+        hex_color_str = ''.join(('#',
+                                 hex(red).split('x')[1].zfill(2),
+                                 hex(green).split('x')[1].zfill(2),
+                                 hex(blue).split('x')[1].zfill(2)))
+        return hex_color_str.upper()
+
+    @staticmethod
+    def hex_to_dec(hexstring):
+        red = int(hexstring[1:3], 16)
+        green = int(hexstring[3:5], 16)
+        blue = int(hexstring[5:7], 16)
+        return red, green, blue
+
+    @staticmethod
+    def hex_to_ansi(hexstring):
+        return int(colortrans.rgb2short(hexstring[1:])[0])

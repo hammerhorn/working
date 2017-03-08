@@ -37,51 +37,44 @@ class ChessBoard(Thing):
     """
     def _get_board_type(self):
         board_list = PlainList(
-            ('8x8', '9x9', '10x9'),
+            ('8x8',
+             '9x9',
+             '10x9'),
             heading="Board Size")
         self.board_type = board_list[TUI.list_menu(board_list) - 1]
         TUI.output(self.board_type)
-        if self.board_type == '8x8':
-            self.rankcount, self.colcount = 8, 8
-        elif self.board_type == '9x9':
-            self.rankcount, self.colcount = 9, 9
-        elif self.board_type == '10x9':
-            self.rankcount, self.colcount = 9, 10
+
+        board_dict = {
+            '8x8': (8, 8),
+            '9x9': (9, 9),
+            '10x9': (10, 9)
+        }
+
+        self.rankcount, self.colcount = board_dict.get(self.board_type, None)
 		
     def __init__(self):
         super(ChessBoard, self).__init__()
         TUI.output('')
         self._get_board_type()
         
-        self.board_array = [[0 for _ in gen_range(self.colcount)] for _ in gen_range(
-            self.rankcount)]
+        self.board_array = [[0 for _ in gen_range(self.colcount)] for _ in gen_range(self.rankcount)]
 
-        for rank in reversed(gen_range(self.rankcount)): #range(self.rankcount)[::-1]:
+        for rank in reversed(gen_range(self.rankcount)):
             for col in gen_range(self.colcount):
-#                print('self.board_array[{0}][{1}] = ChessSquare({0}, {1})'.for
-#                mat(col, self.rankcount - rank - 1))
                 self.board_array[col][self.rankcount - rank - 1] = ChessSquare(
                     col, self.rankcount - rank - 1)
-               # self.board_array[col][rank].populate(ChessPiece(raw_input(), ''))
-
 
     def __str__(self):
-        #out_str = ''
-        #for x in self.board_array:
-        #    out_str += x.__str__()
         out_str_list = []
 
-        for rank in reversed(gen_range(self.rankcount)):  #[::-1]:
+        for rank in reversed(gen_range(self.rankcount)):
             for col in gen_range(self.colcount):
                 if self.board_array[col][rank].occupant is not None:
-                    out_str_list.extend((self.board_array[col][rank].occupant.abbrev, ' '))
+                    out_str_list.extend(
+                        (self.board_array[col][rank].occupant.abbrev, ' '))
                 else:
                     out_str_list.append('. ')
-                #Terminal.clear(1)
-                #Terminal.wait(out_str)
-                
             out_str_list.append('\n')
-
         return ''.join(out_str_list)
 
 
@@ -91,8 +84,6 @@ class ChessBoard(Thing):
         for row in fen_list:
             for char in row:
                 self.board_array[row.index(char)][fen_list.index(row)].populate(ChessPiece(char))
-#            out_str += row #self.board_array[col][rank].label
-#            out_str += '\n'
             out_str_list.extend((row, '\n'))
         return ''.join(out_str_list)
 
@@ -110,7 +101,6 @@ class ChessBoard(Thing):
             position = ChessSquare(0, 0)
             Terminal.output(self.__str__())
             while True:
-                #print('\n' * 3 + self.__str__())
                 Terminal.clear(self.rankcount + 2)
                 Terminal.output(self.__str__())
                 self.board_array[int(position.x)][int(position.y)].label = '. '
@@ -127,8 +117,6 @@ class ChessBoard(Thing):
                 self.board_array[int(position.x)][int(position.y)].label = '? '
         except KeyboardInterrupt:
             return
-     #       print("self.board_array[{}][{}].label = '? '".format(int(position.
-     #       x), int(position.y)))
 
 
 class ChessPiece(Thing):

@@ -27,7 +27,7 @@ REMARKS = """
 atexit.register(Terminal.unhide_cursor)
 Terminal()
 
-DELTA_T = 0.005
+DELTA_T = 0.00125
 OUT_STR1, OUT_STR2 = ' TRUECOLOR', 'COLORTRANS'
 
 
@@ -36,7 +36,7 @@ def side_by_side(red, green, blue):
     Show Truecolor and Colortrans methods on your terminal.
     """
     Terminal.cursor_v(6)
-    hexcolor = color.color_dec_to_hex(red, green, blue)
+    hexcolor = color.Color.dec_to_hex(red, green, blue)
     culler = color.Color(hexcolor, 'hex')
     Terminal.output(culler.__str__() + '\n')
 
@@ -51,11 +51,10 @@ def side_by_side(red, green, blue):
     position_and_color(OUT_STR2, False)
     time.sleep(DELTA_T)
 
-#def wait_and_hide():
-#    """wait for user acknowlegement and hide cursor"""
-    #Terminal.wait()
-    #Terminal.hide_cursor()
-#    return
+def wait_and_hide():
+    """wait for user acknowlegement and hide cursor"""
+    Terminal.wait()
+    Terminal.hide_cursor()
 
 def main():
     """
@@ -76,38 +75,38 @@ def main():
         #Fade from black to red
         for val in gen_range(256):
             side_by_side(val, 0, 0)
-        wait_and_hide()
+        #wait_and_hide()
 
         for _ in gen_range(50):
             #Fade from red to yellow
             for val in gen_range(256):
                 side_by_side(255, val, 0)
-            wait_and_hide()
+            #wait_and_hide()
 
             #Fade from yellow to green
             for val in gen_range(256):
                 side_by_side(255 - val, 255, 0)
-            wait_and_hide()
+            #wait_and_hide()
 
             #Fade from green to cyan
             for val in gen_range(256):
                 side_by_side(0, 255, val)
-            wait_and_hide()
+            #wait_and_hide()
 
             #Fade from cyan to blue
             for val in gen_range(256):
                 side_by_side(0, 255 - val, 255)
-            wait_and_hide()
+            #wait_and_hide()
 
             #Fade from blue to magenta
             for val in gen_range(256):
                 side_by_side(val, 0, 255)
-            wait_and_hide()
+            #wait_and_hide()
 
             #Fade from magenta to red
             for val in gen_range(256):
                 side_by_side(255, 0, 255 - val)
-            wait_and_hide()
+            #wait_and_hide()
 
         Terminal.output('')
     except KeyboardInterrupt:

@@ -30,21 +30,46 @@ class Paragraph(Thing):
         self.__class__.no_indent = no_indent
         super(Paragraph, self).__init__()
         self.width = width
-        text_str = textwrap.dedent(text_str).strip()
-        self.buffer = text_str
+        self.buffer = textwrap.dedent(text_str).strip()
         self.set_lmargin()
 
+    def __lt__(self, integer):
+        self.width -= integer
+        if self.width < integer:
+            self.width = integer
+        return self
+
+    def __gt__(self, integer):
+        self >> integer
+        self.width -= integer
+        if self.width <= integer:
+            self.width = integer
+        return self
+
+    def __rshift__(self, integer):
+        self.lmargin += integer
+        if self.lmargin < 0:
+            self.lmargin = 0
+        return self
+
+    def __lshift__(self, integer):
+        self.lmargin -= integer
+        if self.lmargin < 0:
+            self.lmargin = 0
+        return self
+            
     def __add__(self, other):
         return Section(p_list=[self, other])
 
     def __str__(self):
-        lines2 = list(self.word_wrap)
-        pstr = '\n'
-        pstr += '¶' if self.__class__.invisibles is True else ' '
-        pstr = ''.join((pstr, ' ' * (self.lmargin - 1), lines2[0], '\n'))
+        lines2 = self.word_wrap_list
+        pstr_list = ['\n']
+        char = '¶' if self.__class__.invisibles is True else ' '
+        pstr_list.extend((char, ' ' * (self.lmargin - 1), lines2[0], '\n'))
+        pstr = ''.join(pstr_list)
         appndx_lst = []
         for index in gen_range(1, len(lines2)):
-            appndx_lst.extend([' ' * self.lmargin, lines2[index], '\n'])
+            appndx_lst.extend((' ' * self.lmargin, lines2[index], '\n'))
         str_list = [pstr]
         str_list.extend(appndx_lst)
         return ''.join(str_list)
@@ -83,6 +108,8 @@ class Paragraph(Thing):
         """set left margin"""
         self.lmargin = fill
 
+
+        
     def cat(self, para2):
         """concatenate paragraphs?"""
         tmp_lst1, tmp_lst2 = [], []
@@ -90,7 +117,7 @@ class Paragraph(Thing):
 
         for line in self.naive_wrap:
             tmp_lst1.append(line)
-        tmp_str1 = ''.join(tmp_list1)
+        tmp_str1 = ''.join(tmp_lst1)
 
         if len(tmp_str1) > 0 and tmp_str1[0] == '_':
             noindent = False
@@ -127,16 +154,33 @@ class Paragraph(Thing):
         return lines
 
     @property
-    def word_wrap(self):
+    def word_wrap_list(self):
         """
         use textwrap module to wrap text
         Returns a list of lines.
         """
-        buf = self.buffer
+        buf = self.buffer.lstrip()
         i = '' if self.__class__.no_indent is True else ' ' * 5
         return textwrap.fill(\
             buf, width=self.width, initial_indent=i).split('\n')
 
+    def justify(self):
+        buf_list = []
+        for line in self.word_wrap_list[:-1]:  # self.buffer.split('\n'):
+            line = line.strip()
+            while len(line) < self.width:
+                if len(line.replace(' ', '  ')) <= self.width:
+                    line = line.replace(' ', '  ')
+                if len(line.split('.')) == 2:
+                    line = line.replace('.', '. ')
+                #if len(line) < self.width:
+                #    line = line.replace('.', '. ')
+                if len(line) < self.width:
+                    line = line.replace(',', ', ')
+            buf_list.append(line)
+        buf_list.append(self.word_wrap_list[-1].strip())
+        self.buffer = '\n'.join(buf_list)
+        return self
 
 class Section(Thing):
     """

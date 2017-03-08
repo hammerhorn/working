@@ -43,14 +43,13 @@ def main():
                 subprocess.check_call(
                     'ping -c 2 google.com > /dev/null 2>&1', shell=True)
                 connected = True
-                easycat.write('\n[+]')
-                easycat.write(TERM.fx('bn', 'Connected'))
-                easycat.write(TERM.fx('n', '--Internet available @ '))
+                easycat.write('\n[+]{}--Internet available @ '.format(
+                    TERM.fx('bn', 'Connected')))
             except subprocess.CalledProcessError:
                 connected = False
                 easycat.write('\n[!] No Internet     @    ')
-
             easycat.write(current_time())
+
 
             if connected is True:
                 if '-s' in sys.argv[1:]:

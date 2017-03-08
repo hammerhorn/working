@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #coding=utf8
 """
 Contains Tonerow class.
@@ -98,15 +97,15 @@ class Tonerow(Thing):
         out_str_lst.append(str(self.seq))
 
         hrule_width = int(round(2.91666 * maximum)) + 7
-        if self.sh_obj.interface == 'Tk':
+        if self.sh_obj == 'Tk':
             hrule_width = int(hrule_width * 0.55)
-        out_str_lst.extend(['\n', '=' * hrule_width, '\n\n'])
+        out_str_lst.extend(('\n', '=' * hrule_width, '\n\n'))
 
         for row in gen_range(maximum):
             str_row_lst = [' {:>2} '.format(maximum - row - 1)]
             for index in gen_range(maximum):
                 if self.seq[index] == maximum - row - 1:
-                    if self.sh_obj.interface == 'term':
+                    if self.sh_obj == 'term':
                         if self.sh_obj.os_name == 'posix':
                             args = ()
                             kwargs = {'attrs': ['reverse', 'bold']}
@@ -136,7 +135,7 @@ class Tonerow(Thing):
         """
         reverse the tonerow in place
         """
-        self.seq = self.seq[::-1]
+        self.seq = list(reversed(self.seq))
         self.pseq = PitchSequence(
             PitchSet(len(self), start_pitch=self.get_lowest_tone()), [i + 1 for i in self.seq])
         return self
@@ -169,13 +168,16 @@ class Tonerow(Thing):
         """
         #freqs = [i.freq.mag for i in self.pseq]
         #min_freq = min(freqs)
+
         p_set = PitchSet(len(self), start_pitch=self.get_lowest_tone() + interval)
         self.pseq = PitchSequence(p_set, seq=[i + 1 for i in self.seq])
+
         #for x in range(len(self.pseq)):
         #    self.pseq[x] += interval
-#        self.seq = [i + interval for i in self.seq]
-#        self.pseq = PitchSequence(PitchSet(), self.seq)
-#        self.draw_list_play()
+        #    self.seq = [i + interval for i in self.seq]
+        #    self.pseq = PitchSequence(PitchSet(), self.seq)
+        #    self.draw_list_play()
+
         return self
 
     def get_lowest_tone(self):
@@ -190,9 +192,10 @@ class Tonerow(Thing):
         """
         print the notenames and frequencies of the row's tones
         """
-        out_str = ''
+        out_str_list = []
         for pitch in self.pseq:
-            out_str += '\t{}\n'.format(pitch.__str__())
+            out_str_list.append('\t{}\n'.format(pitch.__str__()))
+        out_str = ''.join(out_str_list)
         if get_str is True:
             return out_str
         else:
@@ -203,9 +206,10 @@ class Tonerow(Thing):
         abc_list = []
         for tone in self:
             if len(tone.note_name) == 1:
-                abc_list.append('=%s ' % tone.note_name)
+                current_note = '=%s ' % tone.note_name
             else:
-                abc_list.append('^%s ' % tone.note_name[0])
+                current_note = '^%s ' % tone.note_name[0]
+            abc_list.append(current_note)
         out_str_list = ["""X: 1
 T: {}
 C:
@@ -244,13 +248,12 @@ K: C
         """
         Convert sequence to hex and this will be the basename
         """
-        basename = ''
+        bname_list = []
         for i in self.seq:
             #print i
             #Cli.wait(i)
-            basename += hex(i)[2:].upper()
-        return basename
-
+            bname_list.append(hex(i)[2:].upper())
+        return ''.join(bname_list)
 
 
     def play_midi(self, player='timidity'):
@@ -266,11 +269,12 @@ K: C
 
     def write_abc_file(self):
         """write ABC data to a file"""
+        filename = '__data__/{}.abc'.format(self.generate_basename())
         abc_str = self.generate_abc_str()
-        filename = '__data__/' + self.generate_basename() + '.abc'
-        handler = open(filename, 'w')
-        handler.write(abc_str)
-        handler.close()
+        #handler = open(filename, 'w')
+        with open(filename, 'w') as handler:
+            handler.write(abc_str)
+        #handler.close()
         Terminal.notify("'{}' written".format(filename))
 
 
@@ -319,10 +323,12 @@ K: C
         """
         if cols >= 0:
             for _ in gen_range(cols):
-                self.seq = [self.seq[-1]] + self.seq[:-1]
+                self.seq = [self.seq[-1]]
+                self.seq.extend(self.seq[:-1])
         else:
             for _ in gen_range(abs(cols)):
-                self.seq = self.seq[1:] + [self.seq[0]]
+                self.seq = self.seq[1:]
+                self.seq.extend([self.seq[0]])
 
     def shift_v(self, rows):
         """

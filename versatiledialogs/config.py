@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 #coding=utf8
 """
 Config objects stores configuration information and methods to read/write the

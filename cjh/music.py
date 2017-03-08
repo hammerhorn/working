@@ -15,7 +15,7 @@ from fiziko.scalars import Scalar, Unit
 from fiziko.waves import SoundWave
 from ranges import gen_range, lst_range
 from things import Thing
-from versatiledialogs.lists import ItemList
+#from versatiledialogs.lists import ItemList
 from versatiledialogs.terminal import Terminal
 
 
@@ -189,10 +189,17 @@ class Pitch(SoundWave):
             letter = chr(pattern.index(number) + 65)
 
         note_dict = {
+            0: 'A',
             1: 'A♯/B♭',
+            2: 'B',
+            3: 'C',
             4: 'C♯/D♭',
+            5: 'D',
             6: 'D♯/E♭',
+            7: 'E',
+            8: 'F',
             9: 'F♯/G♭',
+            10: 'G',
             11: 'G♯/A♭'}
 
         return note_dict.get(number, -1)
@@ -229,10 +236,10 @@ class Pitch(SoundWave):
         Takes either a float frequency or a tuple(float octave,
         float note_float)
         """
-        if type(param) == float or type(param) == int:
+        if type(param) in (float, int):
             halfsteps = 12.0 * math.log(param / 440.0) / math.log(2.0)
 
-        elif type(param) == tuple:
+        elif isinstance(param, tuple):
             octave, note_float = param
             note_float = float(note_float)
             halfsteps = note_float + (octave - 5) * 12.0
@@ -298,7 +305,7 @@ class Pitch(SoundWave):
         param is a number freq or a tuple (oct, number, cents); returns a Scalar
         in Hz.
         """
-        if type(param) == int or type(param) == float:
+        if type(param) in (int, float):
             return Scalar(param, Unit('Hz'))
         else:
             octave, note_num, cents = param

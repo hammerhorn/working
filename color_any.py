@@ -39,13 +39,13 @@ def _parse_args():
 ########################
 notebook('    - by freq and wavelength')
 
-t = '-t' in sys.argv[1:]
+TRUECOLOR = '-t' in sys.argv[1:]
 if len(sys.argv[1:]) == 0 or\
-   (len(sys.argv[1:]) == 1 and '-t' in sys.argv[1:]):
+   (len(sys.argv[1:]) == 1 and TRUECOLOR is True):
     Terminal.hide_cursor()
     try:
         Terminal.output('')
-        cycle_thru_ansiboxes(delta_t=0.1, tc=t)
+        cycle_thru_ansiboxes(delta_t=0.1, tc=TRUECOLOR)
     finally:
         Terminal.output('')
         Terminal.unhide_cursor()

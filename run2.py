@@ -31,16 +31,11 @@ def _parse_args():
     """
     Scan for --shell option and handle --help option.
     """
-    if __name__ == '__main__':
-        parser = argparse.ArgumentParser(
-            description="Run programs in various test environments.")
-        parser.add_argument("-s", "--shell", type=str)
-        parser.add_argument('-C', action='store_true')
-        args = parser.parse_args()
-    else:
-        args = None
-    return args
-
+    parser = argparse.ArgumentParser(
+        description="Run programs in various test environments.")
+    parser.add_argument("-s", "--shell", type=str)
+    parser.add_argument('-C', action='store_true')
+    return parser.parse_args() if __name__ == '__main__' else None
 
 def run_script(scriptname_, shellname_):
     """
@@ -63,7 +58,9 @@ def run_script(scriptname_, shellname_):
         proc = subprocess.Popen(cmd) # , shell=True)
     else:
         proc = subprocess.Popen(cmd_list, shell=True)
+    SHELL.output('')
     proc.wait()
+    SHELL.wait()
     CONFIG.write_to_config_file(shell=original_shell)
 
 
@@ -192,11 +189,12 @@ if SHELL != 'Tk':
     MENU_OPTS = PlainList([
         '-script-', '-shell-', '-args-', '[RUN]', '[EDIT]', '[EXIT]'
     ])
-
-if SHELL == 'Tk':
-    setup_tk_window()
-else:
     checked = None
+#if SHELL == 'Tk':
+else:
+    setup_tk_window()
+#else:
+#    checked = None
 
 def main():
     """Launch an interface, i.e., main loop."""

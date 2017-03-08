@@ -47,10 +47,7 @@ def cat(**kwargs):
 
         try:
             while True:
-                if sys.version_info.major == 2:
-                    line = raw_input()
-                else:
-                    line = input()  # pylint: disable=bad-builtin
+                line = raw_input() if sys.version_info.major == 2 else input() # pylint: disable=bad-builtin
                 line = line.rstrip()
                 lines.append(line)
                 if not ('quiet'in kwargs and kwargs['quiet'] is True):
@@ -63,10 +60,10 @@ def cat(**kwargs):
         return lines
     elif 'return_str' in list(kwargs.keys()) and \
          kwargs['return_str'] is True:
-        string = ''
+        string_list = []
         for line in lines:
-            string += (line + '\n')
-        return string
+            string_list.extend((line, '\n'))
+        return ''.join(string_list)
     elif not ('quiet' in kwargs and kwargs['quiet'] is True):
         write('\n')
         for line in lines:

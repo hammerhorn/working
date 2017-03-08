@@ -7,6 +7,7 @@ import os
 import sys
 
 from cjh.doc_format import Paragraph, Section
+from ranges import gen_range
 from things import Thing
 from versatiledialogs.terminal import Terminal
 
@@ -59,12 +60,12 @@ class LatexObj(Thing):
             line_count = len(self.lines)
             lines_to_delete = []
 
-            for indx in range(line_count):
+            for indx in gen_range(line_count):
                 if len(self.lines[indx]) > 0 and self.lines[indx][0] == '%':
                     lines_to_delete.append(indx)
             for i in lines_to_delete:
                 del self.lines[i]
-                for line_index in range(1, len(lines_to_delete)):
+                for line_index in gen_range(1, len(lines_to_delete)):
                     lines_to_delete[line_index] -= 1
 
         read_file_lines()
@@ -100,68 +101,62 @@ class LatexObj(Thing):
         Print a nice title page.
         """
         if self.title is not None:
-            out_str = ''
-            out_str += ('\n' * (Terminal.height() / 2 - 2))
-            out_str += (' ' * 4 +
-                Terminal.term_fx('bu', (self.title)).center(Terminal.width()))
+            out_str_list = []
+            out_str_list.extend(('\n' * (Terminal.height() // 2 - 2),
+                                 ' ' * 4 + Terminal.fx('bu', (
+                                     self.title)).center(Terminal.width())))
             if self.author is not None:
-                out_str += '\n\n' +\
-                     'by'.center(
-                         Terminal.width()) + '\n\n' + self.author.center(Terminal.width())
-            out_str += ('\n' * (Terminal.height() / 2 - 2))
-            out_str += ('-' * Terminal.width())
+                out_str_list.append(
+                    '\n\n{}\n\n{}'.format('by'.center(
+                        Terminal.width()), self.author.center(Terminal.width())))
+            out_str_list.extend(('\n' * (Terminal.height() // 2 - 2), '-' * Terminal.width()))
             if self.section_no == 0:
-                out_str += ('\n' * 4)
-            return out_str
-        else: return '[No title]'
+                out_str_list.append('\n' * 4)
+            return ''.join(out_str_list)
+        else:
+            return '[No title]'
 
     def print_toc(self):
         """
         Create a table of contents and print to the screen.
         """
-        out_str = ''
+        out_str_list = []
         any_visible = False
-        for section_index in range(len(self.s_list)):
-            if self.s_list[section_index].heading[0].isdigit()\
-                and self.s_list[section_index].heading[0] != '0':
+        for section_index in gen_range(len(self.s_list)):
+            if self.s_list[section_index].heading not in (None, '', '0') and\
+               self.s_list[section_index].heading[0].isdigit():
                 any_visible = True
-        if any_visible == True:
-            out_str += ''
-            out_str += 'CONTENTS'.center(Terminal.width())
-            out_str += ''
+        if any_visible is True:
+            out_str_list.append('CONTENTS'.center(Terminal.width()))
 
             for section in self.s_list:
-                if section.heading[0].isdigit() and section.heading[0] != '0':
-                    out_str += section.heading.center(Terminal.width())
-                out_str += '\n'
-            out_str += (
-                (('-' * (Terminal.width() / 2)).center(Terminal.width()) + '\n') * 1)
-            out_str += ('\n')
-            out_str += (
-                (('-' * (Terminal.width() / 2)).center(Terminal.width()) + '\n') * 1)
-            out_str += ('\n')
-        return out_str
+                if self.s_list[section_index].heading not in (None, '', '0')\
+                   and self.s_list[section_index].heading[0].isdigit():
+                    out_str_list.append(
+                        section.heading.center(Terminal.width()))
+                out_str_list.append('\n')
+            out_str_list.extend(
+                (('-' * (Terminal.width() // 2)).center(
+                    Terminal.width()), '\n\n') * 2)
+        return ''.join(out_str_list)
 
     def print_sections(self):
         """
         Print out all sections
         """
-        out_str = ''
+        out_str_list = []
 
         #top margin == left margin / 3
-        out_str += ('\n' * int(self.tabpoints[0]/3.0))
+        out_str_list.append('\n' * int(self.tabpoints[0]/3.0))
         if len(self.s_list) >= 1 and len(self.s_list[0].pgraph_list) > 0:
-            out_str += str(self.s_list[0])
-        for section_index in range(1, len(self.s_list)):
-            out_str += str(self.s_list[section_index])
-        return out_str
+            out_str_list.append(str(self.s_list[0]))
+        for section_index in gen_range(1, len(self.s_list)):
+            out_str_list.append(str(self.s_list[section_index]))
+        return ''.join(out_str_list)
 
     def __str__(self):
-        out_str = ''
-        out_str += self.make_title()
-        out_str += self.print_toc()
-        out_str += self.print_sections()
-        return out_str
+        return ''.join(
+            (self.make_title(), self.print_toc(), self.print_sections()))
 
     def store_paragraph(self, no_indent):
         """
@@ -179,7 +174,7 @@ class LatexObj(Thing):
             paragraph.set_lmargin(self.tabpoints[0])
             #print "add to section"
             self.s_list[len(self.s_list) - 1] += paragraph
-            self.buffer = ""
+            self.buffer = ''
 	#print "end store_paragraph()"
 
     def easy_subs(self, buffer):
@@ -258,11 +253,12 @@ class LatexObj(Thing):
            #print 'begin loop: "{}"'.format(line)
 
 	   #if line not empty
-            if line != '' and line != '\n':
+            if line not in ('', '\n'):
                #get title
                 if line.find('\\title') >= 0:
                     # Modify to allow nested {}s
-                    self.title = self.easy_subs(line[(line.find('{') + 1):(line.find('}'))])
+                    self.title = self.easy_subs(
+                        line[(line.find('{') + 1):(line.find('}'))])
                     #self.title = self.title.strip()
                 elif line.find('\\author') >= 0:
                     self.author = line[(line.find('{') + 1):(line.find('}'))]
@@ -283,12 +279,13 @@ class LatexObj(Thing):
                         self.open_new_section() # Introduction")
 		       #print "section=0"
 
-                    self.buffer += (line + ' ')
+                    self.buffer = ''.join((self.buffer, line, ' '))
 
            # If it's a blank line, we store the Paragraph and prepare to read in
 #a  new one.
            #    strip_unknown_tags()
-            else: self.store_paragraph(False)
+            else:
+                self.store_paragraph(False)
 
 
 

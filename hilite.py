@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #coding=utf8
 """
 Display file with syntax highlighting.
@@ -28,7 +28,7 @@ def _parse_args():
 #  CONSTANTS  #
 ###############
 ARGS = _parse_args()
-misc.notebook('    - detect whether or not pager is needed')
+misc.notebook('    + detect whether or not pager is needed')
 Terminal()
 
 ##########

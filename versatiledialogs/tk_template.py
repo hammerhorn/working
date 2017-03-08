@@ -17,7 +17,7 @@ except ImportError:
     except ImportError:
         print("Could not import module 'tkinter'.")
 
-from cjh.music import Pitch
+#from cjh.music import Pitch
 
 from versatiledialogs.terminal import Terminal
 from versatiledialogs.windowed_app import WindowedApp
@@ -39,7 +39,7 @@ class TkTemplate(WindowedApp):
         mod_name = super(TkTemplate, cls).declare_main_window()
         if 'DISPLAY' not in os.environ:
             Terminal.output('No X display found.  Exiting program.')
-            Pitch().play()
+            #Pitch().play()
             sys.exit()
         cls.main_window = tkinter.Tk()
         cls.main_window.wm_title(mod_name)

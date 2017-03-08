@@ -27,7 +27,7 @@ except ImportError:
 
 from cjh.misc       import fahr_to_kelvins, notebook
 from colorful       import color
-from colorful.color import color_dec_to_hex
+from colorful.color import Color  # color_dec_to_hex
 from fiziko.waves   import kelvin_to_rgb
 from versatiledialogs.config      import Config
 from versatiledialogs.html_sh     import HtmlShell
@@ -63,13 +63,14 @@ def _parse_args():
     return parser.parse_args() if __name__ == '__main__' else None
 
 ARGS = _parse_args()
-FILENAME = 'results.html'
 CONFIG = Config()
 SHELL = CONFIG.launch_selected_shell(ARGS.shell) if\
         ARGS is not None and ARGS.shell is not None else\
         CONFIG.start_user_profile()
-BROWSER = CONFIG.config_dict.get('browser')
 
+if ARGS is not None and ARGS.html is True:
+    FILENAME = 'results.html'
+    BROWSER = CONFIG.config_dict.get('browser')
 
 def main():
     """
@@ -79,6 +80,7 @@ def main():
         html_obj = HtmlShell(
             title='Kelvin -> Hue',
             location=FILENAME)
+
         html_obj.output(
             'Welcome!  Enter a temperature into your terminal to begin.')
 
@@ -87,17 +89,25 @@ def main():
         while True:
             try:
                 Terminal.output('')
-                if ARGS.F is True:
-                    fahr = float(Terminal.input('temperature? (°F) '))
-                    kelvins = fahr_to_kelvins(fahr)
-                else:
-                    kelvins = float(Terminal.input('temperature? (K) '))
 
+                def get_kelvins():
+                    """
+                    Get the temperature from the user and return it in
+                    kelvins.
+                    """
+                    if ARGS.F is True:
+                        return fahr_to_kelvins(
+                            float(Terminal.input('temperature? (°F) ')))
+                    else:
+                        return float(Terminal.input('temperature? (K) '))
+
+                kelvins = get_kelvins()
                 red, green, blue = kelvin_to_rgb(kelvins)
-                bgcolor = color_dec_to_hex(red, green, blue)
+                bgcolor = Color.dec_to_hex(red, green, blue)
                 title = '{}, {}, {} ({}K)'.format(red, green, blue, kelvins)
                 color_str = "#000000"
                 _heading = '{:,.5}K'.format(kelvins)  # unused?
+
                 if ARGS.html is True:
                     html_obj = HtmlShell(
                         title, FILENAME, bgcolor, color_str, dont_open=True)
@@ -120,7 +130,7 @@ def main():
             and turns the Tk window that color.
             """
             red, green, blue = kelvin_to_rgb(kelvins)
-            bgcolor = color_dec_to_hex(red, green, blue)
+            bgcolor = Color.dec_to_hex(red, green, blue)
             title = '{}, {}, {} ({}K)'.format(red, green, blue, kelvins)
             color_str = "#000000"
             heading = '{:,.5}K'.format(kelvins)

@@ -13,8 +13,7 @@ def money(dollars):
     Takes a float and returns a str, formatted as dollars.
     Belongs in the class Money
     """
-    dollars = int(dollars * 100) / 100.0
-    return'${:,.2f}'.format(dollars)
+    return'${:,.2f}'.format(int(dollars * 100) / 100.0)
 
 class Money(object):
     """

@@ -32,10 +32,10 @@ class TextGen(object):
         """
         Sentences will have exactly SENTENCE_LENGTH words.
         """
-        word_list = [cls.word().capitalize()]
-        for _ in gen_range(1, cls.SENTENCE_LENGTH):
+        word_list = []
+        for _ in gen_range(cls.SENTENCE_LENGTH):
             word_list.append(cls.word())
-        sentence = ' '.join(word_list) + '.'
+        sentence = ' '.join(word_list).capitalize() + '.'
         return sentence
 
     @classmethod

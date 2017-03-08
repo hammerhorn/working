@@ -39,6 +39,7 @@ def find_tonecount():
 
 
 REMARKS = """
+    - write a new abc file when the row is modified
     - generate full 2-d matrix
     - the ability to input specific rows instead of generating them
     - Figure out how to write abc without all the redundant natural signs

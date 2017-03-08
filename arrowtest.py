@@ -5,9 +5,10 @@ Detect pressing of the arrow keys (or h, j, k, l).
 """
 from termcolor import colored, cprint
 
+from colorful import color
 from cjh.misc import catch_help_flag, notebook
 import easycat
-from versatiledialogs.config import Config
+#from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 
 REMARKS = """
@@ -33,33 +34,33 @@ def main():
 
         while True:
             try:
+                key_dict = {
+                    'H': 'left',
+                    'J': 'down',
+                    'K': 'up',
+                    'L': 'right'
+                }
+
                 whichway = Terminal.get_arrow_key()
                 if whichway == chr(12):
                     Terminal.clear()
-                    Terminal.output('\n')
-                elif whichway in 'Hh':
-                    whichway = 'left'
-                elif whichway in 'Jj':
-                    whichway = 'down'
-                elif whichway in 'Kk':
-                    whichway = 'up'
-                elif whichway in 'Ll':
-                    whichway = 'right'                    
-                
+                    Terminal.output('\n\n')
                 elif len(whichway) == 1:
-                    whichway = None
+                    whichway = key_dict.get(whichway.upper(), None)
                 Terminal.clear(0)
                 easycat.write('   |  ')
                 Terminal.cursor_h(5)
-                if whichway is not None:
-                    easycat.write(
-                        colored(whichway, 'white', 'on_red', attrs=['bold']))
-                else:
-                    easycat.write(' ' * 4)
 
-                Terminal.output('\r')
+                if whichway is not None:
+                    out_str = colored(whichway, 'white', 'on_red', attrs=['bold'])
+                else:
+                    out_str = ' ' * 4
+                Terminal.output(out_str + '\r')
+
                 Terminal.cursor_v(3)
                 Terminal.cursor_h(3)
+
+                
                 if whichway == 'up':
                     cprint('|', 'yellow', 'on_blue')
                 else:
