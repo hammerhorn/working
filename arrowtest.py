@@ -5,10 +5,9 @@ Detect pressing of the arrow keys (or h, j, k, l).
 """
 from termcolor import colored, cprint
 
-from colorful import color
 from cjh.misc import catch_help_flag, notebook
+from colorful import color
 import easycat
-#from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
 
 REMARKS = """
@@ -52,7 +51,8 @@ def main():
                 Terminal.cursor_h(5)
 
                 if whichway is not None:
-                    out_str = colored(whichway, 'white', 'on_red', attrs=['bold'])
+                    out_str = colored(
+                        whichway, 'white', 'on_red', attrs=['bold'])
                 else:
                     out_str = ' ' * 4
                 Terminal.output(out_str + '\r')
