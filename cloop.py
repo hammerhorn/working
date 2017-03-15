@@ -14,7 +14,7 @@ import os
 import subprocess
 import sys
 
-from cjh.misc import notebook
+from cjh.misc import catch_help_flag, notebook
 import easycat
 from versatiledialogs.terminal import Terminal
 
@@ -41,6 +41,7 @@ def _parse_args():
         '--f90', action='store_true', help='set language to Fortran 90')
     parser.add_argument(
         '-C', action='store_true', help="view developer's comments")
+    catch_help_flag(help_str=__doc__, argprsr=parser)
     return parser.parse_args() if __name__ == '__main__' else None
 
 
@@ -132,10 +133,11 @@ def main():
             with open(filename, 'w') as file_ptr:
                 file_ptr.write('{}\n{}'.format(includes, block))
 
-            command = compiler_dict[EXTENSION]
+            command_list = compiler_dict[EXTENSION]
             if EXTENSION == 'c' and 'math.h' in includes:
-                command += ' -lm'
-            command = ''.join((command, ' ./tmp.', EXTENSION))
+                command_list.append(' -lm')
+            command_list.extend((' ./tmp.', EXTENSION))
+            command = ''.join(command_list)
 
             try:
                 return_val = subprocess.check_call(command, shell=True)

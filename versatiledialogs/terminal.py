@@ -178,8 +178,9 @@ class Terminal(Shellib):
 
 
     @staticmethod
-    def exit():
-        sys.exit()
+    def exit(quiet=False):
+        out_str = '\nBye' if quiet is False else ''
+        sys.exit(out_str)
 
     @staticmethod
     def fx(cmds, text):

@@ -9,6 +9,7 @@ import sys
 import time
 import traceback
 
+from cjh import misc
 from ttyfun import blocks
 from versatiledialogs.dialog_gui import DialogGui
 from versatiledialogs.terminal import Terminal
@@ -49,13 +50,8 @@ class Config(object):
         Find the config.json file and load its contents into this object.
         """
         # Load json file and retrieve data.
-        if sys.version_info.major == 2:
-            self.config_dict = json.load(
-                open('{}/config.json'.format(self.basedir), 'rb'))
-        else: #i.e., if sys.version_info.major == 3:
-            file_handler = open('{}/config.json'.format(self.basedir), 'rb')
-            file_str = file_handler.read().decode('utf-8')
-            self.config_dict = json.loads(file_str)
+        self.config_dict = misc.read_json_file('%s/config.json' % self.basedir)
+
 
     def start_user_profile(self):
         """
