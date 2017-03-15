@@ -20,14 +20,14 @@ import sys
 from versatiledialogs.terminal import Terminal
 
 
-def bye():
-    """
-    Marks the end of the program.  Maybe it could be moved to <cjh.shell.Cli>.
-    """
+#def bye():
+#    """
+#    Marks the end of the program.  Maybe it could be moved to <cjh.shell.Cli>.
+#    """
     # vt.Terminal.output('Bye.')
     # PitchSequence(PitchSet(pattern=[1, 3, 5, 6, 8, 10, 12], start_pitch=Pitch\
     # ('C', 4)), [5, 1]).play()
-    sys.exit('\nBye.')
+#    sys.exit('\nBye.')
 
 
 def catch_help_flag(help_str='', sh_obj=Terminal(), condition=None,
@@ -57,7 +57,7 @@ def catch_help_flag(help_str='', sh_obj=Terminal(), condition=None,
             finally:
                 Terminal.output('')
         if cleanup is None:
-            cleanup = sh_obj.exit
+            cleanup = lambda: sh_obj.exit(quiet=True)
         cleanup()
 #        if sh_obj.interface == 'Tk':
 #            sh_obj.main_window.destroy()
@@ -84,6 +84,32 @@ def fahr_to_kelvins(fahr):
     return kelvins
 
 
+def mmss_convert(in_str):
+    in_str = str(in_str)
+    try:
+        if ':' in in_str:
+            mmss = tuple(in_str.split(':'))
+            try:
+                mins = int(mmss[0])
+            except ValueError:
+                mins = 0
+                try:
+                    secs = float(mmss[1])
+                except ValueError:
+                    secs = 0.0
+                    total_seconds = mins * 60.0 + secs
+                    return total_seconds
+
+        else:
+            total_seconds = float(in_str)
+            mins = int(total_seconds) // 60
+            secs = total_seconds % 60
+            return '{:d}:{:02g}'.format(mins, secs)
+
+    except ValueError:
+        print('Invalid argument.\n' + __doc__)
+
+                
 def notebook(remarks):
     """
     My personal notekeeping system; type -C after a command to reach the
@@ -127,4 +153,4 @@ def speak(phrase):
     proc.wait()
 #   except:
 #        Terminal.notify('espeak failed')
-
+#        print(traceback.format_exc())

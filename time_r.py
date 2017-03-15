@@ -14,24 +14,26 @@ should be modified to not depend on mmss.py and to convert bytes to
 string if running under python3.
 """
 import argparse
-import datetime
-import subprocess
 import sys
 import time
-import traceback
 
-from cjh.misc import current_time, notebook, speak
+from cjh import misc
+from cjh.music import Note, Pitch
 import easycat
+from ttyfun.unix import Figlet
 from versatiledialogs.terminal import Terminal
 
 __author__ = 'Chris Horn <hammerhorn@gmail.com'
 __license__ = 'GPL'
 
 REMARKS = """
-    - incorporate mmss.py
-    - misc.current_time
-    - misc.speak"""
-notebook(REMARKS)
+    + incorporate mmss.py
+    + use note class
+    + use toilet class
+    + misc.current_time
+    + misc.speak"""
+
+misc.notebook(REMARKS)
 
 ################
 #  PROCEDURES  #
@@ -46,45 +48,26 @@ def _parse_args():
         Accurate Coffee Timer.  Takes an argument is the form SS, MM:, or
         MM:SS.  Default time = 5:30)""")
     parser.add_argument('-q', '--quiet', help='no sound', action='store_true')
+    misc.catch_help_flag(help_str=__doc__, argprsr=parser)
 
     #supposedly there is an equivalent generator expression which would be
     #better
-    if len([i for i in sys.argv[1:] if not i.startswith('-')]) > 0 or\
-        ({'-h', '--help'} & set(sys.argv)):
+    if len([i for i in sys.argv[1:] if not i.startswith('-')]) > 0:
         parser.add_argument('time_str', type=str)
         return parser.parse_args()
+
 
 def alert():
     """
     Print a visual alert using the toilet(/figlet) command.
     Print an audible alert using espeak speech synthesizer.
     """
-    # Use toilet obj
-    proc = subprocess.Popen('toilet "Done"', shell=True)
-    proc.wait()
+    Figlet().output('Done')
+    Terminal.output('Finished at {}.'.format(misc.current_time()))
 
-    today = datetime.datetime.today()
-    now = today.strftime('%l:%M:%S %P')
-    Terminal.output('Finished at {}.'.format(now))
-
-    if ARGS is not None and ARGS.quiet == False:
-        try:
-            proc1 = subprocess.Popen(
-                'play -n synth .5 sin 1000 vol 0.05 > /dev/null 2>&1',
-                shell=True)
-            proc1.wait()
-        #if system call fails???
-        except (OSError, subprocess.CalledProcessError):
-            Terminal.fx('up', 'Problem in sox:')
-            print(traceback.format_exc()) #pylint: disable=C0325
-        try:
-            proc2 = subprocess.Popen(
-                'espeak -v en-us "Your coffee is ready"', shell=True)
-            proc2.wait()
-        #if system call fails???
-        except (OSError, subprocess.CalledProcessError):
-            Terminal.fx('up', 'Problem in espeak:')
-            print(traceback.format_exc()) #pylint: disable=C0325
+    if ARGS is not None and ARGS.quiet is False:
+        Note(Pitch(freq=1000), 0.5).play(voice='sin')
+        misc.speak('Your coffee is ready')
 
 
 ###############
@@ -93,12 +76,12 @@ def alert():
 ARGS = _parse_args() if __name__ == '__main__' else None
 TIME_STR = ARGS.time_str if ARGS is not None and ARGS.time_str is not None\
            else '330'
-    
+
 if TIME_STR[0] == ':':
     TIME_STR = '0' + TIME_STR
 
 SECONDS = float(TIME_STR) if TIME_STR.isdigit() else float(
-    subprocess.check_output('./mmss.py {}'.format(TIME_STR), shell=True))
+    misc.mmss_convert(TIME_STR))
 _SINCE = time.time()
 
 
@@ -112,26 +95,23 @@ def main():
     """
     Terminal()
     remaining = SECONDS
-    string = (subprocess.check_output('./mmss.py {}'.format(
-        int(remaining)), shell=True)).decode('utf-8')
+    string = misc.mmss_convert(int(remaining))
+
     Terminal.hide_cursor()
     easycat.write('{} remaining'.format(string.rstrip()))
     while remaining >= 0:
         time.sleep(.5)
         remaining = SECONDS - time.time() + _SINCE
-        string = (subprocess.check_output('./mmss.py {}'.format(
-            int(remaining)), shell=True)).decode('utf-8')
-        easycat.write('\r{}'.format(string.strip()))
+        string = misc.mmss_convert(int(remaining))
+        easycat.write('\r{:>3s}'.format(string.strip()))
     alert()
 
 
 
 if __name__ == '__main__':
     try:
-        main()  # use misc.current_time()
+        main()
     except KeyboardInterrupt:
-        today = datetime.datetime.today()
-        now = today.strftime('%l:%M:%S %P')
-        Terminal.output('\nInterrupted at {}.'.format(now))
+        Terminal.output('\nInterrupted at {}.'.format(misc.current_time()))
     finally:
         Terminal.unhide_cursor()
