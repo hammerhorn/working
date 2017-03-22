@@ -30,7 +30,7 @@ class Config(object):
         """
     # '/storage/sdcard0/com.hipipal.qpyplus/lib/python2.7/site-packages/cjh'
         self.basedir = 'versatiledialogs' if Terminal().platform != 'android'\
-            else '/storage/emulated/0/qpython/lib/python2.7/site-packages/cjh'
+            else '/storage/emulated/0/qpython/lib/python2.7/site-packages/versatiledialogs'
         self.sh_class = Terminal()
 
 

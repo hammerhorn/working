@@ -45,15 +45,15 @@ def main():
     """
     record = GameRecord(ARGS.filename)
 
-    game_list = record[:]
-    game_label_list = [game.label for game in game_list]
+    #game_list = record[:]
+    game_label_list = Enumeration([game.label for game in record]) #game_list])
 
     while True:
-        int_response = Terminal.list_menu(Enumeration(game_label_list))
-        move_list = game_list[int_response - 1][:]
+        int_response = Terminal.list_menu(game_label_list)
+        move_list = record[int_response - 1]  #game_list[int_response - 1][:]
         easycat.less(Enumeration(move_list))
 
-        goban = Goban(game_list[int_response - 1].header_dict['SZ'])
+        goban = Goban(record[int_response - 1].header_dict['SZ'])
 
         color = 'black'
         for move in move_list:

@@ -48,13 +48,14 @@ class Goban(Graph):
             starpoint = 4
         elif self.size >= 9:
             starpoint = 3
-        else: starpoint = 2
+        else:
+            starpoint = 2
 
         side_point = False
         if self.size % 2 == 1 and self.size >= 13:
             side_point = True
 
-        if x_coord == starpoint - 1 and y_coord == starpoint - 1:
+        if x_coord == starpoint - 1 == y_coord:
             return True
 
         if side_point is True:
@@ -80,7 +81,7 @@ class Goban(Graph):
             self,
             lambda: self.write_sgf(basename))
 
-        menu1 = ListPrompt(['..', 'fast', 'medium', 'slow'])
+        menu1 = ListPrompt(('..', 'fast', 'medium', 'slow'))
         sel1 = Terminal.make_page('MENU: GNUGO Scoring Tools', self, menu1.input)
         gnugo_dict = {'fast':'estimate', 'medium':'finish', 'slow':'aftermath'}
         Terminal.output('')
@@ -102,7 +103,8 @@ class Goban(Graph):
         # 'I' is skipped in th enumeration
         if letter >= 'I':
             ordinal = ord(letter) - 66
-        else: ordinal = ord(letter) - 65
+        else:
+            ordinal = ord(letter) - 65
         tmp_pt = self.indices_to_point(ordinal, self.size - number)
 
         x_val, y_val = tmp_pt.x_mag, tmp_pt.y_mag

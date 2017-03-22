@@ -14,6 +14,7 @@ import time
 
 from colorful import color
 import easycat
+from cjh.misc import catch_help_flag, notebook
 from ranges import gen_range
 from versatiledialogs.terminal import Terminal
 
@@ -114,5 +115,7 @@ def main():
         Terminal.output('')
 
 if __name__ == '__main__':
+    notebook(REMARKS)
+    catch_help_flag(help_str=__doc__.rstrip())
     main()
     Terminal.start_app()

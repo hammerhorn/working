@@ -17,7 +17,7 @@ except ImportError:
     import tkinter as tk
 
 # Local
-from cjh.misc import catch_help_flag, notebook
+from cjh import misc
 from ttyfun.unix import Figlet
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
@@ -34,23 +34,23 @@ CONFIG = Config()
 SHELL = CONFIG.start_user_profile()
 LANG = CONFIG.get_lang_key()
 MONTH_DICT = {
-    'January': 'januaro',
-    'February': 'februaro',
-    'March': 'marto',
-    'April': 'aprilo',
-    'May': 'majo',
-    'June': 'junio',
-    'July': 'julio',
-    'August': 'aŭgusto',
+    'January'  : 'januaro',
+    'February' : 'februaro',
+    'March'    : 'marto',
+    'April'    : 'aprilo',
+    'May'      : 'majo',
+    'June'     : 'junio',
+    'July'     : 'julio',
+    'August'   : 'aŭgusto',
     'September': 'septembro',
-    'October': 'oktobro',
-    'November': 'novembro',
-    'December': 'decembro'}
+    'October'  : 'oktobro',
+    'November' : 'novembro',
+    'December' : 'decembro'}
 
 
 ## SHORT CIRCUITS ##
-catch_help_flag(__doc__, SHELL, SHELL == 'zenity')
-notebook("""
+misc.catch_help_flag(__doc__, SHELL, SHELL == 'zenity')
+misc.notebook("""
     - add '-s' option
     - merge some functions
     - ascii analog clock face""")
@@ -63,9 +63,9 @@ if SHELL == 'Tk':
         bg='#fff', width=200)
     SHELL.main_window.config(bg='dark green')
     SHELL.center_window(width_=300, height_=125)
-    if LANG.upper() == "EO":
+    if LANG.upper() == 'EO':
         SHELL.main_window.title('horloĝo')
-    elif LANG.upper() == "EN":
+    elif LANG.upper() == 'EN':
         SHELL.main_window.title('clock')
 
 
@@ -77,8 +77,9 @@ def main_loop_bash(month):
     Terminal.hide_cursor()
     try:
         while True:
-            _today = datetime.datetime.today()
-            now = _today.strftime('%l:%M %P')
+            #_today = datetime.datetime.today()
+            #now = _today.strftime('%l:%M %P')
+            now = misc.current_time()
             if LANG.upper() == 'EO':
                 now = now[:-1] + 'tm'
 
@@ -110,8 +111,9 @@ def main_loop_dialog():
     Check the time, refresh the clock.
     """
     while True:
-        _today = datetime.datetime.today()
-        now = _today.strftime('%l:%M %P')
+        #_today = datetime.datetime.today()
+        #now = _today.strftime('%l:%M %P')
+        now = misc.current_time()
         now = now[:-1] + 'tm'
         string = now
         SHELL.output(string)
@@ -139,8 +141,9 @@ def main_loop_tk(day, month):
 
     def update(hex_red, hex_green, hex_blue):
         """update the time and the background color."""
-        today = datetime.datetime.today()
-        now = today.strftime('%l:%M:%S %P')
+        #today = datetime.datetime.today()
+        #now = today.strftime('%l:%M:%S %P')
+        now = misc.current_time()
         if LANG.upper() == 'EO':
             now = now[:-1] + 'tm'
         SHELL.msgtxt.set(now)

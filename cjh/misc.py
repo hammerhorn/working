@@ -93,12 +93,12 @@ def mmss_convert(in_str):
                 mins = int(mmss[0])
             except ValueError:
                 mins = 0
-                try:
-                    secs = float(mmss[1])
-                except ValueError:
-                    secs = 0.0
-                    total_seconds = mins * 60.0 + secs
-                    return total_seconds
+            try:
+                secs = float(mmss[1])
+            except ValueError:
+                secs = 0.0
+            total_seconds = mins * 60.0 + secs
+            return total_seconds
 
         else:
             total_seconds = float(in_str)
@@ -107,8 +107,8 @@ def mmss_convert(in_str):
             return '{:d}:{:02g}'.format(mins, secs)
 
     except ValueError:
-        print('Invalid argument.\n' + __doc__)
-
+        print("Invalid argument '{}'.\n".format(in_str))
+        return in_str
                 
 def notebook(remarks):
     """

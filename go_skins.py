@@ -3,12 +3,9 @@
 """
 View the available "skins" for class Goban.
 """
-
-import json
 import os
-# import sys
 
-from cjh.misc import notebook
+from cjh.misc import notebook, read_json_file
 from cjh.tablegames.igo import Goban
 from ttyfun import blocks
 from versatiledialogs.config import Config
@@ -38,12 +35,7 @@ def main():
         choice = Terminal.make_page(func=lambda: SHELL.list_menu(LIST_OBJ))
         skinfile = LIST_OBJ[choice - 1]
         try:
-            if SHELL.py_version == 2:
-                goban.skin_dict = json.load(open('__data__/skins/' + skinfile, 'rb'))
-            elif SHELL.py_version == 3:
-                file_ptr = open('__data__skins/{}'.format(skinfile), 'rb')
-                text_buffer = file_ptr.read().decode('utf-8')
-                goban.skin_dict = json.loads(text_buffer)
+            goban.skin_dict = read_json_file('__data__/skins/%s' % skinfile)
         except IOError:
             Terminal.text_splash(blocks.box("File Error with '{}'".format(
                 skinfile)), duration=0)

@@ -278,14 +278,19 @@ class Graph(Thing):
     """
     a crude graphing calculator and multi-purpose grid
     """
-    def __init__(self, size=19, skinfile='graph.json',
-                 sh_obj=Terminal(), adjust_ssize=0):
+    def __get_basedir(self):
         basedir = '__data__/skins'
-        self.sh_obj = sh_obj
         if self.sh_obj.platform == 'android':
             basedir =\
                 '/storage/sdcard0/com.hipipal.qpyplus/lib/python2.7/\
                 site-packages/' + basedir  # should read from config
+        return basedir
+            
+    def __init__(self, size=19, skinfile='graph.json',
+                 sh_obj=Terminal(), adjust_ssize=0):
+        self.sh_obj = sh_obj
+        basedir = self.__get_basedir()
+
         super(Graph, self).__init__()
         self.size = int(size)
 
@@ -298,20 +303,26 @@ class Graph(Thing):
                 self.size = Terminal.height() - deduct
         shrink(-adjust_ssize)
 
-        max_domain = self.size // 2        
-        min_domain = -max_domain        
+        max_domain = self.size // 2
+        min_domain = -max_domain
         if self.size % 2 == 0:
             min_domain += 1
-
+        #print('Size is %s' % self.size)
+        #print('Max domain is %s' % max_domain)
+        #print('Min domain is %s' % min_domain)        
+        #Terminal.wait()
+        
         self.domain = (min_domain, max_domain)
         self.cursor = [self.domain[0], self.domain[1]]
         #if self.size % 2 == 0:  # wtf
         #    self.cursor[0] -= 1 # idk
-        self.plane = [[0 for _ in range(self.size)] for _ in range(self.size)]
-        for col in range(self.size):
-            for rank in range(self.size):
+        self.plane = [[0 for _ in gen_range(self.size)] for _ in gen_range(self.size)]
+        #print(self.plane)
+        for col in gen_range(self.size):
+            for rank in gen_range(self.size):
                 self.plane[col][rank] = Point(
                     col - self.domain[1], self.domain[1] - rank)
+
                 if col == -self.domain[0] and rank == self.domain[1]:
                     self.plane[col][rank].marker = 'origin'
                 elif col == -self.domain[0]:
@@ -375,7 +386,7 @@ class Graph(Thing):
             str_list.append('%3d ' % (self.size - rank))
             for col in range(self.size):
                 # xy_coords = self.indices_to_point(col, rank).tuple()
-                xy_coords = col + self.domain[0], self.domain[1] - rank + 1
+                xy_coords = col + self.domain[0], self.domain[1] - rank
                 if xy_coords == tuple(self.cursor):
                     str_list.append('\b(')
                 tag_list = self.skin_dict.keys()
@@ -475,7 +486,7 @@ class Graph(Thing):
                     Terminal.output(info)
                 elif self.sh_obj.interface == 'Tk':
                     tk.Label(self.sh_obj.main_window, text=str(info)).pack()
-
+                #print(self.cursor) #__repr__())
                 char = Terminal.get_arrow_key() 
                 #if char is None:
                 #    char = Terminal.get_keypress()  # make a method that can
@@ -606,31 +617,26 @@ class Graph(Thing):
         Print the graph as a table of ordered pairs.  Used for debugging or non-
         Euclidean space.
         """
-        for y_val in range(self.size):
-            for x_val in range(self.size):
-                if self.pt_at_cursor() and self.plane[x_val][y_val] ==\
-                    self.pt_at_cursor():
-                    easycat.write('{:>9}'.format('>{}<'.format(
-                        self.plane[x_val][y_val])))
-                elif self.pt_at_cursor() and self.plane[x_val][y_val] ==\
-                    self.pt_at_cursor():
-                    easycat.write('{:>9}'.format(self.plane[x_val][y_val]))
-                else:
-                    easycat.write('{:>8} '.format(self.plane[x_val][y_val]))
+        for v_val in range(self.size):
+            for h_val in range(self.size):
+                txt_str = self.plane[h_val][v_val].__repr__()
+                if self.pt_at_cursor() is not None and\
+                   self.plane[h_val][v_val] == self.pt_at_cursor():
+                    txt_str = '>%s<' % txt_str
+                easycat.write('{:>15} '.format(txt_str))
             Terminal.output('')
 
     def pt_at_cursor(self):
         """
         returns Point object where cursor is located
         """
-        if self.cursor[0] <= self.domain[1] and\
-           self.cursor[0] >= self.domain[0] and\
-           self.cursor[1] <= self.domain[1] and\
-           self.cursor[1] >= self.domain[0]:
+        if self.domain[0] <= self.cursor[0] <= self.domain[1] and\
+           self.domain[0] <= self.cursor[1] <= self.domain[1]:
 
             # not sure what this error is about.
             # this is an overly-lazy fix.
             indices = self.point_to_indices(Point(*self.cursor))
+            #print(self.plane[indices[0]][indices[1]])
             return self.plane[indices[0]][indices[1]]
 
     def indices_to_point(self, index1, index2):

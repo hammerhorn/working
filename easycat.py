@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #coding=utf8
 """
 Collection of input/output functions which are similar to the cat

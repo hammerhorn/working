@@ -8,7 +8,7 @@ import datetime
 import sys
 import time
 
-from cjh.misc import bye, notebook
+from cjh.misc import bye, catch_help_flag, notebook
 from cjh.paystub import PayPeriod, WorkWeek
 
 from versatiledialogs.config import Config
@@ -54,7 +54,7 @@ def _parse_args():
             SHELL.message(
                 'usage: pay_calc.py [-h] [-i INFILE|-s START] [-w WAGE]' +
                 ' [-p PERCENT]')
-            bye()
+            SHELL.exit()  # bye()
 
         # if there is a startdate but no infile, then parse startdate
         else:
@@ -83,6 +83,7 @@ def _parse_args():
     parser.add_argument('-p', '--percent', type=float, help='percent withheld')
     parser.add_argument(
         '-C', action='store_true', help="read developer's comments")
+    catch_help_flag(help_str=__doc__, sh_obj=SHELL, argprsr=parser)
     args = parser.parse_args()
     Terminal.default_splash('== pay calc ==', 2014)
     setup_template()

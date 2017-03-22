@@ -372,6 +372,7 @@ class Note(Pitch):
         proc = subprocess.Popen('play -n synth {} {} {} vol {} > /dev/null 2>&1'.format(
             self.duration, voice, self.freq.mag, VOL), shell=True)
         proc.wait()
+        #  traceback if OSError?
 
 
 class PitchSet(Thing):

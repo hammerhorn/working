@@ -4,6 +4,7 @@
 DOCSTRING
 """
 import pprint
+import textwrap
 import time
 
 import easycat
@@ -16,7 +17,7 @@ class Turn(Thing):
     """
     Sequential turn within a game
     """
-    def __init__(self, color, pt_tuple, comments):
+    def __init__(self, color, pt_tuple, comments=''):
         super(Turn, self).__init__()
         self.address = pt_tuple
         self.color = color
@@ -49,7 +50,7 @@ class GoGame(Thing):
     One game
     """
     header = {}
-    moves = []
+    #moves = []
 
     def __init__(self, sgf_str=''):#, skin='unicode1.json'):
         self.bullets = None
@@ -67,7 +68,7 @@ class GoGame(Thing):
             self.units_list = sgf_str.split(';')
 
             # Get the header string
-            #self.units_list = self.units_list[1:]  # Game, size 
+            self.units_list = self.units_list[1:]  # Game, size 
             self.header_str = self.units_list[0]  # board position
 
             # Get the list of moves and
@@ -78,6 +79,7 @@ class GoGame(Thing):
             #print(self.moves)
             #import sys
             #sys.exit()
+
             # Convert the header information to a dictionary
             self.head_list = self.header_str.split(']')[:-1]
             for unit in self.head_list:
@@ -89,17 +91,17 @@ class GoGame(Thing):
             self.size = int(self.header_dict['SZ'])
 
             # Convert the sgf representations to Turn objects
-            #for i, v in enumerate(self.moves):
-            for move in self.moves:
+            #for i, move in enumerate(self.moves_list):
+            for move in self.moves_list:
                 #if self.moves[i[0]][0] == 'B':
                 if move[0] == 'B':
                     colour = 'black'
                 elif move[0] == 'W':
                     colour = 'white'
-                address = (
-                    self.moves[i[0]][2].upper(),
-                    self.size - (ord(self.moves[i[0]][3]) - 97))
-                self.moves[i[0]] = Turn(colour, address, self.moves[i[0]][5:])
+                #address = (
+                #    self.moves_list[i[0]][2].upper(),
+                #    self.size - (ord(self.moves_list[i[0]][3]) - 97))
+                #self.moves_list[i[0]] = Turn(colour, address, self.moves_list[i[0]][5:])
 
 
 
@@ -119,53 +121,53 @@ class GoGame(Thing):
         # If this is a new games, there will be no moves....
 
     def __str__(self):
-        out_str = '\n'
-        out_str += Terminal.fx('b', self.label)
-       #out_str += cli.Cli.term_fx(
-       #    'nu', 'header') + ": {}".format(pprint.pformat(self.header_dict))
-        out_str += '{}: {}\n\n'.format(
-            Terminal.fx('nu', 'header'), pprint.pformat(self.header_dict))
-        out_str += '{}: {}'.format(Terminal.fx('nu', 'moves'), self.moves)
-        return out_str
+        return '\n{}{}: {}\n\n{}: {}'.format(
+            Terminal.fx('b', self.label),
+            Terminal.fx('nu', 'header'),
+            pprint.pformat(self.header_dict),
+            Terminal.fx('nu', 'moves'),
+            self.moves_list)
 
     def __getitem__(self, index):
-        return self.moves[index]
+        return self.moves_list[index]
 
     def __len__(self):
-        return len(self.moves)
+        return len(self.moves_list)
 
     #def __iter__(self):
     #    return
 
     def __repr__(self):
-        string = ''
+        string_lst = []
         try:
             if self.header_dict['GM'] == '1':
-                string += 'Game: Go\n'
+                string_lst.append('Game: Go\n')
             elif self.header_dict['GM'] == '2':
-                string += 'Game: Reversi\n'
+                string_lst.append('Game: Reversi\n')
         except KeyError:
             pass
 
         try:
-            string += "Size: {0} x {0}\n".format(self.header_dict['SZ'])
+            string_lst.append('Size: {0} x {0}\n'.format(
+                self.header_dict['SZ']))
         except KeyError:
             pass
 
         try:
-            string += "{} vs. {}\n".format(
-                self.header_dict['PW'], self.header_dict['PB'])
+            string_lst.append('{} vs. {}\n'.format(
+                self.header_dict['PW'], self.header_dict['PB']))
         except KeyError:
             pass
 
         try:
-            string += "Komi: {}\n".format(self.header_dict['KM'])
+            string_lst.append('Komi: {}\n'.format(self.header_dict['KM']))
         except KeyError:
             pass
 
         # try:
-        for game, index in enumerate(self.game_list):
-            self.game_list[index].header = str(game[1]) + "\n"
+        for game, index in enumerate(self):  #.game_list):
+            self[index].header = str(game[1]) + '\n'            
+            # self.game_list[index].header = str(game[1]) + "\n"
         # except: # type?
         #    pass
 
@@ -187,26 +189,27 @@ class GoGame(Thing):
         #    else: game = 'unknown'
         #    s += ["The game is {}.".format(game)]
         if 'RU' in self.header:
-            bullet_items += ["{} rules.".format(self.header['RU'])]
+            bullet_items.append('{} rules.'.format(self.header['RU']))
         if 'SZ' in self.header:
-            bullet_items += ["The board size is {0} × {0}.".format(
-                self.header['SZ'])]
+            bullet_items.append('The board size is {0} × {0}.'.format(
+                self.header['SZ']))
         if 'KM' in self.header:
-            bullet_items += ["Komi is {}.".format(self.header['KM'])]
+            bullet_items.append('Komi is {}.'.format(self.header['KM']))
         if 'PB' in self.header:
-            bullet_items += ["Black Player: {}".format(self.header['PB'])]
+            bullet_items.append('Black Player: {}'.format(self.header['PB']))
         if 'PW' in self.header:
-            bullet_items += ["White Player: {}".format(self.header['PW'])]
+            bullet_items.append('White Player: {}'.format(self.header['PW']))
         self.bullets = ItemList(bullet_items)
+
         ###############################
 
-
-        moves_enum = Enumeration(self.moves)
-        return ('\n' + Terminal.fx('u', self.label.title()) +
-                #self.ul_label() +
-                string + #'\n\nself.bullets: ' + str(self.bullets) +
-                '\nmoves_enum: ' + str(moves_enum) +
-                '\n' + Terminal.hrule(string=True, width=40))
+        moves_enum = Enumeration(self.moves_list)
+        string_lst = ['\n', Terminal.fx('u', self.label.title()), string_lst]
+        string_lst.extend(('\nmoves_enum: ',
+                           str(moves_enum),
+                           '\n',
+                           Terminal.hrule(string=True, width=40)))
+        return ''.join(string_lst)
 
     def less(self):
         """
@@ -220,7 +223,7 @@ class GoGame(Thing):
         """
         goban = Goban(int(self.header_dict['SZ'])) #, skinfile=self.skin)
         color = 'black'
-        for _, turn in enumerate(self.moves):
+        for _, turn in enumerate(self.moves_list):
             goban.place_stone(turn[0], int(turn[1:]), color)
             func = lambda: time.sleep(0.25) if autoplay else Terminal.wait
 

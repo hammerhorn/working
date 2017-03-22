@@ -22,6 +22,7 @@ def _parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('filename', type=str, nargs='?')
     parser.add_argument('-C', action='store_true')
+    misc.catch_help_flag(help_str='', argprsr=parser)
     return parser.parse_args() if __name__ == '__main__' else None
 
 ###############
