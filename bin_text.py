@@ -16,7 +16,7 @@ import textwrap
 
 from termcolor import cprint
 
-from cjh.misc import catch_help_flag
+from cjh.misc import catch_help_flag, notebook
 import easycat
 from versatiledialogs.config import Config
 from versatiledialogs.terminal import Terminal
@@ -25,11 +25,15 @@ __author__ = 'Chris Horn <hammerhorn@gmail.com>'
 __license__ = 'GPL'
 
 DEFAULT = '__data__/binary.txt'
+REMARKS = """
+    - move functionality to Letter class
+    - combine with morse, radio, braille, etc...."""
 
 def _parse_args():
     """
     ./bin_text.py -d filename
     """
+    notebook(REMARKS)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-f', type=str, help='decode from user-specified file')
     parser.add_argument('-d', action='store_true', help="decode from '{}'".format(DEFAULT))

@@ -41,6 +41,7 @@ def main():
                 }
 
                 whichway = Terminal.get_arrow_key()
+
                 if whichway == chr(12):
                     Terminal.clear()
                     Terminal.output('\n\n')

@@ -41,21 +41,26 @@ def run_script(scriptname_, shellname_):
     """
     Run selected script in selected shell.
     """
-    os.system('chmod +x {}'.format(scriptname_))
+    #os.system('chmod +x {}'.format(scriptname_))
+    proc = subprocess.Popen('chmod +x {}'.format(scriptname_), shell=True)
+    proc.wait()
     scriptname_ = './' + scriptname_
     cmd_list = [scriptname_]
     original_shell = CONFIG.read_config_file()
     CONFIG.write_to_config_file(shell=shellname_)
-    os.system('chmod +x {}'.format(scriptname_))
+    #os.system('chmod +x {}'.format(scriptname_))
+    proc = subprocess.Popen('chmod +x {}'.format(scriptname_), shell=True)
+    proc.wait()
     if checked is not None and (SHELL.interface, checked.get()) == ('Tk', 1):
-        cmd = [
-            #word.encode('utf-8') for word
-            word.encode('utf-8') for word
-            in CONFIG.config_dict['terminal'].split()
-        ]
+        #cmd = [
+        #    #word.encode('utf-8') for word
+        #    word.encode('utf-8') for word
+        #    in CONFIG.config_dict['terminal'].split()
+        #]
+        cmd = CONFIG.config_dict['terminal'].split()
         cmd.append(cmd_list)
         print(str(cmd))
-        proc = subprocess.Popen(cmd) # , shell=True)
+        proc = subprocess.Popen(' '.join(cmd)) # , shell=True)
     else:
         proc = subprocess.Popen(cmd_list, shell=True)
     SHELL.output('')
@@ -72,8 +77,9 @@ def open_in_editor(scriptname_):
     #if sh.interface == 'Tk':
         #val = menu1.curselection()
         #scriptname = script_list[val[0]]
-    os.system('{} {}'.format(CONFIG.config_dict['editor'], scriptname_))
-
+    #os.system('{} {}'.format(CONFIG.config_dict['editor'], scriptname_))
+    proc = subprocess.Popen('{} {}'.format(CONFIG.config_dict['editor'], scriptname_), shell=True)
+    proc.wait()
 
 def setup_tk_window():
     """

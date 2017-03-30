@@ -26,7 +26,7 @@ class Angle(Scalar):
         self.shell_obj = shell
         if units_ == '(pi) rad':
             self.units.abbrev = 'π rad'
-        self.label = u'∠ {}'.format(next(self.__class__.letter_seq))
+        self.label = '∠ {}'.format(next(self.__class__.letter_seq))
         if (Terminal.platform, Terminal.interface) == ('Windows', 'term'):
             self.label = self.label.replace('∠', 'angle')
 
@@ -238,7 +238,7 @@ class Angle(Scalar):
         Print out a brief summary
         """
         # more control than with string.Template?
-        string = u"""m = {}
+        string = """m = {}
 [{}]
 
       {:7g}° = {:6.4g} (i.e., {:5.3g}π) radian(s)

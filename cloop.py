@@ -133,7 +133,7 @@ def main():
             with open(filename, 'w') as file_ptr:
                 file_ptr.write('{}\n{}'.format(includes, block))
 
-            command_list = compiler_dict[EXTENSION]
+            command_list = [compiler_dict[EXTENSION]]
             if EXTENSION == 'c' and 'math.h' in includes:
                 command_list.append(' -lm')
             command_list.extend((' ./tmp.', EXTENSION))
