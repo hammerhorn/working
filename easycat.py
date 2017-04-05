@@ -8,8 +8,11 @@ import os
 import pydoc
 import sys
 
-import colorama
-from termcolor import colored
+try:
+    import colorama
+    from termcolor import colored
+except:
+    pass
 
 try:
     from pygments import highlight

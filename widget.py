@@ -12,7 +12,7 @@ import copy
 import string
 import sys
 
-from cjh.misc import bye, catch_help_flag
+from cjh.misc import catch_help_flag
 from versatiledialogs.config import Config
 from versatiledialogs.lists import PlainList
 
@@ -121,7 +121,8 @@ def main():
     
     for key in args_dict:
         if args_dict[key] is not None:
-            widget_dict.get(key, lambda: 0)()
+            if widget_dict.get(key, lambda: 0)():
+                SHELL.exit()
 
 if __name__ == '__main__':
     main()

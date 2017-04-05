@@ -73,6 +73,8 @@ class DialogGui(Terminal):
     @classmethod
     def outputf(cls, **kwargs):
         """
+        keywords = msg, heading, width, height, file_
+
         Output dialog with mono font.
         """
         # There should really be an operator....

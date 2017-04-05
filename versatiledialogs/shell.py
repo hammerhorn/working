@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #coding=utf8
 """
 Parent class for all shell template objects in this package.
@@ -16,7 +15,10 @@ import platform
 import sys
 import time
 
-from termcolor import colored
+try:
+    from termcolor import colored
+except ImportError:
+    pass
 try:
     import tkFileDialog
 except ImportError:
@@ -63,9 +65,16 @@ class Shellib(object):
             except ImportError:
                 pass
 
-
+    def __str__(self):
+        return self.interface
+            
     @classmethod
     def emphasis(cls, in_str):
+        """
+        This should be moved.  Returns bold text when using the 'term'
+        interface on Linux or Android (posix system), otherwise returns
+        text in all caps.
+        """
         if (cls.interface, cls.os_name) == ('term', 'posix'):
             out_str = cls.fx('bn', in_str)
         else:
@@ -86,9 +95,9 @@ class Shellib(object):
         if cls.platform == 'Windows':  # does this hurt anything if it
                                        # runs in posix?
             filename = filename.split('\\')[1]
-        if filename not in os.listdir(os.getcwd() + '/__data__/'):
+        if filename not in os.listdir('%s/__data__/' % os.getcwd()):
             try:
-                _file = open('__data__/' + filename, 'w')
+                _file = open('__data__/%s' % filename, 'w')
                 _file.close()
             except IOError:
                 cls.output('unable to write to file system')
@@ -273,7 +282,7 @@ class Shellib(object):
     def start_app(cls):
         filename = sys.argv[0].split('/')[-1].split('.')[0]+ '.tmp'
         try:
-            with open('__data__/' + filename, 'w') as _file:
+            with open('__data__/%s' % filename, 'w') as _file:
                 pass
         except:
             cls.output('unable to write to file system')            

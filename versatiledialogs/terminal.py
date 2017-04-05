@@ -13,9 +13,15 @@ import time
 
 # Add-ons
 import ctypes
-from termcolor import colored
-import colorama
-from colorama import Fore, Back, Style
+try:
+    from termcolor import colored
+except:
+    pass
+try:
+    import colorama
+    from colorama import Fore, Back, Style
+except:
+    pass
 
 # Local modules
 from colorful.ansi import Ansi
@@ -73,7 +79,10 @@ class Terminal(Shellib):
         self.__class__.bash_available = bool(
             'bin' in os.listdir('/') and 'bash' in os.listdir('/bin'))
         self.__class__.interface = 'term'
-        colorama.init()
+        try:
+            colorama.init()
+        except:
+            pass
 
     @classmethod
     def get_arrow_key(cls, arrows_only=False):
